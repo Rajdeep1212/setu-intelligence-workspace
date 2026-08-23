@@ -35,7 +35,7 @@ async def dense_search(
                 1 - (c.embedding <=> CAST(:embedding AS vector)) AS score
             FROM chunks c
             JOIN documents d ON d.id = c.document_id
-            WHERE (:language IS NULL OR c.language = :language)
+            WHERE (CAST(:language AS text) IS NULL OR c.language = CAST(:language AS text))
             ORDER BY c.embedding <=> CAST(:embedding AS vector)
             LIMIT :limit
             """

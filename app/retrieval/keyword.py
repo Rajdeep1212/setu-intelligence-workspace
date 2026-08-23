@@ -34,7 +34,7 @@ async def keyword_search(
             FROM chunks c
             JOIN documents d ON d.id = c.document_id
             WHERE c.tsv @@ plainto_tsquery('simple', :query)
-              AND (:language IS NULL OR c.language = :language)
+              AND (CAST(:language AS text) IS NULL OR c.language = CAST(:language AS text))
             ORDER BY score DESC
             LIMIT :limit
             """
