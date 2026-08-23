@@ -1,0 +1,15 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Run ingestion in its own venv, outside the API container — no reason for
+# the FastAPI service to carry torch/sentence-transformers just to serve
+# /health. Install with:
+#   python3.11 -m venv .venv-ingest && source .venv-ingest/bin/activate
+#   pip install -r requirements-ingestion.txt
+#   python -m ingestion.ingest --prids 2235812,2224505
+
+asyncpg==0.29.0          # same DB the API uses
+requests==2.32.3
+beautifulsoup4==4.12.3
+lxml==5.3.0
+sentence-transformers==3.1.1
+torch

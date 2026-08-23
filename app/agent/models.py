@@ -1,0 +1,40 @@
+"""Structured-output schemas for the agent — Week 3."""
+
+from __future__ import annotations
+
+from typing import Literal, Optional
+
+from pydantic import BaseModel, Field
+
+
+class RouteDecision(BaseModel):
+    route: Literal["retrieve_docs", "check_eligibility"] = Field(
+        description=(
+            "'check_eligibility' only when the user is asking whether they "
+            "personally qualify for one specific named scheme (income/age/"
+            "state limits etc). 'retrieve_docs' for everything else — "
+            "general questions, 'what is X', 'how do I apply', comparisons."
+        )
+    )
+    scheme_name_hint: Optional[str] = Field(
+        default=None,
+        description=(
+            "If route is check_eligibility, the scheme name as best guessed "
+            "from the query, e.g. 'PM Kisan'. Otherwise omit."
+        ),
+    )
+
+
+class GeneratedAnswer(BaseModel):
+    answer: str = Field(
+        description=(
+            "A grounded answer based ONLY on the provided context, in the "
+            "same language as the question. If the context doesn't answer "
+            "the question, say so plainly instead of guessing."
+        )
+    )
+    confidence: float = Field(
+        ge=0,
+        le=1,
+        description="Self-assessed confidence that the context actually answers the question.",
+    )

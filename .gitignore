@@ -1,0 +1,40 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+mlruns/
+.venv/
+.venv-ingest/
+venv/
+*.egg-info/
+.DS_Store
+
+# Model and tool caches
+.cache/
+cache/
+hf_cache/
+transformers_cache/
+sentence_transformers_data/
+
+# Temporary files, logs, and generated artifacts
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.out
+
+# Local database and Docker data
+*.sqlite
+*.sqlite3
+postgres-data/
+pgdata/
+docker-data/
+
+# Credential and local configuration files
+*.pem
+*.key
+credentials.json
+secrets.json

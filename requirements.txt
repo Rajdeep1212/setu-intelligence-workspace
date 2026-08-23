@@ -1,0 +1,25 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+sqlalchemy==2.0.35
+asyncpg==0.29.0
+python-dotenv==1.0.1
+httpx==0.27.2
+
+# Week 2 — the /query endpoint now embeds queries and reranks candidates
+# live, so the API container needs these too (not just ingestion's venv).
+# This makes the Docker image noticeably heavier to build (~2-3GB extra for
+# torch + model weights on first run) — expected from here on.
+sentence-transformers==3.1.1
+FlagEmbedding==1.3.2
+torch
+
+# Week 3 — LangGraph agent + structured LLM output. `openai` is used as the
+# client for Groq's OpenAI-compatible endpoint, not for OpenAI itself.
+langgraph
+instructor
+openai
+google-generativeai

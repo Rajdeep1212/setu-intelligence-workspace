@@ -1,0 +1,19 @@
+# Reference only — add these to requirements.txt as you reach each week.
+# Keeping the API image lean until each package is actually needed.
+# (Week 1's scraping/embedding deps live in requirements-ingestion.txt.
+#  Weeks 2 and 3's deps are already in requirements.txt, since /query
+#  runs retrieval, reranking, and the agent live.)
+
+# Week 4 — frontend + streaming
+streamlit
+sse-starlette
+
+# Week 5 — evaluation & MLOps
+ragas
+mlflow
+langfuse
+
+# Testing
+pytest
+pytest-asyncio
+
