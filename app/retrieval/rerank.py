@@ -18,7 +18,7 @@ def _get_reranker():
     if _reranker is None:
         from FlagEmbedding import FlagReranker
 
-        _reranker = FlagReranker("BAAI/bge-reranker-v2-m3", use_fp16=True)
+        _reranker = FlagReranker("BAAI/bge-reranker-v2-m3", use_fp16=True, max_length=256)
     return _reranker
 
 
