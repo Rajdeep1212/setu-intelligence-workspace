@@ -76,7 +76,7 @@ def generate_structured(
     max_tokens: int = 1024,
 ) -> T:
     client, provider = _get_client()
-    model_name = "llama-3.3-70b-versatile" if provider == "groq" else "gemini-1.5-flash"
+    model_name = "openai/gpt-oss-20b" if provider == "groq" else "gemini-1.5-flash"
 
     return client.chat.completions.create(
         model=model_name,
