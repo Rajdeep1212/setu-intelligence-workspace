@@ -25,6 +25,7 @@ temp/
 *.tmp
 *.bak
 *.out
+eval_results.json
 
 # Local database and Docker data
 *.sqlite
