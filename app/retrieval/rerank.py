@@ -14,6 +14,7 @@ import logging
 from pathlib import Path
 
 from app.config import settings
+from app.observability import get_request_id
 
 logger = logging.getLogger(__name__)
 _reranker = None
@@ -26,8 +27,9 @@ def _get_reranker():
             from FlagEmbedding import FlagReranker
 
             logger.info(
-                "Initialized local inference backend=pytorch "
-                "model=bge-reranker-v2-m3"
+                "model_initialized request_id=%s backend=pytorch "
+                "model=bge-reranker-v2-m3",
+                get_request_id(),
             )
             _reranker = FlagReranker(
                 "BAAI/bge-reranker-v2-m3", use_fp16=True, max_length=256

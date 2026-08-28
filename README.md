@@ -180,6 +180,53 @@ non-FP32 artifacts fail explicitly on first retrieval initialization; there
 is no silent fallback. To roll back immediately, set
 `LOCAL_INFERENCE_BACKEND=pytorch` and recreate the API container.
 
+## Operations and reliability
+
+SETU exposes three probe surfaces with deliberately different semantics:
+
+- `GET /health` is a liveness check. It returns `status` and the configured
+  inference backend without touching the database or loading model weights.
+- `GET /health/db` checks PostgreSQL and returns HTTP 503 with a safe error
+  envelope when the database is unavailable.
+- `GET /ready` checks PostgreSQL, LLM configuration, and local inference
+  configuration. OpenVINO readiness verifies the required files but does not
+  compile or run the multi-gigabyte models. It returns HTTP 503 with safe
+  issue codes when the service should not receive query traffic.
+
+Every response includes an `X-Request-ID` header. Application logs include
+the same ID, selected backend, major initialization events, request duration,
+and classified failures. Keys, full prompts, and document bodies are not
+logged. Query errors use a stable `error.code`, `error.message`, and
+`error.request_id` envelope; internal stack traces are not returned.
+
+Operational configuration:
+
+| Variable | Requirement |
+|---|---|
+| `DATABASE_URL` | Must be a `postgresql+asyncpg` URL with host and database. Compose supplies it. |
+| `GROQ_API_KEY` / `GEMINI_API_KEY` | At least one is required for readiness and queries; Groq takes precedence. |
+| `LOCAL_INFERENCE_BACKEND` | `pytorch` (default) or `openvino`. Other values fail validation. |
+| `OPENVINO_MODEL_DIR` | Container path containing both exported model directories. |
+
+The two validated FP32 OpenVINO artifacts occupy about 4.28 GiB in total.
+Milestone 3K observed approximately 2.70 GiB API memory use for a real
+OpenVINO query within a 3.70 GiB Docker limit. This is validation evidence,
+not a production-capacity claim. Do not run loaded PyTorch and OpenVINO API
+workers concurrently under that limit.
+
+Keep the PostgreSQL volume, `setu_hf_cache`, current API/database images, and
+`models/openvino/` artifacts. When host disk space is low, inspect with
+`docker system df` and remove only resources proven obsolete. Never use a
+broad volume prune. The isolated exporter image can be removed after exports
+are verified and rebuilt later from its pinned Dockerfile if needed.
+
+Rollback to PyTorch by setting `LOCAL_INFERENCE_BACKEND=pytorch` and
+recreating only the API service:
+
+```bash
+docker compose up -d --no-deps --no-build --force-recreate api
+```
+
 ## Where to go next
 Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
 mapped onto this scaffold, in the same order as the original project plan

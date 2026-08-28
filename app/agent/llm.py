@@ -21,13 +21,17 @@ environment.
 
 from __future__ import annotations
 
+import logging
 from typing import TypeVar
 
 from pydantic import BaseModel
 
 from app.config import settings
+from app.errors import ConfigurationUnavailableError, LLMProviderError
+from app.observability import get_request_id
 
 T = TypeVar("T", bound=BaseModel)
+logger = logging.getLogger(__name__)
 
 _client = None
 _provider: str | None = None
@@ -61,9 +65,8 @@ def _get_client():
         _provider = "gemini"
 
     else:
-        raise RuntimeError(
-            "No LLM configured — set GROQ_API_KEY or GEMINI_API_KEY in .env"
-        )
+        logger.error("llm_configuration_missing request_id=%s", get_request_id())
+        raise ConfigurationUnavailableError()
 
     return _client, _provider
 
@@ -75,15 +78,27 @@ def generate_structured(
     response_model: type[T],
     max_tokens: int = 1024,
 ) -> T:
-    client, provider = _get_client()
-    model_name = "openai/gpt-oss-20b" if provider == "groq" else "gemini-1.5-flash"
-
-    return client.chat.completions.create(
-        model=model_name,
-        max_tokens=max_tokens,
-        response_model=response_model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-    )
+    try:
+        client, provider = _get_client()
+        model_name = (
+            "openai/gpt-oss-20b" if provider == "groq" else "gemini-1.5-flash"
+        )
+        return client.chat.completions.create(
+            model=model_name,
+            max_tokens=max_tokens,
+            response_model=response_model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+    except ConfigurationUnavailableError:
+        raise
+    except Exception as exc:
+        logger.error(
+            "llm_provider_failure request_id=%s provider=%s error_type=%s",
+            get_request_id(),
+            settings.llm_provider or "unconfigured",
+            type(exc).__name__,
+        )
+        raise LLMProviderError() from exc

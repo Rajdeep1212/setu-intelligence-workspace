@@ -19,13 +19,21 @@ need to run any models yet.
 
 from __future__ import annotations
 
+import logging
+
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.errors import DatabaseUnavailableError, RetrievalUnavailableError
+from app.observability import get_request_id
 from app.retrieval.dense import dense_search
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.retrieval.keyword import keyword_search
 from app.retrieval.rerank import rerank
 from app.retrieval.embeddings import embed_chunks
+
+
+logger = logging.getLogger(__name__)
 
 
 async def retrieve(
@@ -35,10 +43,23 @@ async def retrieve(
     candidate_k: int = 20,
     final_k: int = 5,
 ) -> list[dict]:
-    query_vector = embed_chunks([query])[0]
+    try:
+        query_vector = embed_chunks([query])[0]
 
-    dense_results = await dense_search(session, query_vector, language, candidate_k)
-    keyword_results = await keyword_search(session, query, language, candidate_k)
+        dense_results = await dense_search(session, query_vector, language, candidate_k)
+        keyword_results = await keyword_search(session, query, language, candidate_k)
 
-    fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
-    return rerank(query, fused, top_k=final_k)
+        fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
+        return rerank(query, fused, top_k=final_k)
+    except SQLAlchemyError as exc:
+        logger.error("retrieval_database_failure request_id=%s", get_request_id())
+        raise DatabaseUnavailableError() from exc
+    except (DatabaseUnavailableError, RetrievalUnavailableError):
+        raise
+    except Exception as exc:
+        logger.error(
+            "retrieval_failure request_id=%s error_type=%s",
+            get_request_id(),
+            type(exc).__name__,
+        )
+        raise RetrievalUnavailableError() from exc

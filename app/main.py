@@ -1,42 +1,190 @@
-from fastapi import Depends, FastAPI
+from __future__ import annotations
+
+import logging
+import time
+import uuid
+from contextlib import asynccontextmanager
+
+from fastapi import Depends, FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agent.graph import run_agent
+from app.config import settings
 from app.db import get_session
-from app.schemas import Citation, QueryRequest, QueryResponse
+from app.errors import DatabaseUnavailableError, ServiceError
+from app.observability import (
+    configure_logging,
+    get_request_id,
+    reset_request_id,
+    set_request_id,
+)
+from app.schemas import Citation, ErrorResponse, QueryRequest, QueryResponse
 
-app = FastAPI(title="Setu API", version="0.1.0")
+
+configure_logging()
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    issues = settings.operational_issues()
+    logger.info(
+        "application_startup backend=%s inference_ready=%s llm_provider=%s",
+        settings.local_inference_backend,
+        settings.openvino_artifacts_ready(),
+        settings.llm_provider or "unconfigured",
+    )
+    if issues:
+        logger.warning("configuration_not_ready issues=%s", ",".join(issues))
+    yield
+    logger.info("application_shutdown")
+
+
+app = FastAPI(title="Setu API", version="0.1.0", lifespan=lifespan)
+
+
+def _error_response(
+    *, code: str, message: str, status_code: int, request_id: str
+) -> JSONResponse:
+    payload = ErrorResponse(
+        error={"code": code, "message": message, "request_id": request_id}
+    )
+    return JSONResponse(status_code=status_code, content=payload.model_dump())
+
+
+@app.middleware("http")
+async def correlate_and_log_request(request: Request, call_next):
+    request_id = uuid.uuid4().hex
+    request.state.request_id = request_id
+    token = set_request_id(request_id)
+    started = time.perf_counter()
+    try:
+        try:
+            response = await call_next(request)
+        except Exception as exc:  # final safety boundary; never expose internals
+            logger.error(
+                "request_failure request_id=%s method=%s path=%s error_type=%s",
+                request_id,
+                request.method,
+                request.url.path,
+                type(exc).__name__,
+            )
+            response = _error_response(
+                code="internal_error",
+                message="An internal error occurred.",
+                status_code=500,
+                request_id=request_id,
+            )
+        response.headers["X-Request-ID"] = request_id
+        duration_ms = (time.perf_counter() - started) * 1000
+        log = logger.error if response.status_code >= 500 else logger.info
+        log(
+            "request_complete request_id=%s method=%s path=%s status=%s duration_ms=%.2f",
+            request_id,
+            request.method,
+            request.url.path,
+            response.status_code,
+            duration_ms,
+        )
+        return response
+    finally:
+        reset_request_id(token)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(
+    _: Request, __: RequestValidationError
+) -> JSONResponse:
+    request_id = get_request_id()
+    logger.warning("request_validation_failed request_id=%s", request_id)
+    return _error_response(
+        code="invalid_request",
+        message="The request payload is invalid.",
+        status_code=422,
+        request_id=request_id,
+    )
+
+
+@app.exception_handler(ServiceError)
+async def service_error_handler(_: Request, exc: ServiceError) -> JSONResponse:
+    request_id = get_request_id()
+    logger.error(
+        "operation_failed request_id=%s code=%s error_type=%s",
+        request_id,
+        exc.code,
+        type(exc).__name__,
+    )
+    return _error_response(
+        code=exc.code,
+        message=exc.public_message,
+        status_code=exc.status_code,
+        request_id=request_id,
+    )
 
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    """Liveness only: the API process can receive requests."""
+    return {
+        "status": "ok",
+        "inference_backend": settings.local_inference_backend,
+    }
 
 
 @app.get("/health/db")
 async def health_db(session: AsyncSession = Depends(get_session)):
-    result = await session.execute(text("SELECT 1"))
-    return {"db": "ok" if result.scalar() == 1 else "error"}
+    try:
+        result = await session.execute(text("SELECT 1"))
+    except SQLAlchemyError as exc:
+        logger.error("database_readiness_failed request_id=%s", get_request_id())
+        raise DatabaseUnavailableError() from exc
+    if result.scalar() != 1:
+        raise DatabaseUnavailableError()
+    logger.info("database_ready request_id=%s", get_request_id())
+    return {"db": "ok"}
 
 
-@app.post("/query", response_model=QueryResponse)
+@app.get("/ready")
+async def ready(session: AsyncSession = Depends(get_session)):
+    """Readiness without eagerly loading multi-gigabyte model weights."""
+    issues = settings.operational_issues()
+    database_status = "ok"
+    try:
+        result = await session.execute(text("SELECT 1"))
+        if result.scalar() != 1:
+            raise DatabaseUnavailableError()
+        logger.info("database_ready request_id=%s", get_request_id())
+    except (SQLAlchemyError, DatabaseUnavailableError):
+        database_status = "error"
+        issues.append("database_unavailable")
+        logger.error("database_readiness_failed request_id=%s", get_request_id())
+
+    inference_ready = settings.openvino_artifacts_ready()
+    status = "ready" if not issues else "not_ready"
+    payload = {
+        "status": status,
+        "database": database_status,
+        "inference_backend": settings.local_inference_backend,
+        "inference_ready": inference_ready,
+        "llm_provider": settings.llm_provider,
+    }
+    if issues:
+        payload["issues"] = issues
+    return JSONResponse(status_code=200 if not issues else 503, content=payload)
+
+
+@app.post(
+    "/query",
+    response_model=QueryResponse,
+    responses={422: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
+)
 async def query(payload: QueryRequest, session: AsyncSession = Depends(get_session)):
-    """
-    Week 3: routes through the LangGraph agent — an LLM decides between
-    document retrieval and the structured eligibility lookup, then
-    generates a grounded answer from whichever context it collected.
-      Week 4: SSE streaming, API-key auth, rate limiting.
-
-    Needs GROQ_API_KEY or GEMINI_API_KEY set in .env (see app/agent/llm.py).
-    First call after a fresh container start will also be slow (~seconds)
-    while bge-m3 and the reranker load into memory — cached in module-level
-    globals after that, so subsequent calls are fast.
-    """
     final_state = await run_agent(session, payload.query, language=payload.language)
-
-    citations = [Citation(**c) for c in final_state.get("citations", [])]
-
+    citations = [Citation(**citation) for citation in final_state.get("citations", [])]
     return QueryResponse(
         answer=final_state.get("answer", "No answer generated."),
         citations=citations,

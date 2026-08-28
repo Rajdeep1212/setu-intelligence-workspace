@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.errors import DatabaseUnavailableError
 from app.retrieval.pipeline import retrieve
 
 
@@ -21,9 +23,10 @@ async def check_eligibility_tool(session: AsyncSession, scheme_name_hint: str) -
     `ingestion/seed_eligibility.py`. Swap for a proper fuzzy/embedding
     search once this table grows past a few dozen schemes.
     """
-    result = await session.execute(
-        text(
-            """
+    try:
+        result = await session.execute(
+            text(
+                """
             SELECT
                 id::text AS id,
                 scheme_name,
@@ -33,7 +36,9 @@ async def check_eligibility_tool(session: AsyncSession, scheme_name_hint: str) -
             WHERE scheme_name ILIKE :pattern
             LIMIT 5
             """
-        ),
-        {"pattern": f"%{scheme_name_hint}%"},
-    )
+            ),
+            {"pattern": f"%{scheme_name_hint}%"},
+        )
+    except SQLAlchemyError as exc:
+        raise DatabaseUnavailableError() from exc
     return [dict(row._mapping) for row in result]

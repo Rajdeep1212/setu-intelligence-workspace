@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 from app.config import settings
+from app.observability import get_request_id
 from ingestion.embeddings import embed_chunks as _pytorch_embed_chunks
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,10 @@ def embed_chunks(chunks: list[str], batch_size: int = 16) -> list[list[float]]:
         return []
     if settings.local_inference_backend == "pytorch":
         if not _pytorch_logged:
-            logger.info("Initialized local inference backend=pytorch model=bge-m3")
+            logger.info(
+                "model_initialized request_id=%s backend=pytorch model=bge-m3",
+                get_request_id(),
+            )
             _pytorch_logged = True
         return _pytorch_embed_chunks(chunks, batch_size=batch_size)
     return _get_openvino_model().encode(chunks, batch_size=batch_size)

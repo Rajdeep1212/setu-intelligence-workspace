@@ -8,6 +8,8 @@ from typing import Any
 
 import numpy as np
 
+from app.observability import get_request_id
+
 logger = logging.getLogger(__name__)
 
 EMBEDDING_DIMENSION = 1024
@@ -81,7 +83,10 @@ class OpenVINOEmbeddingModel:
             self.model_dir
         )
         self.tokenizer = _load_tokenizer(self.model_dir)
-        logger.info("Initialized local inference backend=openvino model=bge-m3")
+        logger.info(
+            "model_initialized request_id=%s backend=openvino model=bge-m3",
+            get_request_id(),
+        )
 
     def encode(self, texts: list[str], batch_size: int = 16) -> list[list[float]]:
         if not texts:
@@ -133,7 +138,9 @@ class OpenVINOReranker:
         )
         self.tokenizer = _load_tokenizer(self.model_dir)
         logger.info(
-            "Initialized local inference backend=openvino model=bge-reranker-v2-m3"
+            "model_initialized request_id=%s backend=openvino "
+            "model=bge-reranker-v2-m3",
+            get_request_id(),
         )
 
     def compute_score(
