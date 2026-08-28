@@ -143,6 +143,43 @@ curl -X POST http://localhost:8000/query -H "Content-Type: application/json" \
 building the Week 3 tool-selection-accuracy eval mentioned in
 `docs/ROADMAP.md`.
 
+## Optional OpenVINO local inference
+
+PyTorch is the default and rollback-safe local retrieval backend:
+
+```dotenv
+LOCAL_INFERENCE_BACKEND=pytorch
+```
+
+For Intel CPU deployments, generate the validated FP32 OpenVINO artifacts
+once in the isolated exporter environment. The named Hugging Face cache is
+shared with the API service and reused across container recreations and
+exporter runs; generated multi-gigabyte IR files remain under the Git-ignored
+`models/openvino/` directory and are mounted read-only into the API container.
+
+```bash
+docker compose --profile openvino-export build openvino-export
+docker compose --profile openvino-export run --rm openvino-export
+```
+
+After both artifact directories exist, opt in and rebuild the API:
+
+```dotenv
+LOCAL_INFERENCE_BACKEND=openvino
+OPENVINO_MODEL_DIR=/models/openvino
+```
+
+```bash
+docker compose up -d --build api
+```
+
+OpenVINO uses the same BGE-M3 and BGE reranker checkpoints, FP32 weights,
+tokenization, CLS pooling, normalization, and ranking semantics. It uses more
+memory than PyTorch in the validated CPU experiment. Missing, incomplete, or
+non-FP32 artifacts fail explicitly on first retrieval initialization; there
+is no silent fallback. To roll back immediately, set
+`LOCAL_INFERENCE_BACKEND=pytorch` and recreate the API container.
+
 ## Where to go next
 Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
 mapped onto this scaffold, in the same order as the original project plan

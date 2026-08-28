@@ -22,6 +22,7 @@ cache/
 hf_cache/
 transformers_cache/
 sentence_transformers_data/
+models/openvino/
 mlruns/
 *.log
 tmp/

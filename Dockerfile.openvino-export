@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /exporter
+
+COPY requirements-openvino-export.txt .
+RUN pip install --no-cache-dir -r requirements-openvino-export.txt
+
+COPY scripts/export_openvino_models.sh /usr/local/bin/export-openvino-models
+RUN chmod +x /usr/local/bin/export-openvino-models
+
+ENTRYPOINT ["export-openvino-models"]

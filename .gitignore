@@ -16,6 +16,7 @@ cache/
 hf_cache/
 transformers_cache/
 sentence_transformers_data/
+models/openvino/
 
 # Temporary files, logs, and generated artifacts
 *.log

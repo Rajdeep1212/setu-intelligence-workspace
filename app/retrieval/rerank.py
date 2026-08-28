@@ -10,15 +10,33 @@ than rerank-as-retrieval).
 
 from __future__ import annotations
 
+import logging
+from pathlib import Path
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
 _reranker = None
 
 
 def _get_reranker():
     global _reranker
     if _reranker is None:
-        from FlagEmbedding import FlagReranker
+        if settings.local_inference_backend == "pytorch":
+            from FlagEmbedding import FlagReranker
 
-        _reranker = FlagReranker("BAAI/bge-reranker-v2-m3", use_fp16=True, max_length=256)
+            logger.info(
+                "Initialized local inference backend=pytorch "
+                "model=bge-reranker-v2-m3"
+            )
+            _reranker = FlagReranker(
+                "BAAI/bge-reranker-v2-m3", use_fp16=True, max_length=256
+            )
+        else:
+            from app.retrieval.openvino_backend import OpenVINOReranker
+
+            model_dir = Path(settings.openvino_model_dir) / "bge-reranker-v2-m3"
+            _reranker = OpenVINOReranker(model_dir)
     return _reranker
 
 

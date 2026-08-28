@@ -28,6 +28,8 @@ services:
       - .env
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-setu}:${POSTGRES_PASSWORD:-setu}@db:5432/${POSTGRES_DB:-setu}
+      LOCAL_INFERENCE_BACKEND: ${LOCAL_INFERENCE_BACKEND:-pytorch}
+      OPENVINO_MODEL_DIR: /models/openvino
     ports:
       - "8000:8000"
     depends_on:
@@ -36,6 +38,20 @@ services:
     volumes:
       - ./app:/app/app
       - ./ingestion:/app/ingestion
+      - ./models/openvino:/models/openvino:ro
+      - setu_hf_cache:/root/.cache/huggingface
+
+  openvino-export:
+    profiles: ["openvino-export"]
+    build:
+      context: .
+      dockerfile: Dockerfile.openvino-export
+    environment:
+      HF_HOME: /cache/huggingface
+    volumes:
+      - ./models/openvino:/output
+      - setu_hf_cache:/cache/huggingface
 
 volumes:
   setu_pgdata:
+  setu_hf_cache:

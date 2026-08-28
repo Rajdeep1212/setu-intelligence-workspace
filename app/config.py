@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,6 +12,8 @@ class Settings(BaseSettings):
     langfuse_public_key: str | None = None
     langfuse_secret_key: str | None = None
     mlflow_tracking_uri: str = "./mlruns"
+    local_inference_backend: Literal["pytorch", "openvino"] = "pytorch"
+    openvino_model_dir: str = "/models/openvino"
 
 
 settings = Settings()

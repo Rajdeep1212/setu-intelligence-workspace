@@ -25,7 +25,7 @@ from app.retrieval.dense import dense_search
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.retrieval.keyword import keyword_search
 from app.retrieval.rerank import rerank
-from ingestion.embeddings import embed_chunks
+from app.retrieval.embeddings import embed_chunks
 
 
 async def retrieve(
