@@ -1,0 +1,23 @@
+services:
+  db:
+    # Production databases should be reachable only over the private service
+    # network. Publish a port at the deployment layer only when required.
+    ports: !reset []
+
+  api:
+    # A reverse proxy or service network should reach api:8000 directly.
+    ports: !reset []
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m,mode=1777
+    volumes: !override
+      - ./models/openvino:/models/openvino:ro
+      - setu_hf_cache:/cache/huggingface:ro

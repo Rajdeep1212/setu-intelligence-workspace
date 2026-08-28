@@ -18,6 +18,10 @@ transformers_cache/
 sentence_transformers_data/
 models/openvino/
 
+# Generated supply-chain reports belong in CI artifacts, not Git.
+pip-audit.json
+setu-sbom.cdx.json
+
 # Temporary files, logs, and generated artifacts
 *.log
 logs/

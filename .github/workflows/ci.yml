@@ -36,4 +36,57 @@ jobs:
         run: python -m pip check
 
       - name: Validate Compose configuration
-        run: docker compose config --quiet
+        run: |
+          docker compose config --quiet
+          docker compose -f docker-compose.yml -f compose.production.yml config --quiet
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install application and security dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --no-cache-dir -r requirements.txt
+          python -m pip install --no-cache-dir -r requirements-security.txt
+
+      - name: Audit installed dependencies
+        id: audit
+        continue-on-error: true
+        run: >-
+          python -m pip_audit --local --progress-spinner off
+          --format json --output pip-audit.json
+
+      - name: Generate CycloneDX SBOM
+        run: >-
+          cyclonedx-py environment
+          --output-format JSON
+          --output-file setu-sbom.cdx.json
+
+      - name: Upload supply-chain reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-chain-reports
+          path: |
+            pip-audit.json
+            setu-sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report vulnerability audit result
+        if: always()
+        run: |
+          echo "pip-audit outcome: ${{ steps.audit.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.audit.outcome }}" = "failure" ]; then
+            echo "Review the uploaded report; dependencies are not upgraded automatically." >> "$GITHUB_STEP_SUMMARY"
+          fi

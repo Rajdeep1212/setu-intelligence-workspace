@@ -33,3 +33,12 @@ temp/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Development and CI files are not copied into the production API image
+.github/
+docs/
+eval/
+tests/
+db/
+README.md
+test_ingestion_local.py

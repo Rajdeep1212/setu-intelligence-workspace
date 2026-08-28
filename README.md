@@ -271,11 +271,65 @@ does not require `.env`, PostgreSQL, provider/API keys, model artifacts,
 Docker builds, external LLM calls, or BGE downloads. Dependency installation
 does include the production Python packages; model weights are never fetched.
 
-The current API image still runs as root and uses writable development bind
-mounts. Moving to a non-root runtime requires a deliberate cache-volume
-ownership migration and a rebuilt image, so it is deferred while host storage
-is critically low. Do not treat the current Compose file as a hardened cloud
-deployment specification.
+## Container and supply-chain hardening
+
+The API Dockerfile uses a multi-stage build. Compilers and development headers
+remain in the builder stage; the final stage contains the installed virtual
+environment, the runtime `libgomp1` library, and only `app/` plus `ingestion/`.
+It runs as the dedicated `setu` user with stable UID/GID `10001:10001`.
+Python is fixed at the currently validated `3.11.16` patch release, and the
+formerly floating direct application requirements are fixed to the versions
+already installed in the validated image. Transitive dependencies are not yet
+hash-locked; the generated SBOM records what CI actually resolved.
+
+Default Compose ports bind only to `127.0.0.1`, and application source mounts
+are read-only. The Hugging Face cache remains writable in the local-development
+configuration so a missing PyTorch model can be acquired deliberately. An
+existing cache created by the former root container may need a one-time
+ownership migration after the hardened image is built:
+
+```bash
+docker compose run --rm --no-deps --user 0 api \
+  sh -c 'chown -R 10001:10001 /cache/huggingface'
+```
+
+Review the target volume before running that command. It changes ownership
+only; it must never be replaced with broad permission changes such as
+`chmod 777`.
+
+For a deployment-oriented configuration, combine the base file with the
+production overlay:
+
+```bash
+docker compose -f docker-compose.yml -f compose.production.yml config
+docker compose -f docker-compose.yml -f compose.production.yml up -d
+```
+
+The overlay removes host-published ports (the API remains reachable as
+`api:8000` on the private Compose network), removes development source mounts,
+makes the root filesystem and cached models read-only, provides a constrained
+64 MiB `/tmp`, drops all Linux capabilities, and enables
+`no-new-privileges`. Model downloads are disabled in that configuration, so
+the selected backend's artifacts must already exist. Cloud ingress should
+publish only the API through TLS; PostgreSQL should remain private.
+
+Dependency auditing and SBOM generation use tools isolated in
+`requirements-security.txt`; they do not modify application versions:
+
+```bash
+python -m pip install -r requirements.txt -r requirements-security.txt
+python -m pip_audit --local --progress-spinner off \
+  --format json --output pip-audit.json
+cyclonedx-py environment --output-format JSON \
+  --output-file setu-sbom.cdx.json
+```
+
+The CycloneDX document covers packages installed in that Python environment.
+CI runs both commands and retains the JSON audit and CycloneDX JSON SBOM as a
+30-day `supply-chain-reports` artifact. Vulnerability results are visibility,
+not proof of security: CI records a failing audit step and preserves its report
+without automatically upgrading the deliberately pinned ML/runtime stack.
+Generated reports are CI artifacts and should not be committed.
 
 ## Where to go next
 Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
