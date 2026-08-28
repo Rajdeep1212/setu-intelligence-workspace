@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -23,6 +24,7 @@ from app.observability import (
     set_request_id,
 )
 from app.schemas import Citation, ErrorResponse, QueryRequest, QueryResponse
+from app.security import protect_query
 
 
 configure_logging()
@@ -45,6 +47,15 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Setu API", version="0.1.0", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-API-Key"],
+    expose_headers=["X-Request-ID"],
+    max_age=600,
+)
 
 
 def _error_response(
@@ -63,23 +74,44 @@ async def correlate_and_log_request(request: Request, call_next):
     token = set_request_id(request_id)
     started = time.perf_counter()
     try:
-        try:
-            response = await call_next(request)
-        except Exception as exc:  # final safety boundary; never expose internals
-            logger.error(
-                "request_failure request_id=%s method=%s path=%s error_type=%s",
-                request_id,
-                request.method,
-                request.url.path,
-                type(exc).__name__,
-            )
+        content_length = request.headers.get("content-length")
+        request_too_large = (
+            request.method == "POST"
+            and request.url.path == "/query"
+            and content_length is not None
+            and content_length.isdigit()
+            and int(content_length) > settings.max_request_body_bytes
+        )
+        if request_too_large:
+            logger.warning("request_too_large request_id=%s", request_id)
             response = _error_response(
-                code="internal_error",
-                message="An internal error occurred.",
-                status_code=500,
+                code="request_too_large",
+                message="The request body is too large.",
+                status_code=413,
                 request_id=request_id,
             )
+        else:
+            try:
+                response = await call_next(request)
+            except Exception as exc:  # final safety boundary; never expose internals
+                logger.error(
+                    "request_failure request_id=%s method=%s path=%s error_type=%s",
+                    request_id,
+                    request.method,
+                    request.url.path,
+                    type(exc).__name__,
+                )
+                response = _error_response(
+                    code="internal_error",
+                    message="An internal error occurred.",
+                    status_code=500,
+                    request_id=request_id,
+                )
         response.headers["X-Request-ID"] = request_id
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["Cache-Control"] = "no-store"
         duration_ms = (time.perf_counter() - started) * 1000
         log = logger.error if response.status_code >= 500 else logger.info
         log(
@@ -180,6 +212,7 @@ async def ready(session: AsyncSession = Depends(get_session)):
 @app.post(
     "/query",
     response_model=QueryResponse,
+    dependencies=[Depends(protect_query)],
     responses={422: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
 async def query(payload: QueryRequest, session: AsyncSession = Depends(get_session)):

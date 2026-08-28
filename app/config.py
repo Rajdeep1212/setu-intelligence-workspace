@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlsplit
 
-from pydantic import field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
@@ -29,6 +30,11 @@ class Settings(BaseSettings):
     mlflow_tracking_uri: str = "./mlruns"
     local_inference_backend: Literal["pytorch", "openvino"] = "pytorch"
     openvino_model_dir: str = "/models/openvino"
+    setu_api_key: SecretStr | None = None
+    query_rate_limit: int = Field(default=10, ge=1, le=10_000)
+    query_rate_window_seconds: int = Field(default=60, ge=1, le=86_400)
+    max_request_body_bytes: int = Field(default=16_384, ge=1_024, le=1_048_576)
+    cors_allowed_origins: str = "http://localhost:3000"
 
     @field_validator("database_url")
     @classmethod
@@ -52,6 +58,38 @@ class Settings(BaseSettings):
             raise ValueError("OPENVINO_MODEL_DIR must not be empty")
         return value
 
+    @field_validator("setu_api_key", mode="before")
+    @classmethod
+    def normalize_api_key(cls, value):
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return None
+        return value
+
+    @field_validator("cors_allowed_origins")
+    @classmethod
+    def validate_cors_allowed_origins(cls, value: str) -> str:
+        origins = [origin.strip().rstrip("/") for origin in value.split(",")]
+        origins = [origin for origin in origins if origin]
+        for origin in origins:
+            if origin == "*":
+                raise ValueError("CORS_ALLOWED_ORIGINS must not contain a wildcard")
+            parsed = urlsplit(origin)
+            if (
+                parsed.scheme not in {"http", "https"}
+                or not parsed.netloc
+                or parsed.path
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise ValueError(
+                    "CORS_ALLOWED_ORIGINS entries must be HTTP(S) origins"
+                )
+        return ",".join(origins)
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin for origin in self.cors_allowed_origins.split(",") if origin]
+
     @property
     def llm_provider(self) -> str | None:
         if self.groq_api_key:
@@ -72,6 +110,8 @@ class Settings(BaseSettings):
 
     def operational_issues(self) -> list[str]:
         issues: list[str] = []
+        if self.setu_api_key is None:
+            issues.append("api_auth_not_configured")
         if self.llm_provider is None:
             issues.append("llm_not_configured")
         if not self.openvino_artifacts_ready():

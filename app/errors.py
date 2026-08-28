@@ -17,6 +17,18 @@ class ConfigurationUnavailableError(ServiceError):
     status_code = 503
 
 
+class AuthenticationError(ServiceError):
+    code = "authentication_required"
+    public_message = "A valid API key is required."
+    status_code = 401
+
+
+class RateLimitExceededError(ServiceError):
+    code = "rate_limit_exceeded"
+    public_message = "Too many requests. Try again later."
+    status_code = 429
+
+
 class DatabaseUnavailableError(ServiceError):
     code = "database_unavailable"
     public_message = "The database is temporarily unavailable."

@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 from sqlalchemy.exc import OperationalError
 
 from app.errors import (
@@ -15,6 +15,9 @@ from app.errors import (
 
 
 main = importlib.import_module("app.main")
+security = importlib.import_module("app.security")
+TEST_API_KEY = "unit-test-api-key"
+AUTH_HEADERS = {"X-API-Key": TEST_API_KEY}
 
 
 class FakeResult:
@@ -46,9 +49,15 @@ async def unavailable_session():
 class OperationalEndpointTests(unittest.TestCase):
     def setUp(self):
         main.app.dependency_overrides.clear()
+        self.original_api_key = main.settings.setu_api_key
+        self.original_limiter = security.query_rate_limiter
+        main.settings.setu_api_key = SecretStr(TEST_API_KEY)
+        security.query_rate_limiter = security.InMemoryRateLimiter(1_000, 60)
 
     def tearDown(self):
         main.app.dependency_overrides.clear()
+        main.settings.setu_api_key = self.original_api_key
+        security.query_rate_limiter = self.original_limiter
 
     def test_health_exposes_backend_and_request_id(self):
         with TestClient(main.app) as client:
@@ -149,7 +158,9 @@ class OperationalEndpointTests(unittest.TestCase):
     def test_invalid_request_uses_stable_safe_error(self):
         main.app.dependency_overrides[main.get_session] = healthy_session
         with TestClient(main.app) as client:
-            response = client.post("/query", json={"query": ""})
+            response = client.post(
+                "/query", json={"query": ""}, headers=AUTH_HEADERS
+            )
         self.assertEqual(response.status_code, 422)
         self.assertEqual(response.json()["error"]["code"], "invalid_request")
         self.assertEqual(
@@ -168,7 +179,9 @@ class OperationalEndpointTests(unittest.TestCase):
                 with patch.object(
                     main, "run_agent", AsyncMock(side_effect=error)
                 ):
-                    response = client.post("/query", json={"query": "test"})
+                    response = client.post(
+                        "/query", json={"query": "test"}, headers=AUTH_HEADERS
+                    )
                 self.assertEqual(response.status_code, status)
                 self.assertEqual(response.json()["error"]["code"], code)
                 self.assertNotIn("traceback", response.text.lower())
@@ -181,7 +194,9 @@ class OperationalEndpointTests(unittest.TestCase):
             patch.object(main, "run_agent", AsyncMock(side_effect=RuntimeError(secret))),
             TestClient(main.app, raise_server_exceptions=False) as client,
         ):
-            response = client.post("/query", json={"query": "test"})
+            response = client.post(
+                "/query", json={"query": "test"}, headers=AUTH_HEADERS
+            )
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response.json()["error"]["code"], "internal_error")

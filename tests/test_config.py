@@ -46,6 +46,7 @@ class SettingsTests(unittest.TestCase):
             settings = Settings(
                 _env_file=None,
                 groq_api_key="test",
+                setu_api_key="test-api-key",
                 local_inference_backend="openvino",
                 openvino_model_dir=directory,
             )
@@ -60,6 +61,38 @@ class SettingsTests(unittest.TestCase):
                     (model_dir / filename).touch()
             self.assertTrue(settings.openvino_artifacts_ready())
             self.assertEqual(settings.operational_issues(), [])
+
+    def test_api_key_is_secret_and_required_for_readiness(self):
+        missing = Settings(_env_file=None, groq_api_key="test")
+        self.assertIn("api_auth_not_configured", missing.operational_issues())
+
+        value = "unit-test-placeholder"
+        configured = Settings(
+            _env_file=None, groq_api_key="test", setu_api_key=value
+        )
+        self.assertNotIn(value, repr(configured))
+        self.assertEqual(configured.setu_api_key.get_secret_value(), value)
+
+    def test_rate_limit_and_body_size_are_validated(self):
+        for field in (
+            {"query_rate_limit": 0},
+            {"query_rate_window_seconds": 0},
+            {"max_request_body_bytes": 100},
+        ):
+            with self.assertRaises(ValidationError):
+                Settings(_env_file=None, **field)
+
+    def test_cors_origins_are_explicit_and_wildcards_are_rejected(self):
+        configured = Settings(
+            _env_file=None,
+            cors_allowed_origins="https://app.example,http://localhost:3000/",
+        )
+        self.assertEqual(
+            configured.cors_origins,
+            ["https://app.example", "http://localhost:3000"],
+        )
+        with self.assertRaises(ValidationError):
+            Settings(_env_file=None, cors_allowed_origins="*")
 
 
 if __name__ == "__main__":

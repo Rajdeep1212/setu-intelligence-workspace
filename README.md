@@ -227,6 +227,56 @@ recreating only the API service:
 docker compose up -d --no-deps --no-build --force-recreate api
 ```
 
+## Security baseline
+
+`POST /query` is fail-closed and requires the API key configured through
+`SETU_API_KEY`. Send it in the `X-API-Key` header; never place it in a URL,
+commit it, or log it:
+
+```bash
+curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $SETU_API_KEY" \
+  -d '{"query": "what is Digital Public Infrastructure"}'
+```
+
+`/health`, `/health/db`, and `/ready` remain public probe endpoints. They
+expose only coarse service state, never credentials, connection strings, or
+stack traces. Readiness returns `api_auth_not_configured` until
+`SETU_API_KEY` is set.
+
+Query traffic is limited in memory using `QUERY_RATE_LIMIT` requests per
+`QUERY_RATE_WINDOW_SECONDS` (defaults: 10 per 60 seconds). The limiter is
+global to one API process: it is neither shared across workers/replicas nor
+durable across restarts. Replace it with a distributed gateway or Redis-backed
+limit before horizontal scaling.
+
+Request safety and browser access are controlled by:
+
+| Variable | Default | Purpose |
+|---|---:|---|
+| `MAX_REQUEST_BODY_BYTES` | `16384` | Reject oversized `/query` request bodies with HTTP 413. |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated exact browser origins; `*` is rejected. |
+
+CORS allows only GET, POST, and OPTIONS with `Content-Type` and `X-API-Key`;
+credentials are disabled. Responses include `X-Content-Type-Options: nosniff`,
+`X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Cache-Control:
+no-store`, and the existing `X-Request-ID`. A Content Security Policy is not
+set because SETU is a JSON API and the built-in interactive API documentation
+loads its own browser assets.
+
+GitHub Actions runs Python 3.11 compilation, all mocked unit tests, `pip
+check`, and Compose configuration validation on pushes and pull requests. CI
+does not require `.env`, PostgreSQL, provider/API keys, model artifacts,
+Docker builds, external LLM calls, or BGE downloads. Dependency installation
+does include the production Python packages; model weights are never fetched.
+
+The current API image still runs as root and uses writable development bind
+mounts. Moving to a non-root runtime requires a deliberate cache-volume
+ownership migration and a rebuilt image, so it is deferred while host storage
+is critically low. Do not treat the current Compose file as a hardened cloud
+deployment specification.
+
 ## Where to go next
 Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
 mapped onto this scaffold, in the same order as the original project plan
