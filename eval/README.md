@@ -31,3 +31,19 @@ python -m eval.precision_at_k
 Prints overall precision@5 and a per-language breakdown — read
 `docs/ROADMAP.md` (Week 5) for why the per-language breakdown matters more
 than the aggregate number.
+
+## Citation grounding
+
+`grounding_set.jsonl` is a compact human-readable grounding fixture with five
+queries each for Bengali, Hindi, and English. Run the deterministic citation
+contract replay (no model or provider call) with:
+
+```bash
+python -m eval.grounding_metrics
+```
+
+For reviewed system outputs, pass `--predictions path.jsonl`. Each prediction
+must contain its case `id`, citations with `chunk_id`, and `claim_judgments`
+whose `supporting_chunk_ids` were assigned by a human reviewer. If judgments
+are omitted, the Unicode-safe local splitter exposes claims but deliberately
+marks them unsupported rather than pretending lexical overlap proves support.

@@ -21,6 +21,7 @@ from app.agent.llm import generate_structured
 from app.agent.models import GeneratedAnswer, RouteDecision
 from app.agent.state import AgentState
 from app.agent.tools import check_eligibility_tool, retrieve_docs_tool
+from app.grounding import abstention_message, select_citations
 
 ROUTER_SYSTEM_PROMPT = (
     "You route citizen questions about Indian government schemes and "
@@ -36,7 +37,9 @@ ANSWER_SYSTEM_PROMPT = (
     "government schemes and public documents using ONLY the provided "
     "context. If the context doesn't contain the answer, say so plainly — "
     "never invent scheme details, numbers, or eligibility criteria. Answer "
-    "in the same language the question was asked in."
+    "in the same language the question was asked in. For document evidence, "
+    "return only the chunk IDs that materially support the final answer. "
+    "Never invent a chunk ID and do not cite merely related context."
 )
 
 
@@ -70,10 +73,13 @@ async def generate_node(state: AgentState) -> dict:
             for m in state["eligibility_matches"]
         )
     elif state.get("retrieved_chunks"):
-        context = "\n\n".join(c["content"] for c in state["retrieved_chunks"])
+        context = "\n\n".join(
+            f"[chunk_id={c['id']}]\n{c['content']}"
+            for c in state["retrieved_chunks"]
+        )
     else:
         return {
-            "answer": "I couldn't find anything relevant to answer that.",
+            "answer": abstention_message(state["query"], state.get("language")),
             "citations": [],
             "confidence": 0.0,
         }
@@ -84,15 +90,18 @@ async def generate_node(state: AgentState) -> dict:
         response_model=GeneratedAnswer,
     )
 
-    citations = [
-        {
-            "document_id": c["document_id"],
-            "title": c.get("title"),
-            "url": c.get("url"),
-            "snippet": c["content"][:200],
-        }
-        for c in state.get("retrieved_chunks", [])
-    ]
+    if state["route"] == "retrieve_docs":
+        citations = select_citations(
+            state.get("retrieved_chunks", []), result.citation_ids
+        )
+        if result.abstained or not citations:
+            return {
+                "answer": abstention_message(state["query"], state.get("language")),
+                "citations": [],
+                "confidence": 0.0,
+            }
+    else:
+        citations = []
 
     return {"answer": result.answer, "citations": citations, "confidence": result.confidence}
 

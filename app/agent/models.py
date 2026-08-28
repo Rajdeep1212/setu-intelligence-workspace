@@ -38,3 +38,15 @@ class GeneratedAnswer(BaseModel):
         le=1,
         description="Self-assessed confidence that the context actually answers the question.",
     )
+    citation_ids: list[str] = Field(
+        max_length=5,
+        description=(
+            "Chunk IDs from the provided context that materially support the "
+            "answer. Never invent an ID and omit chunks that were not used."
+        ),
+    )
+    abstained: bool = Field(
+        description=(
+            "True when the supplied evidence is insufficient for a grounded answer."
+        ),
+    )

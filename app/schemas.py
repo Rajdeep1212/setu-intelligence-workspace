@@ -9,6 +9,7 @@ class QueryRequest(BaseModel):
 
 
 class Citation(BaseModel):
+    chunk_id: str
     document_id: str
     title: Optional[str] = None
     url: Optional[str] = None
