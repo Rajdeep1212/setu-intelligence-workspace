@@ -28,6 +28,10 @@ from app.language import (
     dominant_supported_script,
     target_language_instruction,
 )
+from app.numerical_grounding import (
+    NumericalGroundingResult,
+    validate_numerical_grounding,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -45,11 +49,33 @@ ANSWER_SYSTEM_PROMPT = (
     "You are Setu, an assistant that answers questions about Indian "
     "government schemes and public documents using ONLY the provided "
     "context. If the context doesn't contain the answer, say so plainly — "
-    "never invent scheme details, numbers, or eligibility criteria. Answer "
+    "never invent scheme details, numbers, or eligibility criteria. Use only "
+    "facts explicitly supported by the supplied context; do not add remembered "
+    "or external facts. Do not introduce a number, percentage, date, quantity, "
+    "or scale statement unless it is explicitly supported by evidence that you "
+    "cite. Omit unsupported details rather than guessing. Answer "
     "in the same language the question was asked in. For document evidence, "
     "return only the chunk IDs that materially support the final answer. "
     "Never invent a chunk ID and do not cite merely related context."
 )
+
+NUMERICAL_CORRECTION_INSTRUCTION = (
+    "Correction required: regenerate the answer once from the same evidence. "
+    "Use only facts explicitly supported by that evidence. Every number, "
+    "percentage, date, quantity, and scale statement must be explicitly "
+    "supported by a chunk ID returned as a citation. Omit unsupported details."
+)
+
+
+def _selected_citation_evidence(
+    retrieved_chunks: list[dict], citations: list[dict]
+) -> list[str]:
+    selected_ids = {citation["chunk_id"] for citation in citations}
+    return [
+        str(chunk.get("content", ""))
+        for chunk in retrieved_chunks
+        if str(chunk["id"]) in selected_ids
+    ]
 
 
 async def route_node(state: AgentState) -> dict:
@@ -96,38 +122,98 @@ async def generate_node(state: AgentState) -> dict:
 
     target_language = query_language(state["query"], state.get("language"))
     user_prompt = f"Context:\n{context}\n\nQuestion: {state['query']}"
-    result = generate_structured(
-        stage="answer_generation",
-        system_prompt=(
-            f"{ANSWER_SYSTEM_PROMPT}\n\n"
-            f"{target_language_instruction(target_language)}"
-        ),
-        user_prompt=user_prompt,
-        response_model=GeneratedAnswer,
+    system_prompt = (
+        f"{ANSWER_SYSTEM_PROMPT}\n\n"
+        f"{target_language_instruction(target_language)}"
     )
+    retrieved_chunks = state.get("retrieved_chunks", [])
+    correction_categories: str | None = None
 
-    if not answer_uses_target_language(result.answer, target_language):
-        logger.warning(
-            "answer_language_mismatch stage=answer_generation "
-            "target_language=%s detected_script=%s correction_attempt=1",
-            target_language,
-            dominant_supported_script(result.answer),
-        )
+    for attempt in (1, 2):
         result = generate_structured(
             stage="answer_generation",
-            system_prompt=(
-                f"{ANSWER_SYSTEM_PROMPT}\n\n"
-                f"{target_language_instruction(target_language, correction=True)}"
-            ),
+            system_prompt=system_prompt,
             user_prompt=user_prompt,
             response_model=GeneratedAnswer,
         )
-        if not answer_uses_target_language(result.answer, target_language):
+
+        if state["route"] == "retrieve_docs":
+            citations = select_citations(retrieved_chunks, result.citation_ids)
+            if result.abstained or not citations:
+                return {
+                    "answer": abstention_message(
+                        state["query"], state.get("language")
+                    ),
+                    "citations": [],
+                    "confidence": 0.0,
+                }
+            numerical_result = validate_numerical_grounding(
+                result.answer,
+                _selected_citation_evidence(retrieved_chunks, citations),
+            )
+        else:
+            citations = []
+            numerical_result = NumericalGroundingResult(0, 0)
+
+        language_valid = answer_uses_target_language(
+            result.answer, target_language
+        )
+        numerical_valid = numerical_result.is_valid
+        if language_valid and numerical_valid:
+            if attempt == 2:
+                logger.info(
+                    "answer_correction_succeeded stage=answer_generation "
+                    "attempt=2 validation_categories=%s unsupported_count=0",
+                    correction_categories or "unknown",
+                )
+            return {
+                "answer": result.answer,
+                "citations": citations,
+                "confidence": result.confidence,
+            }
+
+        failed_categories = ",".join(
+            category
+            for category, failed in (
+                ("language", not language_valid),
+                ("numerical_grounding", not numerical_valid),
+            )
+            if failed
+        )
+        if not language_valid:
+            event = (
+                "answer_language_mismatch"
+                if attempt == 1
+                else "answer_language_correction_failed"
+            )
             logger.warning(
-                "answer_language_correction_failed stage=answer_generation "
-                "target_language=%s detected_script=%s correction_attempt=1",
+                "%s stage=answer_generation attempt=%s target_language=%s "
+                "detected_script=%s correction_attempt=1",
+                event,
+                attempt,
                 target_language,
                 dominant_supported_script(result.answer),
+            )
+        if not numerical_valid:
+            event = (
+                "answer_numerical_grounding_mismatch"
+                if attempt == 1
+                else "answer_numerical_grounding_correction_failed"
+            )
+            logger.warning(
+                "%s stage=answer_generation attempt=%s unsupported_count=%s "
+                "correction_attempt=1",
+                event,
+                attempt,
+                numerical_result.unsupported_count,
+            )
+
+        if attempt == 2:
+            logger.warning(
+                "answer_correction_failed stage=answer_generation attempt=2 "
+                "validation_categories=%s unsupported_count=%s",
+                failed_categories,
+                numerical_result.unsupported_count,
             )
             return {
                 "answer": abstention_message(state["query"], target_language),
@@ -135,20 +221,20 @@ async def generate_node(state: AgentState) -> dict:
                 "confidence": 0.0,
             }
 
-    if state["route"] == "retrieve_docs":
-        citations = select_citations(
-            state.get("retrieved_chunks", []), result.citation_ids
+        logger.warning(
+            "answer_correction_started stage=answer_generation attempt=1 "
+            "validation_categories=%s unsupported_count=%s",
+            failed_categories,
+            numerical_result.unsupported_count,
         )
-        if result.abstained or not citations:
-            return {
-                "answer": abstention_message(state["query"], state.get("language")),
-                "citations": [],
-                "confidence": 0.0,
-            }
-    else:
-        citations = []
+        correction_categories = failed_categories
+        system_prompt = (
+            f"{ANSWER_SYSTEM_PROMPT}\n\n"
+            f"{target_language_instruction(target_language, correction=True)}\n\n"
+            f"{NUMERICAL_CORRECTION_INSTRUCTION}"
+        )
 
-    return {"answer": result.answer, "citations": citations, "confidence": result.confidence}
+    raise AssertionError("answer generation attempts exhausted")
 
 
 def _pick_route(state: AgentState) -> str:
