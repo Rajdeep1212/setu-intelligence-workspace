@@ -331,6 +331,12 @@ not proof of security: CI records a failing audit step and preserves its report
 without automatically upgrading the deliberately pinned ML/runtime stack.
 Generated reports are CI artifacts and should not be committed.
 
+## Deployment readiness
+
+Before any deployment, follow `docs/DEPLOYMENT.md` for the frozen backend
+contract, production configuration gates, database backup/restore procedure,
+latency decision, and API-only rollback plan.
+
 ## Where to go next
 Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
 mapped onto this scaffold, in the same order as the original project plan

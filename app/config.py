@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     query_rate_window_seconds: int = Field(default=60, ge=1, le=86_400)
     max_request_body_bytes: int = Field(default=16_384, ge=1_024, le=1_048_576)
     cors_allowed_origins: str = "http://localhost:3000"
+    groq_request_timeout_seconds: float = Field(default=600, ge=1, le=3_600)
+    groq_connect_timeout_seconds: float = Field(default=5, ge=1, le=60)
+    groq_max_retries: int = Field(default=2, ge=0, le=5)
+    database_pool_size: int = Field(default=5, ge=1, le=100)
+    database_max_overflow: int = Field(default=10, ge=0, le=100)
+    database_pool_timeout_seconds: float = Field(default=30, ge=1, le=300)
+    database_pool_recycle_seconds: int = Field(default=1_800, ge=60, le=86_400)
 
     @field_validator("database_url")
     @classmethod

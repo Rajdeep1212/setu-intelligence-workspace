@@ -82,6 +82,20 @@ class SettingsTests(unittest.TestCase):
             with self.assertRaises(ValidationError):
                 Settings(_env_file=None, **field)
 
+    def test_external_timeout_retry_and_database_pool_limits_are_validated(self):
+        invalid_fields = (
+            {"groq_request_timeout_seconds": 0},
+            {"groq_connect_timeout_seconds": 0},
+            {"groq_max_retries": -1},
+            {"database_pool_size": 0},
+            {"database_max_overflow": -1},
+            {"database_pool_timeout_seconds": 0},
+            {"database_pool_recycle_seconds": 1},
+        )
+        for field in invalid_fields:
+            with self.subTest(field=field), self.assertRaises(ValidationError):
+                Settings(_env_file=None, **field)
+
     def test_cors_origins_are_explicit_and_wildcards_are_rejected(self):
         configured = Settings(
             _env_file=None,

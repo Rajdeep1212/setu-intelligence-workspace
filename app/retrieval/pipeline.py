@@ -19,6 +19,7 @@ need to run any models yet.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -44,13 +45,13 @@ async def retrieve(
     final_k: int = 5,
 ) -> list[dict]:
     try:
-        query_vector = embed_chunks([query])[0]
+        query_vector = (await asyncio.to_thread(embed_chunks, [query]))[0]
 
         dense_results = await dense_search(session, query_vector, language, candidate_k)
         keyword_results = await keyword_search(session, query, language, candidate_k)
 
         fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
-        return rerank(query, fused, top_k=final_k)
+        return await asyncio.to_thread(rerank, query, fused, top_k=final_k)
     except SQLAlchemyError as exc:
         logger.error("retrieval_database_failure request_id=%s", get_request_id())
         raise DatabaseUnavailableError() from exc

@@ -1,6 +1,6 @@
 services:
   db:
-    image: pgvector/pgvector:pg16
+    image: ${SETU_DB_IMAGE:-pgvector/pgvector:pg16}
     container_name: setu-db
     restart: unless-stopped
     environment:
@@ -19,6 +19,7 @@ services:
       retries: 10
 
   api:
+    image: ${SETU_API_IMAGE:-setu-api:latest}
     build:
       context: .
       dockerfile: Dockerfile

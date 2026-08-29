@@ -36,6 +36,17 @@ jobs:
         run: python -m pip check
 
       - name: Validate Compose configuration
+        env:
+          COMPOSE_DISABLE_ENV_FILE: "1"
+          POSTGRES_USER: ci-setu
+          POSTGRES_PASSWORD: ci-only-placeholder
+          POSTGRES_DB: ci-setu
+          SETU_DB_IMAGE: pgvector/pgvector:pg16
+          SETU_API_IMAGE: setu-api:ci
+          DATABASE_URL: postgresql+asyncpg://ci-setu:ci-only-placeholder@db:5432/ci-setu
+          SETU_API_KEY: ci-only-placeholder
+          GROQ_API_KEY: ci-only-placeholder
+          CORS_ALLOWED_ORIGINS: https://ci.invalid
         run: |
           docker compose config --quiet
           docker compose -f docker-compose.yml -f compose.production.yml config --quiet

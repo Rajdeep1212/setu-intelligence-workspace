@@ -12,6 +12,7 @@ carried inside the state dict — state is meant to be the serializable
 
 from __future__ import annotations
 
+import asyncio
 import functools
 import logging
 
@@ -79,7 +80,8 @@ def _selected_citation_evidence(
 
 
 async def route_node(state: AgentState) -> dict:
-    decision = generate_structured(
+    decision = await asyncio.to_thread(
+        generate_structured,
         stage="route_decision",
         system_prompt=ROUTER_SYSTEM_PROMPT,
         user_prompt=state["query"],
@@ -130,7 +132,8 @@ async def generate_node(state: AgentState) -> dict:
     correction_categories: str | None = None
 
     for attempt in (1, 2):
-        result = generate_structured(
+        result = await asyncio.to_thread(
+            generate_structured,
             stage="answer_generation",
             system_prompt=system_prompt,
             user_prompt=user_prompt,

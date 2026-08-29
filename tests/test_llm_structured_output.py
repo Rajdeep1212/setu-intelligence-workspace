@@ -165,6 +165,54 @@ class NativeJSONSchemaTests(unittest.TestCase):
 
 
 class StageAndDiagnosticsTests(unittest.TestCase):
+    def test_groq_client_uses_explicit_finite_timeout_and_retry_policy(self):
+        original_client = llm._client
+        original_provider = llm._provider
+        llm._client = None
+        llm._provider = None
+        try:
+            with (
+                patch.object(llm.settings, "groq_api_key", "offline-key"),
+                patch.object(llm.settings, "gemini_api_key", None),
+                patch.object(llm.settings, "groq_connect_timeout_seconds", 5),
+                patch.object(llm.settings, "groq_request_timeout_seconds", 600),
+                patch.object(llm.settings, "groq_max_retries", 2),
+                patch("openai.OpenAI") as constructor,
+            ):
+                configured_client, provider = llm._get_client()
+
+            timeout = constructor.call_args.kwargs["timeout"]
+            self.assertIs(configured_client, constructor.return_value)
+            self.assertEqual(provider, "groq")
+            self.assertEqual(timeout.connect, 5)
+            self.assertEqual(timeout.read, 600)
+            self.assertEqual(timeout.write, 600)
+            self.assertEqual(timeout.pool, 600)
+            self.assertEqual(constructor.call_args.kwargs["max_retries"], 2)
+        finally:
+            llm._client = original_client
+            llm._provider = original_provider
+
+    def test_graph_offloads_blocking_provider_calls_from_the_event_loop(self):
+        route_result = RouteDecision(
+            route="retrieve_docs", scheme_name_hint=None
+        )
+
+        async def verify_to_thread(function, **kwargs):
+            self.assertIs(function, graph.generate_structured)
+            self.assertEqual(kwargs["stage"], "route_decision")
+            return route_result
+
+        with patch.object(
+            graph.asyncio, "to_thread", AsyncMock(side_effect=verify_to_thread)
+        ) as offload:
+            result = asyncio.run(
+                graph.route_node({"query": "question", "language": "en"})
+            )
+
+        self.assertEqual(result["route"], "retrieve_docs")
+        offload.assert_awaited_once()
+
     def test_graph_passes_both_stage_labels(self):
         route_result = RouteDecision(
             route="retrieve_docs", scheme_name_hint=None

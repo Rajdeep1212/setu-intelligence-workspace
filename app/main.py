@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agent.graph import run_agent
 from app.config import settings
-from app.db import get_session
+from app.db import engine, get_session
 from app.errors import DatabaseUnavailableError, ServiceError
 from app.observability import (
     configure_logging,
@@ -42,8 +42,11 @@ async def lifespan(_: FastAPI):
     )
     if issues:
         logger.warning("configuration_not_ready issues=%s", ",".join(issues))
-    yield
-    logger.info("application_shutdown")
+    try:
+        yield
+    finally:
+        await engine.dispose()
+        logger.info("application_shutdown database_pool_disposed=true")
 
 
 app = FastAPI(title="Setu API", version="0.1.0", lifespan=lifespan)

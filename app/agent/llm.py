@@ -24,6 +24,7 @@ import logging
 import re
 from typing import Literal, TypeVar
 
+import httpx
 from pydantic import BaseModel, ValidationError
 
 from app.config import settings
@@ -130,6 +131,11 @@ def _get_client():
         _client = OpenAI(
             api_key=settings.groq_api_key,
             base_url="https://api.groq.com/openai/v1",
+            timeout=httpx.Timeout(
+                timeout=settings.groq_request_timeout_seconds,
+                connect=settings.groq_connect_timeout_seconds,
+            ),
+            max_retries=settings.groq_max_retries,
         )
         _provider = "groq"
 

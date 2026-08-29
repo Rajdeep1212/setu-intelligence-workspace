@@ -3,10 +3,17 @@ services:
     # Production databases should be reachable only over the private service
     # network. Publish a port at the deployment layer only when required.
     ports: !reset []
+    image: ${SETU_DB_IMAGE:?SETU_DB_IMAGE is required for production}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required for production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required for production}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required for production}
 
   api:
     # A reverse proxy or service network should reach api:8000 directly.
     ports: !reset []
+    image: ${SETU_API_IMAGE:?SETU_API_IMAGE is required for production}
+    env_file: !reset []
     user: "10001:10001"
     read_only: true
     cap_drop:
@@ -14,6 +21,11 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required for production}
+      SETU_API_KEY: ${SETU_API_KEY:?SETU_API_KEY is required for production}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?CORS_ALLOWED_ORIGINS is required for production}
       HF_HUB_OFFLINE: "1"
       TRANSFORMERS_OFFLINE: "1"
     tmpfs:
