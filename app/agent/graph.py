@@ -13,6 +13,7 @@ carried inside the state dict — state is meant to be the serializable
 from __future__ import annotations
 
 import functools
+import logging
 
 from langgraph.graph import END, StateGraph
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +22,15 @@ from app.agent.llm import generate_structured
 from app.agent.models import GeneratedAnswer, RouteDecision
 from app.agent.state import AgentState
 from app.agent.tools import check_eligibility_tool, retrieve_docs_tool
-from app.grounding import abstention_message, select_citations
+from app.grounding import abstention_message, query_language, select_citations
+from app.language import (
+    answer_uses_target_language,
+    dominant_supported_script,
+    target_language_instruction,
+)
+
+
+logger = logging.getLogger(__name__)
 
 ROUTER_SYSTEM_PROMPT = (
     "You route citizen questions about Indian government schemes and "
@@ -85,12 +94,46 @@ async def generate_node(state: AgentState) -> dict:
             "confidence": 0.0,
         }
 
+    target_language = query_language(state["query"], state.get("language"))
+    user_prompt = f"Context:\n{context}\n\nQuestion: {state['query']}"
     result = generate_structured(
         stage="answer_generation",
-        system_prompt=ANSWER_SYSTEM_PROMPT,
-        user_prompt=f"Context:\n{context}\n\nQuestion: {state['query']}",
+        system_prompt=(
+            f"{ANSWER_SYSTEM_PROMPT}\n\n"
+            f"{target_language_instruction(target_language)}"
+        ),
+        user_prompt=user_prompt,
         response_model=GeneratedAnswer,
     )
+
+    if not answer_uses_target_language(result.answer, target_language):
+        logger.warning(
+            "answer_language_mismatch stage=answer_generation "
+            "target_language=%s detected_script=%s correction_attempt=1",
+            target_language,
+            dominant_supported_script(result.answer),
+        )
+        result = generate_structured(
+            stage="answer_generation",
+            system_prompt=(
+                f"{ANSWER_SYSTEM_PROMPT}\n\n"
+                f"{target_language_instruction(target_language, correction=True)}"
+            ),
+            user_prompt=user_prompt,
+            response_model=GeneratedAnswer,
+        )
+        if not answer_uses_target_language(result.answer, target_language):
+            logger.warning(
+                "answer_language_correction_failed stage=answer_generation "
+                "target_language=%s detected_script=%s correction_attempt=1",
+                target_language,
+                dominant_supported_script(result.answer),
+            )
+            return {
+                "answer": abstention_message(state["query"], target_language),
+                "citations": [],
+                "confidence": 0.0,
+            }
 
     if state["route"] == "retrieve_docs":
         citations = select_citations(
