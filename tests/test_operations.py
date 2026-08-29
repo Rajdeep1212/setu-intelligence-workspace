@@ -245,6 +245,7 @@ class FailureClassificationTests(unittest.IsolatedAsyncioTestCase):
         ):
             with self.assertRaises(LLMProviderError):
                 llm.generate_structured(
+                    stage="route_decision",
                     system_prompt="system",
                     user_prompt="user",
                     response_model=Response,

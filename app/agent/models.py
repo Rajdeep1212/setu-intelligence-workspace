@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class RouteDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     route: Literal["retrieve_docs", "check_eligibility"] = Field(
         description=(
             "'check_eligibility' only when the user is asking whether they "
@@ -26,6 +28,8 @@ class RouteDecision(BaseModel):
 
 
 class GeneratedAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     answer: str = Field(
         description=(
             "A grounded answer based ONLY on the provided context, in the "

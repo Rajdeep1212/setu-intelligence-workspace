@@ -45,6 +45,7 @@ ANSWER_SYSTEM_PROMPT = (
 
 async def route_node(state: AgentState) -> dict:
     decision = generate_structured(
+        stage="route_decision",
         system_prompt=ROUTER_SYSTEM_PROMPT,
         user_prompt=state["query"],
         response_model=RouteDecision,
@@ -85,6 +86,7 @@ async def generate_node(state: AgentState) -> dict:
         }
 
     result = generate_structured(
+        stage="answer_generation",
         system_prompt=ANSWER_SYSTEM_PROMPT,
         user_prompt=f"Context:\n{context}\n\nQuestion: {state['query']}",
         response_model=GeneratedAnswer,
