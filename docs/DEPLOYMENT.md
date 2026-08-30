@@ -77,6 +77,20 @@ silently increase timeouts to make a platform appear compatible.
 
 ## Configuration and secrets contract
 
+### Private Cloud Run database contract
+
+Cloud Run uses the platform-mounted Cloud SQL Unix socket. Leave
+`DATABASE_URL` unset and inject `DATABASE_USER`, `DATABASE_PASSWORD`,
+`DATABASE_NAME`, and `DATABASE_UNIX_SOCKET` as separate values. The password
+must come from a numerically pinned Secret Manager version. The socket value
+is derived by deployment automation and must not be committed or printed.
+
+The container listens on the runtime-provided `PORT`, runs as UID/GID
+`10001:10001`, and includes the two reviewed OpenVINO artifact directories at
+`/models/openvino`. Select `LOCAL_INFERENCE_BACKEND=openvino` and keep model
+downloads disabled for the private preview. Application startup performs no
+schema or extension DDL; database bootstrap remains an operator-only action.
+
 The production Compose overlay resets the service `env_file`, so it does not
 inject the repository's local `.env` into the container. Compose can still use
 a project `.env` for interpolation unless the operator disables that behavior.

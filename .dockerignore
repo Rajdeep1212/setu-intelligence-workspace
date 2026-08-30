@@ -16,17 +16,35 @@
 .venv-*/
 venv/
 
-# Local model, tool, and runtime artifacts
+# Local tool and runtime artifacts. The two reviewed OpenVINO model
+# directories are deliberately included for the immutable Cloud Run image.
 .cache/
 cache/
 hf_cache/
 transformers_cache/
 sentence_transformers_data/
-models/openvino/
 mlruns/
 *.log
 tmp/
 temp/
+
+# Backups, generated reports, and credential-like files
+backups/
+*.dump
+*.sql.gz
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*service-account*.json
+.config/gcloud/
+gcloud/
+pip-audit*.json
+*sbom*.json
+.coverage
+coverage.xml
+htmlcov/
 
 # Editor and operating-system artifacts
 .vscode/

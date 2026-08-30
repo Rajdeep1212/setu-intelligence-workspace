@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 
 from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from sqlalchemy.engine import make_url
+from sqlalchemy.engine import URL, make_url
 
 
 OPENVINO_MODELS = ("bge-m3", "bge-reranker-v2-m3")
@@ -22,7 +22,13 @@ class Settings(BaseSettings):
         env_file=".env", extra="ignore", hide_input_in_errors=True
     )
 
-    database_url: str = "postgresql+asyncpg://setu:setu@localhost:5432/setu"
+    database_url: str | None = "postgresql+asyncpg://setu:setu@localhost:5432/setu"
+    database_user: str = "setu"
+    database_password: SecretStr | None = None
+    database_name: str = "setu"
+    database_host: str = "localhost"
+    database_port: int = Field(default=5432, ge=1, le=65_535)
+    database_unix_socket: str | None = None
     groq_api_key: str | None = None
     gemini_api_key: str | None = None
     langfuse_public_key: str | None = None
@@ -43,9 +49,11 @@ class Settings(BaseSettings):
     database_pool_timeout_seconds: float = Field(default=30, ge=1, le=300)
     database_pool_recycle_seconds: int = Field(default=1_800, ge=60, le=86_400)
 
-    @field_validator("database_url")
+    @field_validator("database_url", mode="before")
     @classmethod
-    def validate_database_url(cls, value: str) -> str:
+    def validate_database_url(cls, value):
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return None
         try:
             url = make_url(value)
         except Exception as exc:
@@ -57,6 +65,26 @@ class Settings(BaseSettings):
                 "DATABASE_URL must use postgresql+asyncpg and include host and database"
             )
         return value
+
+    @field_validator("database_user", "database_name", "database_host")
+    @classmethod
+    def validate_database_component(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Database connection components must not be empty")
+        return value
+
+    @field_validator("database_unix_socket", mode="before")
+    @classmethod
+    def validate_database_unix_socket(cls, value):
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return None
+        if (
+            not isinstance(value, str)
+            or not value.startswith("/")
+            or "\x00" in value
+        ):
+            raise ValueError("DATABASE_UNIX_SOCKET must be an absolute directory")
+        return value.rstrip("/")
 
     @field_validator("openvino_model_dir")
     @classmethod
@@ -96,6 +124,29 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         return [origin for origin in self.cors_allowed_origins.split(",") if origin]
+
+    @property
+    def database_engine_url(self) -> URL:
+        if self.database_url:
+            return make_url(self.database_url)
+        if self.database_password is None:
+            raise ValueError(
+                "DATABASE_PASSWORD is required when DATABASE_URL is unset"
+            )
+        return URL.create(
+            "postgresql+asyncpg",
+            username=self.database_user,
+            password=self.database_password.get_secret_value(),
+            host=None if self.database_unix_socket else self.database_host,
+            port=None if self.database_unix_socket else self.database_port,
+            database=self.database_name,
+        )
+
+    @property
+    def database_connect_args(self) -> dict[str, str]:
+        if self.database_unix_socket:
+            return {"host": self.database_unix_socket}
+        return {}
 
     @property
     def llm_provider(self) -> str | None:

@@ -24,6 +24,7 @@ ARG APP_GID=10001
 ENV HOME=/home/setu \
     HF_HOME=/cache/huggingface \
     PATH="/opt/venv/bin:$PATH" \
+    PORT=8000 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TMPDIR=/tmp
@@ -41,9 +42,10 @@ COPY --from=builder /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=${APP_UID}:${APP_GID} app ./app
 COPY --chown=${APP_UID}:${APP_GID} ingestion ./ingestion
+COPY --chown=${APP_UID}:${APP_GID} models/openvino ./models/openvino
 
 USER ${APP_UID}:${APP_GID}
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port \"${PORT:-8000}\""]

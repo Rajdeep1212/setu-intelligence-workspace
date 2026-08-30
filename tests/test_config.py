@@ -29,6 +29,49 @@ class SettingsTests(unittest.TestCase):
             Settings(_env_file=None, database_url=f"not-a-url-{secret}")
         self.assertNotIn(secret, str(raised.exception))
 
+    def test_local_database_url_preserves_tcp_defaults(self):
+        settings = Settings(_env_file=None)
+        url = settings.database_engine_url
+
+        self.assertEqual(url.drivername, "postgresql+asyncpg")
+        self.assertEqual(url.username, "setu")
+        self.assertEqual(url.host, "localhost")
+        self.assertEqual(url.port, 5432)
+        self.assertEqual(url.database, "setu")
+        self.assertEqual(settings.database_connect_args, {})
+
+    def test_component_mode_requires_a_database_password(self):
+        settings = Settings(_env_file=None, database_url=None)
+        with self.assertRaisesRegex(ValueError, "DATABASE_PASSWORD is required"):
+            _ = settings.database_engine_url
+
+    def test_cloud_sql_socket_uses_components_and_hides_password(self):
+        password = "cloud-password-must-not-leak"
+        settings = Settings(
+            _env_file=None,
+            database_url=None,
+            database_user="setu_app",
+            database_password=password,
+            database_name="setu",
+            database_unix_socket="/cloudsql/internal-identity/",
+        )
+
+        url = settings.database_engine_url
+        self.assertIsNone(url.host)
+        self.assertIsNone(url.port)
+        self.assertEqual(url.username, "setu_app")
+        self.assertEqual(url.database, "setu")
+        self.assertEqual(
+            settings.database_connect_args,
+            {"host": "/cloudsql/internal-identity"},
+        )
+        self.assertNotIn(password, repr(settings))
+        self.assertNotIn(password, str(url))
+
+    def test_socket_path_must_be_absolute(self):
+        with self.assertRaises(ValidationError):
+            Settings(_env_file=None, database_unix_socket="relative/socket")
+
     def test_llm_provider_precedence_and_missing_configuration(self):
         missing = Settings(_env_file=None)
         self.assertIsNone(missing.llm_provider)
