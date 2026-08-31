@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="route-state" role="status"><span className="route-state-mark" /><p className="mono-label">Preparing SETU workspace</p><h1>Loading evidence-backed intelligence…</h1></main>; }
