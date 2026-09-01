@@ -56,7 +56,7 @@ query_rate_limiter = InMemoryRateLimiter(
 )
 
 
-async def protect_query(
+async def require_api_key(
     x_api_key: Annotated[str | None, Header(alias="X-API-Key")] = None,
 ) -> None:
     configured_key = settings.setu_api_key
@@ -69,6 +69,13 @@ async def protect_query(
     if not supplied or not hmac.compare_digest(supplied, expected):
         logger.warning("authentication_failed request_id=%s", get_request_id())
         raise AuthenticationError()
+
+
+async def protect_query(
+    x_api_key: Annotated[str | None, Header(alias="X-API-Key")] = None,
+) -> None:
+    """Authenticate and apply the provider-facing query rate limit."""
+    await require_api_key(x_api_key)
 
     if not await query_rate_limiter.allow():
         logger.warning("rate_limit_exceeded request_id=%s", get_request_id())

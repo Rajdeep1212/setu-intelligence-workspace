@@ -35,6 +35,12 @@ class DatabaseUnavailableError(ServiceError):
     status_code = 503
 
 
+class SourceNotFoundError(ServiceError):
+    code = "source_not_found"
+    public_message = "The requested source was not found."
+    status_code = 404
+
+
 class RetrievalUnavailableError(ServiceError):
     code = "retrieval_unavailable"
     public_message = "Document retrieval is temporarily unavailable."

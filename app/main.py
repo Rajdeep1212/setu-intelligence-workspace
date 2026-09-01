@@ -4,8 +4,10 @@ import logging
 import time
 import uuid
 from contextlib import asynccontextmanager
+from typing import Annotated, Literal
+from uuid import UUID
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -23,8 +25,16 @@ from app.observability import (
     reset_request_id,
     set_request_id,
 )
-from app.schemas import Citation, ErrorResponse, QueryRequest, QueryResponse
-from app.security import protect_query
+from app.schemas import (
+    Citation,
+    ErrorResponse,
+    QueryRequest,
+    QueryResponse,
+    SourceDetail,
+    SourcesResponse,
+)
+from app.security import protect_query, require_api_key
+from app.sources import get_source, list_sources
 
 
 configure_logging()
@@ -210,6 +220,43 @@ async def ready(session: AsyncSession = Depends(get_session)):
     if issues:
         payload["issues"] = issues
     return JSONResponse(status_code=200 if not issues else 503, content=payload)
+
+
+@app.get(
+    "/sources",
+    response_model=SourcesResponse,
+    dependencies=[Depends(require_api_key)],
+    responses={401: {"model": ErrorResponse}, 422: {"model": ErrorResponse}},
+)
+async def sources(
+    page: Annotated[int, Query(ge=1, le=10_000)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=25)] = 10,
+    search: Annotated[str | None, Query(max_length=100)] = None,
+    language: Literal["en", "hi", "bn"] | None = None,
+    has_eligibility: bool | None = None,
+    session: AsyncSession = Depends(get_session),
+):
+    return await list_sources(
+        session,
+        page=page,
+        page_size=page_size,
+        search=search,
+        language=language,
+        has_eligibility=has_eligibility,
+    )
+
+
+@app.get(
+    "/sources/{source_id}",
+    response_model=SourceDetail,
+    dependencies=[Depends(require_api_key)],
+    responses={401: {"model": ErrorResponse}, 404: {"model": ErrorResponse}},
+)
+async def source_detail(
+    source_id: UUID,
+    session: AsyncSession = Depends(get_session),
+):
+    return await get_source(session, source_id)
 
 
 @app.post(
