@@ -31,6 +31,7 @@ async def dense_search(
                 c.content,
                 c.language,
                 d.title,
+                d.source,
                 d.url,
                 1 - (c.embedding <=> CAST(:embedding AS vector)) AS score
             FROM chunks c

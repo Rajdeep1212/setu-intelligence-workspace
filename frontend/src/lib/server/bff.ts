@@ -1,4 +1,4 @@
-import { eligibilityResponse, getDemoSource, getDemoSources, demoResponse } from "@/lib/fixtures";
+import { getDemoSource, getDemoSources, demoResponse } from "@/lib/fixtures";
 import { queryResponseSchema, sourceDetailSchema, sourceFiltersSchema, sourcesResponseSchema, type QueryRequest, type QueryResponse, type SourceDetail, type SourcesResponse } from "@/lib/contracts";
 
 export type DataMode = "demo" | "local" | "cloud";
@@ -7,7 +7,9 @@ type Transport = typeof fetch;
 export class BffError extends Error { constructor(public readonly code: string, public readonly status: number, message: string) { super(message); } }
 
 export function dataMode(environment: NodeJS.ProcessEnv = process.env): DataMode { const value = environment.SETU_DATA_MODE ?? "demo"; return value === "local" || value === "cloud" ? value : "demo"; }
-export function validateSameSite(request: Request): boolean { const site = request.headers.get("sec-fetch-site"); if (site && !["same-origin", "same-site", "none"].includes(site)) return false; const origin = request.headers.get("origin"); return !origin || new URL(origin).origin === new URL(request.url).origin; }
+export function validateSameSite(request: Request): boolean { const site = request.headers.get("sec-fetch-site"); if (site && !["same-origin", "same-site", "none"].includes(site)) return false; const origin = request.headers.get("origin"); if (!origin) return true; try { return new URL(origin).origin === new URL(request.url).origin; } catch { return false; } }
+
+export function isEligibilityPreviewRequest(input: QueryRequest): boolean { return input.query.trim().toLowerCase().startsWith("eligibility assessment:"); }
 
 export function localBackendOrigin(environment: NodeJS.ProcessEnv = process.env): string {
   const raw = environment.SETU_BACKEND_URL; if (!raw) throw new BffError("LIVE_NOT_CONFIGURED", 503, "Local backend integration is not configured.");
@@ -35,7 +37,8 @@ async function upstream<T>(path: string, init: RequestInit, schema: { parse(valu
 
 export async function queryThroughBff(input: QueryRequest, options: { transport?: Transport; environment?: NodeJS.ProcessEnv } = {}): Promise<QueryResponse> {
   const environment = options.environment ?? process.env; const mode = dataMode(environment);
-  if (mode === "demo") return input.query.startsWith("Eligibility assessment:") ? eligibilityResponse : demoResponse;
+  if (isEligibilityPreviewRequest(input)) throw new BffError("ELIGIBILITY_UNVERIFIED", 503, "Live eligibility evaluation is intentionally unavailable until its rules are reviewed, versioned, and linked to official-source provenance.");
+  if (mode === "demo") return demoResponse;
   if (mode === "cloud") throw new BffError("CLOUD_ADAPTER_DISABLED", 503, "The future cloud adapter is not active.");
   return upstream("/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) }, queryResponseSchema, 90_000, options.transport ?? fetch, environment);
 }

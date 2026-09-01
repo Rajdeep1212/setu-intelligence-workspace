@@ -1,6 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class QueryRequest(BaseModel):
@@ -12,15 +12,53 @@ class Citation(BaseModel):
     chunk_id: str
     document_id: str
     title: Optional[str] = None
+    source: Optional[str] = None
     url: Optional[str] = None
     snippet: Optional[str] = None
 
 
+class AnswerSection(BaseModel):
+    text: str = Field(min_length=1)
+    citation_ids: list[str] = Field(default_factory=list, max_length=5)
+
+    @field_validator("citation_ids")
+    @classmethod
+    def reject_duplicate_citations(cls, value: list[str]) -> list[str]:
+        if any(not citation_id.strip() for citation_id in value):
+            raise ValueError("section citation IDs must not be blank")
+        if len(value) != len(set(value)):
+            raise ValueError("section citation IDs must be unique")
+        return value
+
+
 class QueryResponse(BaseModel):
     answer: str
-    citations: list[Citation] = Field(default_factory=list)
+    citations: list[Citation] = Field(default_factory=list, max_length=5)
+    sections: list[AnswerSection] = Field(default_factory=list, max_length=12)
     route: Optional[str] = None
     confidence: Optional[float] = None
+    response_status: Literal["answered", "abstained", "eligibility_unverified"] = (
+        "answered"
+    )
+
+    @field_validator("citations")
+    @classmethod
+    def reject_duplicate_citations(cls, value: list[Citation]) -> list[Citation]:
+        chunk_ids = [citation.chunk_id for citation in value]
+        if len(chunk_ids) != len(set(chunk_ids)):
+            raise ValueError("citation chunk IDs must be unique")
+        return value
+
+    @model_validator(mode="after")
+    def validate_section_citations(self):
+        retrieved_ids = {citation.chunk_id for citation in self.citations}
+        if any(
+            citation_id not in retrieved_ids
+            for section in self.sections
+            for citation_id in section.citation_ids
+        ):
+            raise ValueError("section citation ID is not present in citations")
+        return self
 
 
 class ErrorDetail(BaseModel):

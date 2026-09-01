@@ -6,9 +6,10 @@ from unittest.mock import patch
 
 from pydantic import ValidationError
 
-from app.agent.graph import generate_node
-from app.agent.models import GeneratedAnswer
+from app.agent.graph import generate_node, run_agent
+from app.agent.models import GeneratedAnswer, GeneratedClaim
 from app.grounding import abstention_message, select_citations
+from app.schemas import AnswerSection, Citation, QueryResponse
 from eval.grounding_metrics import extract_claims, structural_replay, summarize
 
 
@@ -23,6 +24,27 @@ def chunk(chunk_id, content, title=None):
 
 
 class CitationSelectionTests(unittest.TestCase):
+    def test_personal_eligibility_fails_closed_without_provider_or_database(self):
+        session = object()
+        with (
+            patch("app.agent.graph.generate_structured") as generate,
+            patch("app.agent.graph.retrieve_docs_tool") as retrieve,
+        ):
+            update = asyncio.run(
+                run_agent(
+                    session,
+                    "Could I qualify for this scheme?",
+                    language="en",
+                )
+            )
+
+        generate.assert_not_called()
+        retrieve.assert_not_called()
+        self.assertEqual(update["route"], "check_eligibility")
+        self.assertEqual(update["response_status"], "eligibility_unverified")
+        self.assertEqual(update["citations"], [])
+        self.assertIsNone(update["confidence"])
+
     def test_ids_are_whitelisted_deduplicated_and_retrieval_ordered(self):
         chunks = [chunk("first", "Evidence one"), chunk("second", "Evidence two")]
         citations = select_citations(
@@ -60,7 +82,7 @@ class CitationSelectionTests(unittest.TestCase):
         result = GeneratedAnswer(
             answer="Supported answer.",
             confidence=0.8,
-            citation_ids=["one", "invented"],
+            citation_ids=["one"],
             abstained=False,
         )
         with patch(
@@ -70,6 +92,10 @@ class CitationSelectionTests(unittest.TestCase):
 
         self.assertEqual(update["answer"], "Supported answer.")
         self.assertEqual([c["chunk_id"] for c in update["citations"]], ["one"])
+        self.assertEqual(
+            update["sections"],
+            [{"text": "Supported answer.", "citation_ids": ["one"]}],
+        )
         prompt = generate.call_args.kwargs["user_prompt"]
         self.assertIn("[chunk_id=one]", prompt)
         self.assertIn("[chunk_id=two]", prompt)
@@ -93,6 +119,91 @@ class CitationSelectionTests(unittest.TestCase):
         self.assertEqual(update["answer"], abstention_message(state["query"], "hi"))
         self.assertEqual(update["citations"], [])
         self.assertEqual(update["confidence"], 0.0)
+        self.assertEqual(update["response_status"], "abstained")
+
+    def test_claim_specific_citations_are_validated_and_unlinked_claim_stays_unbadged(self):
+        state = {
+            "query": "What is supported?",
+            "language": "en",
+            "route": "retrieve_docs",
+            "retrieved_chunks": [chunk("one", "Supporting text")],
+        }
+        result = GeneratedAnswer(
+            answer="Legacy answer is not authoritative when claims are present.",
+            confidence=0.7,
+            citation_ids=["one"],
+            claims=[
+                GeneratedClaim(text="Supported section.", citation_ids=["one"]),
+                GeneratedClaim(text="Unlinked section.", citation_ids=[]),
+            ],
+            abstained=False,
+        )
+        with patch("app.agent.graph.generate_structured", return_value=result):
+            update = asyncio.run(generate_node(state))
+
+        self.assertEqual(update["answer"], "Supported section. Unlinked section.")
+        self.assertEqual(
+            update["sections"],
+            [
+                {"text": "Supported section.", "citation_ids": ["one"]},
+                {"text": "Unlinked section.", "citation_ids": []},
+            ],
+        )
+
+    def test_unknown_claim_citation_fails_closed(self):
+        state = {
+            "query": "What is supported?",
+            "language": "en",
+            "route": "retrieve_docs",
+            "retrieved_chunks": [chunk("one", "Supporting text")],
+        }
+        result = GeneratedAnswer(
+            answer="Unsupported.",
+            confidence=0.9,
+            citation_ids=["one"],
+            claims=[GeneratedClaim(text="Unsupported.", citation_ids=["fabricated"])],
+            abstained=False,
+        )
+        with patch("app.agent.graph.generate_structured", return_value=result):
+            update = asyncio.run(generate_node(state))
+
+        self.assertEqual(update["response_status"], "abstained")
+        self.assertEqual(update["citations"], [])
+        self.assertEqual(update["sections"], [])
+
+    def test_duplicate_claim_citation_ids_are_rejected(self):
+        with self.assertRaises(ValidationError):
+            GeneratedClaim(text="Claim", citation_ids=["one", "one"])
+
+    def test_malformed_provider_claim_is_rejected(self):
+        with self.assertRaises(ValidationError):
+            GeneratedAnswer.model_validate(
+                {
+                    "answer": "Malformed claim.",
+                    "confidence": 0.5,
+                    "citation_ids": ["one"],
+                    "claims": [{"text": " ", "citation_ids": [""]}],
+                    "abstained": False,
+                }
+            )
+
+    def test_api_contract_rejects_unknown_section_citation(self):
+        with self.assertRaises(ValidationError):
+            QueryResponse(
+                answer="Claim.",
+                citations=[Citation(chunk_id="one", document_id="document-one")],
+                sections=[AnswerSection(text="Claim.", citation_ids=["unknown"])],
+            )
+
+    def test_api_contract_rejects_duplicate_top_level_citations(self):
+        with self.assertRaises(ValidationError):
+            QueryResponse(
+                answer="Claim.",
+                citations=[
+                    Citation(chunk_id="one", document_id="document-one"),
+                    Citation(chunk_id="one", document_id="document-two"),
+                ],
+            )
 
     def test_empty_retrieval_abstains_without_calling_provider(self):
         state = {

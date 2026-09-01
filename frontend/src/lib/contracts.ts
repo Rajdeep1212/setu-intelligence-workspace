@@ -1,8 +1,27 @@
 import { z } from "zod";
 export const languageSchema = z.enum(["en", "hi", "bn"]);
 export const queryRequestSchema = z.object({ query: z.string().trim().min(1).max(2000), language: languageSchema.optional() });
-export const citationSchema = z.object({ chunk_id: z.string().min(1), document_id: z.string().min(1), title: z.string().nullable().optional(), url: z.url().nullable().optional(), snippet: z.string().nullable().optional() });
-export const queryResponseSchema = z.object({ answer: z.string(), citations: z.array(citationSchema), route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(), confidence: z.number().min(0).max(1).nullable().optional(), data_mode: z.enum(["demo", "local", "cloud"]).optional() });
+export const citationSchema = z.object({ chunk_id: z.string().min(1), document_id: z.string().min(1), title: z.string().nullable().optional(), source: z.string().nullable().optional(), url: z.url().nullable().optional(), snippet: z.string().nullable().optional() });
+export const answerSectionSchema = z.object({
+  text: z.string().trim().min(1),
+  citation_ids: z.array(z.string().min(1)).max(5).refine((ids) => new Set(ids).size === ids.length, "Section citation IDs must be unique."),
+});
+export const queryResponseSchema = z.object({
+  answer: z.string(),
+  citations: z.array(citationSchema).max(5),
+  sections: z.array(answerSectionSchema).max(12).default([]),
+  route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(),
+  confidence: z.number().min(0).max(1).nullable().optional(),
+  response_status: z.enum(["answered", "abstained", "eligibility_unverified"]).default("answered"),
+  data_mode: z.enum(["demo", "local", "cloud"]).optional(),
+}).superRefine((response, context) => {
+  const citationIds = response.citations.map((citation) => citation.chunk_id);
+  if (new Set(citationIds).size !== citationIds.length) context.addIssue({ code: "custom", path: ["citations"], message: "Citation chunk IDs must be unique." });
+  const retrievedIds = new Set(response.citations.map((citation) => citation.chunk_id));
+  response.sections.forEach((section, sectionIndex) => section.citation_ids.forEach((citationId, citationIndex) => {
+    if (!retrievedIds.has(citationId)) context.addIssue({ code: "custom", path: ["sections", sectionIndex, "citation_ids", citationIndex], message: "Section citation ID is not present in retrieved citations." });
+  }));
+});
 export const errorResponseSchema = z.object({ error: z.object({ code: z.string(), message: z.string(), request_id: z.string() }) });
 export const safeMetadataSchema = z.record(z.string(), z.string());
 export const eligibilitySummarySchema = z.object({
@@ -25,6 +44,7 @@ export const sourceFiltersSchema = z.object({
 });
 export type QueryRequest = z.infer<typeof queryRequestSchema>;
 export type QueryResponse = z.infer<typeof queryResponseSchema>;
+export type AnswerSection = z.infer<typeof answerSectionSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 export type SourceSummary = z.infer<typeof sourceSummarySchema>;
 export type SourceDetail = z.infer<typeof sourceDetailSchema>;

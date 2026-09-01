@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import functools
 import logging
+import re
 
 from langgraph.graph import END, StateGraph
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,7 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.agent.llm import generate_structured
 from app.agent.models import GeneratedAnswer, RouteDecision
 from app.agent.state import AgentState
-from app.agent.tools import check_eligibility_tool, retrieve_docs_tool
+from app.agent.tools import retrieve_docs_tool
 from app.grounding import abstention_message, query_language, select_citations
 from app.language import (
     answer_uses_target_language,
@@ -38,12 +39,11 @@ from app.numerical_grounding import (
 logger = logging.getLogger(__name__)
 
 ROUTER_SYSTEM_PROMPT = (
-    "You route citizen questions about Indian government schemes and "
-    "public documents to the right tool. Use check_eligibility only when "
-    "the user is asking whether they personally qualify for one specific "
-    "named scheme (income/age/state limits etc). Use retrieve_docs for "
-    "everything else — general questions, 'what is X', 'how do I apply', "
-    "comparisons."
+    "You route questions about Indian government schemes and public documents. "
+    "Use check_eligibility only for a personal qualification request about one "
+    "specific named scheme. Use retrieve_docs for general questions, application "
+    "instructions, comparisons, and descriptions. The eligibility route is "
+    "quarantined and cannot produce a decision."
 )
 
 ANSWER_SYSTEM_PROMPT = (
@@ -56,9 +56,54 @@ ANSWER_SYSTEM_PROMPT = (
     "or scale statement unless it is explicitly supported by evidence that you "
     "cite. Omit unsupported details rather than guessing. Answer "
     "in the same language the question was asked in. For document evidence, "
-    "return only the chunk IDs that materially support the final answer. "
+    "return claim-specific sections and only the chunk IDs that materially "
+    "support each section. A citation relationship means the ID came from "
+    "the retrieved set; do not describe it as independent semantic proof. "
     "Never invent a chunk ID and do not cite merely related context."
 )
+
+ELIGIBILITY_UNVERIFIED_MESSAGES = {
+    "en": (
+        "Live eligibility evaluation is intentionally unavailable because the "
+        "current criteria have not been reviewed, versioned, and linked to "
+        "official-source provenance. Verify eligibility with the applicable "
+        "official source."
+    ),
+    "hi": (
+        "लाइव पात्रता मूल्यांकन जानबूझकर उपलब्ध नहीं है, क्योंकि मौजूदा मानदंडों "
+        "की समीक्षा, संस्करण निर्धारण और आधिकारिक स्रोत से पुष्टि नहीं हुई है। "
+        "कृपया लागू आधिकारिक स्रोत से पात्रता की पुष्टि करें।"
+    ),
+    "bn": (
+        "লাইভ যোগ্যতা মূল্যায়ন ইচ্ছাকৃতভাবে অনুপলব্ধ, কারণ বর্তমান মানদণ্ড "
+        "পর্যালোচিত, সংস্করণভুক্ত এবং সরকারি উৎসের সঙ্গে যাচাইকৃত নয়। প্রযোজ্য "
+        "সরকারি উৎস থেকে যোগ্যতা যাচাই করুন।"
+    ),
+}
+
+
+def _is_personal_eligibility_query(query: str) -> bool:
+    """Conservatively quarantine explicit personal eligibility requests."""
+    normalized = " ".join(query.casefold().split())
+    if normalized.startswith("eligibility assessment:"):
+        return True
+    patterns = (
+        r"\b(am i|are we|do i|can i|could i|should i|may i|would i)\b.{0,80}\b(eligible|qualify)",
+        r"\b(eligible|qualify)\b.{0,80}\b(me|my|our|us)\b",
+        r"(?:क्या मैं|क्या हम).{0,80}(?:पात्र|योग्य)",
+        r"(?:আমি|আমরা).{0,80}(?:যোগ্য|পাত্র)",
+    )
+    return any(re.search(pattern, normalized) for pattern in patterns)
+
+
+def _abstention_update(query: str, language: str | None) -> dict:
+    return {
+        "answer": abstention_message(query, language),
+        "citations": [],
+        "sections": [],
+        "confidence": 0.0,
+        "response_status": "abstained",
+    }
 
 NUMERICAL_CORRECTION_INSTRUCTION = (
     "Correction required: regenerate the answer once from the same evidence. "
@@ -80,6 +125,10 @@ def _selected_citation_evidence(
 
 
 async def route_node(state: AgentState) -> dict:
+    # The eligibility route is quarantined deterministically so an unverified
+    # decision cannot spend a provider call merely to decide whether to block.
+    if _is_personal_eligibility_query(state["query"]):
+        return {"route": "check_eligibility"}
     decision = await asyncio.to_thread(
         generate_structured,
         stage="route_decision",
@@ -99,28 +148,28 @@ async def retrieve_docs_node(state: AgentState, session: AsyncSession) -> dict:
 
 
 async def check_eligibility_node(state: AgentState, session: AsyncSession) -> dict:
-    hint = state.get("scheme_name_hint") or state["query"]
-    matches = await check_eligibility_tool(session, hint)
-    return {"eligibility_matches": matches}
+    # Preserve the typed route without reading unverified criteria from the DB.
+    return {"eligibility_matches": []}
 
 
 async def generate_node(state: AgentState) -> dict:
-    if state["route"] == "check_eligibility" and state.get("eligibility_matches"):
-        context = "\n\n".join(
-            f"Scheme: {m['scheme_name']}\nCriteria: {m['criteria']}"
-            for m in state["eligibility_matches"]
-        )
-    elif state.get("retrieved_chunks"):
+    if state["route"] == "check_eligibility":
+        language = query_language(state["query"], state.get("language"))
+        message = ELIGIBILITY_UNVERIFIED_MESSAGES[language]
+        return {
+            "answer": message,
+            "citations": [],
+            "sections": [{"text": message, "citation_ids": []}],
+            "confidence": None,
+            "response_status": "eligibility_unverified",
+        }
+    if state.get("retrieved_chunks"):
         context = "\n\n".join(
             f"[chunk_id={c['id']}]\n{c['content']}"
             for c in state["retrieved_chunks"]
         )
     else:
-        return {
-            "answer": abstention_message(state["query"], state.get("language")),
-            "citations": [],
-            "confidence": 0.0,
-        }
+        return _abstention_update(state["query"], state.get("language"))
 
     target_language = query_language(state["query"], state.get("language"))
     user_prompt = f"Context:\n{context}\n\nQuestion: {state['query']}"
@@ -141,25 +190,55 @@ async def generate_node(state: AgentState) -> dict:
         )
 
         if state["route"] == "retrieve_docs":
-            citations = select_citations(retrieved_chunks, result.citation_ids)
+            claims = result.claims or [
+                {"text": result.answer, "citation_ids": result.citation_ids}
+            ]
+            requested_ids = [
+                str(chunk_id)
+                for claim in claims
+                for chunk_id in (
+                    claim.citation_ids if hasattr(claim, "citation_ids") else claim["citation_ids"]
+                )
+            ]
+            known_ids = {str(chunk["id"]) for chunk in retrieved_chunks}
+            if any(chunk_id not in known_ids for chunk_id in requested_ids):
+                logger.warning(
+                    "answer_unknown_citation stage=answer_generation attempt=%s",
+                    attempt,
+                )
+                return _abstention_update(state["query"], state.get("language"))
+            citations = select_citations(retrieved_chunks, requested_ids)
             if result.abstained or not citations:
-                return {
-                    "answer": abstention_message(
-                        state["query"], state.get("language")
-                    ),
-                    "citations": [],
-                    "confidence": 0.0,
+                return _abstention_update(state["query"], state.get("language"))
+            validated_ids = {citation["chunk_id"] for citation in citations}
+            sections = [
+                {
+                    "text": claim.text if hasattr(claim, "text") else claim["text"],
+                    "citation_ids": [
+                        str(chunk_id)
+                        for chunk_id in (
+                            claim.citation_ids
+                            if hasattr(claim, "citation_ids")
+                            else claim["citation_ids"]
+                        )
+                        if str(chunk_id) in validated_ids
+                    ],
                 }
+                for claim in claims
+            ]
+            answer = " ".join(section["text"].strip() for section in sections)
             numerical_result = validate_numerical_grounding(
-                result.answer,
+                answer,
                 _selected_citation_evidence(retrieved_chunks, citations),
             )
         else:
             citations = []
+            sections = []
+            answer = result.answer
             numerical_result = NumericalGroundingResult(0, 0)
 
         language_valid = answer_uses_target_language(
-            result.answer, target_language
+            answer, target_language
         )
         numerical_valid = numerical_result.is_valid
         if language_valid and numerical_valid:
@@ -170,9 +249,11 @@ async def generate_node(state: AgentState) -> dict:
                     correction_categories or "unknown",
                 )
             return {
-                "answer": result.answer,
+                "answer": answer,
                 "citations": citations,
+                "sections": sections,
                 "confidence": result.confidence,
+                "response_status": "answered",
             }
 
         failed_categories = ",".join(
@@ -218,11 +299,7 @@ async def generate_node(state: AgentState) -> dict:
                 failed_categories,
                 numerical_result.unsupported_count,
             )
-            return {
-                "answer": abstention_message(state["query"], target_language),
-                "citations": [],
-                "confidence": 0.0,
-            }
+            return _abstention_update(state["query"], target_language)
 
         logger.warning(
             "answer_correction_started stage=answer_generation attempt=1 "
@@ -249,7 +326,10 @@ def build_graph(session: AsyncSession):
 
     graph.add_node("route", route_node)
     graph.add_node("retrieve_docs", functools.partial(retrieve_docs_node, session=session))
-    graph.add_node("check_eligibility", functools.partial(check_eligibility_node, session=session))
+    graph.add_node(
+        "check_eligibility",
+        functools.partial(check_eligibility_node, session=session),
+    )
     graph.add_node("generate", generate_node)
 
     graph.set_entry_point("route")

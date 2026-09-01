@@ -73,8 +73,8 @@ end to end:
 | Application `/query` executions | 1 |
 | HTTP status | 200 |
 | Route | `retrieve_docs` |
-| Confidence | 0.9 |
-| Citations | 3 distinct, valid, and resolved |
+| Confidence | 0.9, model-reported and uncalibrated |
+| Citations | 3 distinct, membership-validated, and resolved |
 | Expected supporting citations | 2 of 2 present |
 | Query-log count | 0 before and after |
 | Manual retries | 0 |
@@ -86,6 +86,11 @@ material claim supported by the three stored chunks. The word “three” requir
 manual numeric review because the deployed validator recognizes digit
 expressions, not word-form numbers; the review found no unsupported numeric
 claim.
+
+This historical manual review is why the case study may say those particular
+claims were reviewed. The runtime validator alone proves retrieved-ID membership
+and de-duplication, not semantic entailment. No new provider or cloud execution
+occurred during the later evidence-integrity milestone.
 
 ## Provider accounting
 

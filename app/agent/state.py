@@ -14,4 +14,6 @@ class AgentState(TypedDict, total=False):
     eligibility_matches: list[dict]
     answer: str
     citations: list[dict]
+    sections: list[dict]
+    response_status: str
     confidence: Optional[float]

@@ -179,8 +179,8 @@ class NumericalCorrectionPipelineTests(unittest.TestCase):
 
     def test_citations_remain_allowlisted_during_numeric_correction(self):
         state = _state("The programme supports citizens.")
-        first = _answer("It serves 42 citizens.", ["fabricated", "chunk-1"])
-        corrected = _answer("The programme supports citizens.", ["fabricated", "chunk-1"])
+        first = _answer("It serves 42 citizens.", ["chunk-1"])
+        corrected = _answer("The programme supports citizens.", ["chunk-1"])
         with patch.object(
             graph, "generate_structured", side_effect=[first, corrected]
         ) as generate:

@@ -26,6 +26,7 @@ from app.observability import (
     set_request_id,
 )
 from app.schemas import (
+    AnswerSection,
     Citation,
     ErrorResponse,
     QueryRequest,
@@ -271,6 +272,10 @@ async def query(payload: QueryRequest, session: AsyncSession = Depends(get_sessi
     return QueryResponse(
         answer=final_state.get("answer", "No answer generated."),
         citations=citations,
+        sections=[
+            AnswerSection(**section) for section in final_state.get("sections", [])
+        ],
         route=final_state.get("route"),
         confidence=final_state.get("confidence"),
+        response_status=final_state.get("response_status", "answered"),
     )

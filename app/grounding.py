@@ -59,6 +59,7 @@ def select_citations(
                 "chunk_id": chunk_id,
                 "document_id": str(chunk["document_id"]),
                 "title": chunk.get("title"),
+                "source": chunk.get("source"),
                 "url": chunk.get("url"),
                 "snippet": str(chunk.get("content", ""))[:200],
             }

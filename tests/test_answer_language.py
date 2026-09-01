@@ -80,7 +80,7 @@ class BoundedCorrectionTests(unittest.TestCase):
         corrected = GeneratedAnswer(
             answer="Digital infrastructure can be designed as a public good.",
             confidence=0.9,
-            citation_ids=["chunk-1", "fabricated", "chunk-1"],
+            citation_ids=["chunk-1", "chunk-1"],
             abstained=False,
         )
         with patch.object(

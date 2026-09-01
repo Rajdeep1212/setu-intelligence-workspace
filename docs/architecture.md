@@ -18,7 +18,7 @@ flowchart TB
     AG --> RET[Hybrid retrieval]
     RET --> DB[(Cloud SQL PostgreSQL + pgvector)]
     AG --> LLM[Structured provider completion]
-    AG --> VAL[Grounding validators]
+    AG --> VAL[Citation membership + numerical validators]
     SM[Secret Manager] -->|runtime-only values| API
     API -->|Direct VPC egress| DB
 ```
@@ -69,15 +69,12 @@ sequenceDiagram
         Store-->>Router: Bounded candidates
         Router->>Router: Reciprocal-rank fusion + rerank
         Router->>Model: Structured answer request with evidence IDs
-        Model-->>Router: Answer, confidence, cited IDs
-        Router->>Guard: Validate IDs, de-duplicate, check digits
-        Guard-->>API: Grounded result or bounded correction/abstention
+        Model-->>Router: Answer, confidence, sections, cited IDs
+        Router->>Guard: Validate retrieved IDs, de-duplicate, check digits
+        Guard-->>API: Evidence-linked sections or bounded correction/abstention
     else check_eligibility
-        Router->>Store: Parameterized criteria lookup
-        Store-->>Router: Structured eligibility rows
-        Router->>Model: Structured eligibility explanation
-        Model-->>Router: Structured result
-        Router-->>API: Eligibility result
+        Router-->>API: Typed eligibility-unverified outcome
+        Note over Router,API: No criteria lookup or provider answer call
     end
     API-->>Client: Typed response + request ID
 ```
@@ -100,6 +97,21 @@ The bootstrap schema defines:
 The deployed runtime database identity is read-only. The application currently
 does not insert production `query_logs` rows. This is a known observability gap,
 not a reason to expand runtime database privileges.
+
+## Evidence and eligibility integrity boundary
+
+Answer sections carry zero or more citation IDs. The API validates that every
+claim-specific ID belongs to the retrieved result set, then applies stable
+ordering and exact-evidence de-duplication. The browser renders only that typed
+mapping. Membership does not establish semantic entailment; independent human
+or semantic review is required before calling a claim supported.
+
+The tracked eligibility rows are illustrative and unverified. Personal
+eligibility requests now return a sanitized `eligibility_unverified` result
+without reading the criteria table or executing answer generation. The frontend
+keeps its multi-step interaction as a non-decision preview and never submits its
+profile. Reviewed, versioned rules, effective dates, and official-source
+provenance are prerequisites for a future decision engine.
 
 ## Cloud deployment
 

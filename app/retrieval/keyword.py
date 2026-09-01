@@ -29,6 +29,7 @@ async def keyword_search(
                 c.content,
                 c.language,
                 d.title,
+                d.source,
                 d.url,
                 ts_rank(c.tsv, plainto_tsquery('simple', :query)) AS score
             FROM chunks c

@@ -14,7 +14,7 @@ risks; it is not a claim of formal certification.
 | API → secrets | Per-secret accessor bindings for the runtime identity; payloads never enter source or logs |
 | API → database | Dedicated read-only database user over private networking |
 | API → provider | Server-only key, structured responses, bounded SDK retry policy, safe diagnostics |
-| Model output → user | Citation membership checks, de-duplication, numerical checks, abstention |
+| Model output → user | Claim-specific retrieved-ID membership checks, de-duplication, numerical checks, abstention |
 
 ## Credential separation
 
@@ -90,6 +90,18 @@ the current digit-expression guard and therefore require manual review.
 
 These controls reduce common failure modes. They do not prove semantic truth or
 replace source review.
+
+Model-reported confidence is uncalibrated and is not presented as a primary
+trust signal. It remains visible only as labeled engineering metadata.
+
+## Eligibility quarantine
+
+The existing eligibility criteria are illustrative and unverified. The browser
+workflow is therefore a session-only interaction preview: it makes no positive
+or negative determination and sends no profile to the BFF, backend, database, or
+provider. Direct personal eligibility requests to the backend fail closed with
+a typed, sanitized outcome before criteria lookup or answer generation. Future
+activation requires reviewed, versioned rules and official-source provenance.
 
 ## Repository publication controls
 

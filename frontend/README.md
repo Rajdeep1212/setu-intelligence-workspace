@@ -2,7 +2,7 @@
 
 Evidence-backed intelligence for India’s digital public infrastructure.
 
-This Next.js App Router frontend is the local-only Milestone 4A-2 workspace. It ships with a sanitized demo adapter, a loopback-only local adapter, and a fail-closed future cloud contract. It does not connect to the deployed SETU backend during local validation.
+This Next.js App Router frontend is a local-first workspace. It ships with a sanitized demo adapter, a loopback-only local adapter, and a fail-closed future cloud contract. It does not connect to the deployed SETU backend during local validation. Its eligibility flow is an illustrative, non-decision preview: no profile is submitted and unverified demonstration criteria cannot produce an eligibility determination.
 
 ## Local development
 
@@ -32,9 +32,14 @@ For browser checks, start the app on `http://127.0.0.1:3000` and run `npm run te
 
 - Server Components render the landing, sources, trust, and case-study shells.
 - Focused Client Components own workspace and source-explorer interactions.
-- Zod validates query and response boundaries.
+- Zod validates query, claim-to-citation, and response boundaries. Unknown claim citation IDs fail closed.
 - TanStack Query manages query and source state with retries disabled.
 - `POST /api/query` accepts validated same-site browser input and makes at most one bounded upstream attempt in explicitly enabled local mode.
 - `GET /api/sources` and `GET /api/sources/[id]` expose only bounded, validated source contracts.
 - The FastAPI source endpoints are API-key authenticated, parameterized, and read-only; they never return full documents or unrestricted chunks.
 - No cloud URL, API key, identity token, or secret is included in browser code.
+
+Citation validation proves that an ID belongs to the retrieved response and
+passes deterministic de-duplication. It does not prove semantic entailment.
+Model-reported confidence is uncalibrated and appears only in engineering
+details. The input is deliberately preserved after success for edit-and-resubmit.

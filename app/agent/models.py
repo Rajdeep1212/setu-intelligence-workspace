@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class RouteDecision(BaseModel):
@@ -27,12 +27,30 @@ class RouteDecision(BaseModel):
     )
 
 
+class GeneratedClaim(BaseModel):
+    """One provider-authored answer section and its claimed evidence IDs."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    text: str = Field(min_length=1)
+    citation_ids: list[str] = Field(default_factory=list, max_length=5)
+
+    @field_validator("citation_ids")
+    @classmethod
+    def reject_duplicate_citations(cls, value: list[str]) -> list[str]:
+        if any(not citation_id.strip() for citation_id in value):
+            raise ValueError("claim citation IDs must not be blank")
+        if len(value) != len(set(value)):
+            raise ValueError("claim citation IDs must be unique")
+        return value
+
+
 class GeneratedAnswer(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     answer: str = Field(
         description=(
-            "A grounded answer based ONLY on the provided context, in the "
+            "An evidence-constrained answer based ONLY on the provided context, in the "
             "same language as the question. If the context doesn't answer "
             "the question, say so plainly instead of guessing."
         )
@@ -49,8 +67,17 @@ class GeneratedAnswer(BaseModel):
             "answer. Never invent an ID and omit chunks that were not used."
         ),
     )
+    claims: list[GeneratedClaim] = Field(
+        default_factory=list,
+        max_length=12,
+        description=(
+            "Claim-specific answer sections. Each citation ID must come from "
+            "the supplied context. Older provider responses may omit this "
+            "field and use answer plus citation_ids as one whole-answer section."
+        ),
+    )
     abstained: bool = Field(
         description=(
-            "True when the supplied evidence is insufficient for a grounded answer."
+            "True when the supplied evidence is insufficient for an answer."
         ),
     )

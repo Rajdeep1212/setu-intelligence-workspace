@@ -20,12 +20,12 @@ export default function Home() {
           <div className="hero-actions"><Button asChild><Link href="/workspace">Open workspace <ArrowRight size={17} aria-hidden="true" /></Link></Button><Button asChild variant="secondary"><Link href="/case-study">Read the engineering case</Link></Button></div>
           <div className="trust-row" aria-label="System trust summary"><span><LockKeyhole size={15} /> IAM protected</span><span><Database size={15} /> Private corpus</span><span><Waypoints size={15} /> Citation validated</span></div>
         </div>
-        <div className="investigation-preview" aria-label="Example grounded investigation">
-          <div className="preview-topline"><span className="mono-label">INVESTIGATION / EN-2</span><span className="verified-pill"><span /> Grounded</span></div>
+        <div className="investigation-preview" aria-label="Example research response with retrieved citations">
+          <div className="preview-topline"><span className="mono-label">INVESTIGATION / EN-2</span><span className="verified-pill"><span /> Citations retrieved</span></div>
           <p className="preview-query">What are the core components of India&apos;s digital approach?</p>
           <div className="rail-divider"><span /><i /><span /><i /><span /></div>
           <div className="preview-answer"><p>India&apos;s approach connects digital identity, payments and data exchange through interoperable public rails.</p><div className="citation-strip"><span>01</span><span>02</span><span>03</span><small>3 linked evidence records</small></div></div>
-          <dl className="preview-metrics"><div><dt>Route</dt><dd>retrieve_docs</dd></div><div><dt>Confidence</dt><dd>0.90</dd></div><div><dt>Grounding</dt><dd>Passed</dd></div></dl>
+          <dl className="preview-metrics"><div><dt>Route</dt><dd>retrieve_docs</dd></div><div><dt>Confidence</dt><dd>Model-reported, uncalibrated</dd></div><div><dt>Citations</dt><dd>Membership validated</dd></div></dl>
         </div>
       </section>
     </main>

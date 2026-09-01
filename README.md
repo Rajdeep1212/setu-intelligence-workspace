@@ -1,10 +1,11 @@
 # SETU Intelligence Workspace
 
 SETU is an evidence-first workspace for exploring India’s digital public
-infrastructure and selected public-program eligibility rules. It combines a
+infrastructure and an explicitly quarantined eligibility-experience prototype. It combines a
 multilingual retrieval-augmented generation (RAG) backend with a recruiter-ready
-Next.js interface that makes the route, confidence, citations, and source context
-visible alongside each answer.
+Next.js interface that makes claim-to-citation relationships and source context
+visible alongside each answer. Model-reported confidence remains uncalibrated
+engineering metadata rather than a user-facing correctness score.
 
 This repository is a portfolio case study in building an AI system whose claims
 can be inspected. It does not claim production scale, continuous public
@@ -21,9 +22,9 @@ SETU addresses that problem with:
 
 - hybrid dense and keyword retrieval over a private PostgreSQL/pgvector corpus;
 - reranking before answer generation;
-- agent routing between document retrieval and structured eligibility lookup;
+- agent routing with personal eligibility requests quarantined before criteria lookup or answer generation;
 - multilingual answer controls for English, Hindi, and Bengali;
-- citation selection, validation, stable ordering, and de-duplication;
+- claim-specific citation selection, retrieved-ID membership validation, stable ordering, and de-duplication;
 - deterministic checks for digit-form numerical claims;
 - a secure Next.js backend-for-frontend (BFF) boundary; and
 - explicit abstention and safe error behavior when evidence or configuration is
@@ -34,7 +35,7 @@ SETU addresses that problem with:
 The frontend includes four portfolio views:
 
 - **[Workspace](frontend/src/app/workspace/page.tsx)** — a guided intelligence
-  surface with a sanitized grounded-answer demonstration and eligibility flow.
+  surface with sanitized claim-to-citation demonstration data and a non-decision eligibility preview.
 - **[Sources](frontend/src/app/sources/page.tsx)** — a bounded evidence explorer
   with search, language, eligibility, pagination, and source-detail states.
 - **[System trust](frontend/src/app/system/page.tsx)** — a content-safe view of
@@ -57,7 +58,7 @@ flowchart LR
     A --> R[Hybrid retrieval + reranking]
     R --> Q[(Private Cloud SQL<br/>PostgreSQL + pgvector)]
     A --> L[Structured LLM completion]
-    A --> G[Citation + numerical grounding]
+    A --> G[Citation membership + numerical checks]
     S[Secret Manager] --> I
     V[Direct VPC path] --> Q
 ```
@@ -74,7 +75,7 @@ required before the application API-key check. Cloud SQL has a private address
 only and is reached through private networking. See
 [Architecture](docs/architecture.md) and [Security](docs/security.md).
 
-## Grounded query workflow
+## Evidence-linked query workflow
 
 1. Validate request size, schema, origin, authentication, and rate limit.
 2. Ask the structured router to select `retrieve_docs` or
@@ -82,15 +83,31 @@ only and is reached through private networking. See
 3. For retrieval, combine pgvector similarity and PostgreSQL full-text search
    with reciprocal-rank fusion, then rerank the candidate set.
 4. Generate a schema-constrained answer from the selected evidence.
-5. Accept only cited chunk identifiers present in the retrieved set; remove
-   duplicate identifiers and duplicate evidence.
+5. Return typed answer sections with their claimed citation identifiers. Accept
+   only identifiers present in the retrieved set; remove duplicate identifiers
+   and duplicate evidence. This proves membership, not semantic entailment.
 6. Check digit-form numeric claims against the supporting evidence. A bounded
    correction completion is available when this check fails.
-7. Return the answer, selected route, confidence, citations, and request ID—or
-   a stable, content-safe error/abstention response.
+7. Return the answer, selected route, model-reported confidence, and citations,
+   with a correlation ID in the response header—or a stable, content-safe
+   error/abstention response.
 
-Eligibility answers use structured database criteria rather than pretending
-that table rows are document citations.
+Personal eligibility evaluation is quarantined. The current criteria are
+illustrative, unverified demonstration data, so neither the frontend nor backend
+produces an eligibility determination or sends an eligibility profile to a
+provider. Production use requires reviewed, versioned rules with effective dates
+and official-source provenance.
+
+### Evidence trust contract
+
+- **Retrieved citation** means the citation ID belongs to the retrieved result set.
+- **Citation validated** means membership and deterministic de-duplication passed.
+- **Evidence linked** means an answer section carries at least one validated
+  retrieved citation ID.
+- These automated checks do not prove semantic support. “Claim support reviewed”
+  is reserved for separately recorded human or semantic evaluation.
+- Provider confidence is self-reported and uncalibrated; it is shown only in the
+  engineering details area.
 
 ## Technology
 
@@ -104,21 +121,21 @@ that table rows are document citations.
 | Infrastructure | Docker, Artifact Registry, Cloud Run, Cloud SQL, Secret Manager, Direct VPC networking |
 | Quality | unittest/pytest, Vitest, Testing Library, Playwright, ESLint, TypeScript, GitHub Actions |
 
-## Verified evidence baseline
+## Current local and historical evidence baseline
 
 The evidence frozen before publication records:
 
 | Area | Verified result |
 |---|---|
 | Corpus | 8 documents / 239 chunks / 3 eligibility records |
-| Backend regression suite | 98 tests passed |
-| Frontend unit/integration suite | 18 default tests passed; 1 opt-in local integration test separately passed |
+| Backend regression suite | 105 tests passed in a network-disabled container |
+| Frontend unit/integration suite | 25 default tests passed; 1 opt-in local integration test remains intentionally skipped by default |
 | Browser suite | 9 Playwright tests passed |
 | Frontend production build | Passed with Node.js 22 |
 | Frontend dependency audit | 0 known vulnerabilities reported by `npm audit` |
 | Cloud backend | 1 service; 1 active-ready revision at 100% traffic; 1 retained historical revision at 0% |
 | Cloud health | Authenticated `/health`, `/health/db`, and `/ready` returned 200 |
-| Controlled cloud query | HTTP 200; `retrieve_docs`; confidence 0.9; 3 distinct valid citations |
+| Controlled cloud query | Historical HTTP 200; `retrieve_docs`; model-reported confidence 0.9; 3 membership-validated citations; material claims manually reviewed |
 | Query preservation | 1 external submission, no manual retry, no database query-log insertion |
 
 The controlled query took approximately 69 seconds end to end. It is evidence
@@ -246,6 +263,10 @@ tests/                  Backend regression tests
   requires timely teardown.
 - The evaluation sets are small regression fixtures, not statistically robust
   accuracy claims.
+- Eligibility is an interaction preview only. Unverified placeholder criteria
+  are quarantined and cannot produce a positive or negative determination.
+- Citation validation proves retrieved-ID membership and de-duplication, not
+  semantic entailment; model-reported confidence is uncalibrated.
 
 ## Screenshots
 
@@ -266,12 +287,11 @@ instructions; no image or production result has been invented as a substitute.
 
 ## Roadmap
 
-The next engineering step is a separately authorized frontend deployment with
-a dedicated service identity, server-side audience-bound IAM tokens, and
-production session authentication. Later work should improve structured query
-observability, provider-attempt telemetry, word-form numerical checks, image
-size, cold-start latency, and the depth of multilingual evaluation. None of
-those changes are implemented by this publication commit.
+The next engineering step is offline evaluation expansion and a full-stack CI
+gate. A later separately authorized frontend deployment still requires a
+dedicated service identity, server-side audience-bound IAM tokens, and
+production session authentication. No cloud or provider validation occurred
+during the evidence-integrity milestone.
 
 ## Data and licensing
 

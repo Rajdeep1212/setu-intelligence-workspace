@@ -118,11 +118,12 @@ class NativeJSONSchemaTests(unittest.TestCase):
         schema = response_format["json_schema"]["schema"]
         self.assertEqual(
             set(schema["required"]),
-            {"answer", "confidence", "citation_ids", "abstained"},
+            {"answer", "confidence", "citation_ids", "claims", "abstained"},
         )
         self.assertEqual(schema["properties"]["confidence"]["minimum"], 0)
         self.assertEqual(schema["properties"]["confidence"]["maximum"], 1)
         self.assertEqual(schema["properties"]["citation_ids"]["maxItems"], 5)
+        self.assertEqual(schema["properties"]["claims"]["maxItems"], 12)
         _assert_objects_are_closed(self, schema)
 
     def test_unicode_answers_parse_for_all_supported_languages(self):

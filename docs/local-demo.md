@@ -34,13 +34,15 @@ Open these loopback routes:
 | Route | What to review |
 |---|---|
 | `http://127.0.0.1:3000/` | Product framing and trust summary |
-| `http://127.0.0.1:3000/workspace` | Grounded query and eligibility workflows |
+| `http://127.0.0.1:3000/workspace` | Claim-linked research demo and non-decision eligibility preview |
 | `http://127.0.0.1:3000/sources` | Searchable, filterable evidence explorer |
 | `http://127.0.0.1:3000/system` | Security architecture and known limits |
 | `http://127.0.0.1:3000/case-study` | Controlled-query engineering evidence |
 
-The workspace’s “run” interactions return deterministic demo responses. A mode
-label in the interface makes that boundary visible.
+The workspace’s research interactions return deterministic demo responses. A
+mode label makes that boundary visible. The eligibility workflow is a
+non-decision interaction preview using unverified demonstration data; it never
+sends its profile to the BFF, backend, database, or provider.
 
 ## Data modes
 
@@ -73,6 +75,11 @@ budgeted.
 `cloud` currently fails closed. It is a contract for a future deployed frontend
 that will use a dedicated service identity and an audience-bound IAM token in
 server memory. It is not a hidden or incomplete path to the existing backend.
+
+Personal eligibility submission also fails closed in every adapter mode until
+reviewed, versioned rules and official-source provenance exist. Completing the
+four-step preview demonstrates form state and missing-information handling only;
+it never reports a positive or negative eligibility determination.
 
 ## Validation
 
