@@ -72,19 +72,17 @@ time. Each week assumes the previous one's tests/checks pass before moving on.
    up/down feedback.
 
 ## Week 5 — Evaluation + MLOps
-1. Wire `RAGAS` (faithfulness, answer relevance, context recall) against the
-   Week 2 eval set; log results into `eval_runs`.
-2. Add `MLflow` tracking around eval runs and retrieval experiments (e.g.
-   dense-only vs. hybrid vs. hybrid+rerank) so you have a defensible ablation
-   to talk about in interviews.
-3. Add `Langfuse` tracing around the agent graph to inspect tool-routing
-   decisions.
-4. Write a GitHub Actions workflow that runs the eval suite on every PR and
-   fails the build below threshold (from the original plan: faithfulness
-   ≥0.90, precision@5 ≥0.80, refusal accuracy ≥90%, p95 latency <3.5s, agent
-   tool-selection accuracy ≥90%).
-5. Break every metric down **per language**, not just in aggregate — this
-   is the detail that differentiates the project.
+1. Maintain the versioned, provider-free 60-case offline gate with balanced
+   English, Hindi, and Bengali reporting.
+2. Keep fixture replay, live local retrieval, provider quality, and human
+   semantic review as separate modes and claims.
+3. Run backend, frontend, browser/accessibility, and publication-safety jobs on
+   standard `ubuntu-latest` GitHub-hosted runners.
+4. Add privacy-safe structured request/stage timing only in a separately
+   authorized telemetry milestone; do not grant database writes merely to fill
+   `query_logs`.
+5. Consider external evaluation or experiment-tracking tools only after their
+   dependencies, data handling, and provider cost are explicitly reviewed.
 
 ## Week 6 — Stretch: embedding merging
 1. Fine-tune or adapt two language-specialized embedding checkpoints from a

@@ -1,0 +1,56 @@
+{
+  "schema": "setu.offline-evaluation-manifest/v1",
+  "evaluation_version": "4C-2.1",
+  "supported_languages": ["en", "hi", "bn"],
+  "headline_case_count": 60,
+  "case_counts_by_language": {"en": 20, "hi": 20, "bn": 20},
+  "case_counts_by_category": {
+    "retrieval": 15,
+    "grounding": 15,
+    "numeric": 15,
+    "routing": 9,
+    "adversarial": 6
+  },
+  "answerability_counts": {"answerable": 27, "unanswerable": 3, "not_applicable": 30},
+  "provenance_counts": {"corpus_linked": 15, "mock_or_synthetic": 45},
+  "expected_schema_version": "query-response/v2",
+  "citation_contract_version": "claim-sections/v1",
+  "eligibility_quarantine_status": "required_before_database_or_provider",
+  "corpus_fingerprint": {
+    "algorithm": "sha256",
+    "input": "sorted language labels and stable chunk identifiers from eval_set.jsonl and grounding_set.jsonl; no source text",
+    "value": "53a68285ec499ed2df83debfc48df24448ebe53da2e3fd4b03d47c0004652a02"
+  },
+  "pull_request_checks": [
+    "manifest and fixture validation",
+    "deterministic corpus-label replay",
+    "claim/citation contract replay",
+    "numeric expression validation",
+    "deterministic eligibility route guard",
+    "adversarial configured-behavior checks"
+  ],
+  "authorized_local_release_checks": [
+    "live retrieval metrics against the established local corpus",
+    "Compose topology validation",
+    "full inference-backend checks with existing local model artifacts"
+  ],
+  "future_provider_checks": [
+    "live structured claim-schema compatibility",
+    "provider-routed research and ambiguous-query behavior",
+    "answer quality and semantic support review"
+  ],
+  "thresholds": {
+    "case_pass_rate": 1.0,
+    "retrieval_label_replay_p1": 0.6,
+    "retrieval_label_replay_recall5": 0.65,
+    "retrieval_label_replay_mrr5": 0.8
+  },
+  "known_limitations": [
+    "The retrieval ranking is a deterministic fixture replay, not a live retriever measurement.",
+    "Citation membership does not prove semantic entailment.",
+    "Route checks measure the deterministic quarantine guard, not provider route accuracy.",
+    "Number-word support is a small reviewed lexicon, not general semantic number parsing.",
+    "Code-mixed and transliterated language handling remains a labeled limitation.",
+    "No provider, database, model download, or cloud service is used by this evaluation."
+  ]
+}

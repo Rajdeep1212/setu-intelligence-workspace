@@ -84,9 +84,12 @@ generation. Returned citations must belong to that retrieved set. Unknown IDs,
 duplicates, and exact duplicate evidence are discarded; a retrieval answer with
 no valid support abstains rather than falling back to every retrieved chunk.
 
-Digit-form numerical claims are compared with the supporting evidence. A
-bounded correction path is available, but word-form numbers are not detected by
-the current digit-expression guard and therefore require manual review.
+Digit-form numerical claims are compared with supporting evidence, and the
+repository now includes a small reviewed multilingual lexicon for one to three
+and first to third. Currency identity, scale, percentage, ordinal, range, and
+unit cases are tested. A bounded correction path is available. This lexical
+coverage is not general natural-language number understanding; unsupported
+words, code-mixed input, and transliteration still require review.
 
 These controls reduce common failure modes. They do not prove semantic truth or
 replace source review.

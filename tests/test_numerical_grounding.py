@@ -103,6 +103,27 @@ class NumericalExpressionTests(unittest.TestCase):
         self.assertUnsupported("It serves 42 districts.", "It operated for 42 days.")
         self.assertUnsupported("It serves 1.4 billion people.", "It spent 1.4 million dollars.")
 
+    def test_small_reviewed_number_word_lexicon(self):
+        cases = (
+            ("It connects three rails.", "Evidence lists three rails."),
+            ("यह तीन जिलों में चलता है।", "प्रमाण तीन जिलों की पुष्टि करता है।"),
+            ("এটি তিন জেলায় চলে।", "প্রমাণে তিন জেলার কথা আছে।"),
+        )
+        for answer, evidence in cases:
+            with self.subTest(answer=answer):
+                self.assertGrounded(answer, evidence)
+        self.assertUnsupported("It connects three rails.", "Evidence lists two rails.")
+
+    def test_ordinals_are_distinct_and_cross_form_normalized(self):
+        self.assertGrounded("It ranked 1st.", "It ranked first.")
+        self.assertGrounded("यह पहला चरण है।", "प्रमाण इसे पहला चरण कहता है।")
+        self.assertGrounded("এটি প্রথম ধাপ।", "প্রমাণে প্রথম ধাপ বলা হয়েছে।")
+        self.assertUnsupported("It ranked 1st.", "It completed 1 phase.")
+
+    def test_currency_identity_is_preserved(self):
+        self.assertGrounded("The budget is ₹ 5 crore.", "The budget is INR 5 crore.")
+        self.assertUnsupported("The budget is ₹ 5 crore.", "The budget is USD 5 crore.")
+
 
 class NumericalCorrectionPipelineTests(unittest.TestCase):
     def test_unsupported_number_is_removed_by_single_correction(self):

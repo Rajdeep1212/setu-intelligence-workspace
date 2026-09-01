@@ -1,103 +1,152 @@
-name: CI
+name: Full-stack quality
 
 on:
   push:
+    branches: [master]
   pull_request:
+    branches: [master]
 
 permissions:
   contents: read
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
+  backend-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        # actions/setup-python v5.4.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --no-cache-dir -r requirements.txt
+      - name: Install deterministic test dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir -r requirements-ci.txt
 
       - name: Compile Python sources
-        run: python -m compileall -q app ingestion eval tests
+        run: python -m compileall -q app ingestion eval tests scripts
 
-      - name: Run unit tests
+      - name: Run complete backend test suite
         run: python -m unittest discover -s tests -v
 
-      - name: Check installed dependencies
+      - name: Run offline evaluation and verify frozen report
+        run: |
+          python -m eval.offline_evaluation --json-out /tmp/setu-eval.json --markdown-out /tmp/setu-eval.md
+          diff --unified docs/offline-evaluation-report.md /tmp/setu-eval.md
+          cat /tmp/setu-eval.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check installed dependency consistency
         run: python -m pip check
 
-      - name: Validate Compose configuration
+      - name: Validate Compose topology without starting services
         env:
           COMPOSE_DISABLE_ENV_FILE: "1"
-          POSTGRES_USER: ci-setu
-          POSTGRES_PASSWORD: ci-only-placeholder
-          POSTGRES_DB: ci-setu
+          POSTGRES_USER: ci-placeholder
+          POSTGRES_PASSWORD: ci-placeholder
+          POSTGRES_DB: ci-placeholder
           SETU_DB_IMAGE: pgvector/pgvector:pg16
-          SETU_API_IMAGE: setu-api:ci
-          DATABASE_URL: postgresql+asyncpg://ci-setu:ci-only-placeholder@db:5432/ci-setu
-          SETU_API_KEY: ci-only-placeholder
-          GROQ_API_KEY: ci-only-placeholder
+          SETU_API_IMAGE: setu-api:ci-placeholder
+          DATABASE_URL: postgresql+asyncpg://ci-placeholder:ci-placeholder@db:5432/ci-placeholder
+          SETU_API_KEY: ci-placeholder
           CORS_ALLOWED_ORIGINS: https://ci.invalid
         run: |
           docker compose config --quiet
           docker compose -f docker-compose.yml -f compose.production.yml config --quiet
 
-  supply-chain:
+  frontend-quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Set up Node.js
+        # actions/setup-node v4.0.3
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: "22"
+
+      - name: Install locked frontend dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Lint with zero warnings
+        run: npm run lint
+
+      - name: Run Vitest
+        run: npm run test:run
+
+      - name: Build production frontend
+        run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+  browser-smoke-accessibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Check out repository
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Set up Node.js
+        # actions/setup-node v4.0.3
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: "22"
+
+      - name: Install locked frontend dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Install only the configured browser
+        run: ./node_modules/.bin/playwright install --with-deps msedge
+
+      - name: Build deterministic demo frontend
+        run: npm run build
+
+      - name: Run loopback-only browser and accessibility suite
+        env:
+          SETU_DATA_MODE: demo
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3000 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:3000/api/health >/dev/null && break
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:3000/api/health >/dev/null
+          npm run test:e2e
+
+  publication-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        # actions/setup-python v5.4.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
         with:
           python-version: "3.11"
 
-      - name: Install application and security dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --no-cache-dir -r requirements.txt
-          python -m pip install --no-cache-dir -r requirements-security.txt
-
-      - name: Audit installed dependencies
-        id: audit
-        continue-on-error: true
-        run: >-
-          python -m pip_audit --local --progress-spinner off
-          --format json --output pip-audit.json
-
-      - name: Generate CycloneDX SBOM
-        run: >-
-          cyclonedx-py environment
-          --output-format JSON
-          --output-file setu-sbom.cdx.json
-
-      - name: Upload supply-chain reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: supply-chain-reports
-          path: |
-            pip-audit.json
-            setu-sbom.cdx.json
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Report vulnerability audit result
-        if: always()
-        run: |
-          echo "pip-audit outcome: ${{ steps.audit.outcome }}" >> "$GITHUB_STEP_SUMMARY"
-          if [ "${{ steps.audit.outcome }}" = "failure" ]; then
-            echo "Review the uploaded report; dependencies are not upgraded automatically." >> "$GITHUB_STEP_SUMMARY"
-          fi
+      - name: Run lightweight publication checks
+        run: python scripts/ci_static_checks.py

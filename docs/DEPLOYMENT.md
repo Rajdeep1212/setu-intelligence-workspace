@@ -227,10 +227,12 @@ docker image inspect --format '{{.Id}}' setu-api:latest
 
 The registry push, signing/attestation mechanism, and cloud image scan depend
 on the selected platform and must be documented before execution. The current
-CI pins direct Python dependencies but not transitive hashes, base-image
-digests, operating-system packages, or GitHub Actions by commit SHA. Treat its
-SBOM and non-blocking `pip-audit` result as evidence to review, not a release
-signature.
+zero-spend CI pins action references to reviewed commit SHAs and installs a
+minimal pinned test-only subset of existing dependencies. It does not pin
+transitive hashes, base-image digests, or operating-system packages, and it
+neither builds images nor publishes retained SBOM/audit artifacts. Treat a
+green workflow as regression evidence, not a release signature or supply-chain
+attestation.
 
 ## Deploy procedure
 

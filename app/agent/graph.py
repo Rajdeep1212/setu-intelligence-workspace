@@ -82,18 +82,22 @@ ELIGIBILITY_UNVERIFIED_MESSAGES = {
 }
 
 
-def _is_personal_eligibility_query(query: str) -> bool:
-    """Conservatively quarantine explicit personal eligibility requests."""
+def deterministic_route_guard(query: str) -> str | None:
+    """Return the locally provable quarantine route, otherwise defer routing."""
     normalized = " ".join(query.casefold().split())
     if normalized.startswith("eligibility assessment:"):
-        return True
+        return "check_eligibility"
     patterns = (
         r"\b(am i|are we|do i|can i|could i|should i|may i|would i)\b.{0,80}\b(eligible|qualify)",
         r"\b(eligible|qualify)\b.{0,80}\b(me|my|our|us)\b",
         r"(?:क्या मैं|क्या हम).{0,80}(?:पात्र|योग्य)",
         r"(?:আমি|আমরা).{0,80}(?:যোগ্য|পাত্র)",
     )
-    return any(re.search(pattern, normalized) for pattern in patterns)
+    return (
+        "check_eligibility"
+        if any(re.search(pattern, normalized) for pattern in patterns)
+        else None
+    )
 
 
 def _abstention_update(query: str, language: str | None) -> dict:
@@ -127,8 +131,9 @@ def _selected_citation_evidence(
 async def route_node(state: AgentState) -> dict:
     # The eligibility route is quarantined deterministically so an unverified
     # decision cannot spend a provider call merely to decide whether to block.
-    if _is_personal_eligibility_query(state["query"]):
-        return {"route": "check_eligibility"}
+    guarded_route = deterministic_route_guard(state["query"])
+    if guarded_route:
+        return {"route": guarded_route}
     decision = await asyncio.to_thread(
         generate_structured,
         stage="route_decision",

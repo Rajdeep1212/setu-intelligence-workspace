@@ -25,7 +25,8 @@ SETU addresses that problem with:
 - agent routing with personal eligibility requests quarantined before criteria lookup or answer generation;
 - multilingual answer controls for English, Hindi, and Bengali;
 - claim-specific citation selection, retrieved-ID membership validation, stable ordering, and de-duplication;
-- deterministic checks for digit-form numerical claims;
+- deterministic checks for digit-form claims and a small reviewed multilingual
+  number-word/ordinal lexicon;
 - a secure Next.js backend-for-frontend (BFF) boundary; and
 - explicit abstention and safe error behavior when evidence or configuration is
   insufficient.
@@ -86,8 +87,9 @@ only and is reached through private networking. See
 5. Return typed answer sections with their claimed citation identifiers. Accept
    only identifiers present in the retrieved set; remove duplicate identifiers
    and duplicate evidence. This proves membership, not semantic entailment.
-6. Check digit-form numeric claims against the supporting evidence. A bounded
-   correction completion is available when this check fails.
+6. Check numeric claims against supporting evidence, including digits,
+   currencies, units, and a small reviewed number-word/ordinal lexicon. A
+   bounded correction completion is available when this check fails.
 7. Return the answer, selected route, model-reported confidence, and citations,
    with a correlation ID in the response header—or a stable, content-safe
    error/abstention response.
@@ -128,9 +130,11 @@ The evidence frozen before publication records:
 | Area | Verified result |
 |---|---|
 | Corpus | 8 documents / 239 chunks / 3 eligibility records |
-| Backend regression suite | 105 tests passed in a network-disabled container |
+| Backend regression suite | 112 tests passed in a network-disabled container |
 | Frontend unit/integration suite | 25 default tests passed; 1 opt-in local integration test remains intentionally skipped by default |
 | Browser suite | 9 Playwright tests passed |
+| Offline evaluation | 60/60 deterministic fixture-replay cases passed; 20 each in English, Hindi, and Bengali |
+| GitHub Actions | Four read-only `ubuntu-latest` quality jobs; no secrets, cloud credentials, artifacts, or model downloads |
 | Frontend production build | Passed with Node.js 22 |
 | Frontend dependency audit | 0 known vulnerabilities reported by `npm audit` |
 | Cloud backend | 1 service; 1 active-ready revision at 100% traffic; 1 retained historical revision at 0% |
@@ -191,6 +195,8 @@ Backend checks from the repository root:
 ```bash
 python -m compileall -q app ingestion eval tests
 python -m unittest discover -s tests -v
+python -m eval.offline_evaluation
+python scripts/ci_static_checks.py
 python -m pip check
 docker compose config --quiet
 ```
@@ -223,7 +229,7 @@ frontend/               Next.js application, BFF, tests, and demo fixtures
 ingestion/              PIB fetch, language-aware chunking, embeddings, writes
 scripts/                Isolated OpenVINO export helper
 tests/                  Backend regression tests
-.github/workflows/      CI and supply-chain evidence generation
+.github/workflows/      Zero-spend full-stack quality workflow
 ```
 
 ## Security principles
@@ -250,8 +256,9 @@ tests/                  Backend regression tests
 - Exact successful Groq HTTP-attempt telemetry is unavailable, and the
   configured provider HTTP-attempt ceiling is higher than the normal two-step
   logical workflow.
-- The deployed numeric guard detects digit expressions; word-form numbers need
-  manual review or a future expanded validator.
+- The historical deployed numeric guard detects digit expressions. This
+  repository adds only a small reviewed number-word/ordinal lexicon; broader
+  number language, code-mixed input, and transliteration remain limitations.
 - The validated query took approximately 69 seconds.
 - The deployed OCI image is approximately 3.37 GB and scale-to-zero can produce
   cold starts.
@@ -261,8 +268,8 @@ tests/                  Backend regression tests
   hosting and production session authentication are not complete.
 - The alerts-only cloud budget is not a spending cap, and the Cloud SQL trial
   requires timely teardown.
-- The evaluation sets are small regression fixtures, not statistically robust
-  accuracy claims.
+- The evaluation sets are small deterministic regression fixtures, not a live
+  retrieval/provider benchmark or statistically robust accuracy study.
 - Eligibility is an interaction preview only. Unverified placeholder criteria
   are quarantined and cannot produce a positive or negative determination.
 - Citation validation proves retrieved-ID membership and de-duplication, not
@@ -280,6 +287,7 @@ instructions; no image or production result has been invented as a substitute.
 - [Architecture](docs/architecture.md)
 - [Security model](docs/security.md)
 - [Evaluation and validated evidence](docs/evaluation.md)
+- [Generated offline evaluation report](docs/offline-evaluation-report.md)
 - [Local demo guide](docs/local-demo.md)
 - [Citation-grounding design](docs/CITATION_GROUNDING.md)
 - [Deployment runbook](docs/DEPLOYMENT.md)
@@ -287,11 +295,11 @@ instructions; no image or production result has been invented as a substitute.
 
 ## Roadmap
 
-The next engineering step is offline evaluation expansion and a full-stack CI
-gate. A later separately authorized frontend deployment still requires a
-dedicated service identity, server-side audience-bound IAM tokens, and
-production session authentication. No cloud or provider validation occurred
-during the evidence-integrity milestone.
+The next identified engineering step is privacy-safe query telemetry and stage
+timing; it is not implemented here. A later separately authorized frontend
+deployment still requires a dedicated service identity, server-side
+audience-bound IAM tokens, and production session authentication. No cloud or
+provider validation occurred during the evidence-integrity milestone.
 
 ## Data and licensing
 

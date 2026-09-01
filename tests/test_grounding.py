@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from pydantic import ValidationError
 
-from app.agent.graph import generate_node, run_agent
+from app.agent.graph import deterministic_route_guard, generate_node, run_agent
 from app.agent.models import GeneratedAnswer, GeneratedClaim
 from app.grounding import abstention_message, select_citations
 from app.schemas import AnswerSection, Citation, QueryResponse
@@ -24,6 +24,15 @@ def chunk(chunk_id, content, title=None):
 
 
 class CitationSelectionTests(unittest.TestCase):
+    def test_deterministic_route_guard_distinguishes_quarantine_from_provider_routing(self):
+        self.assertEqual(
+            deterministic_route_guard("Could I qualify for this scheme?"),
+            "check_eligibility",
+        )
+        self.assertIsNone(
+            deterministic_route_guard("What are the eligibility rules for this scheme?")
+        )
+
     def test_personal_eligibility_fails_closed_without_provider_or_database(self):
         session = object()
         with (

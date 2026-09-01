@@ -1,0 +1,13 @@
+# Minimal, pinned subset of the existing application dependencies needed by
+# deterministic unit and offline-evaluation checks. Inference runtimes and
+# model packages are intentionally excluded so CI cannot download models.
+fastapi==0.115.0
+pydantic==2.9.2
+pydantic-settings==2.5.2
+sqlalchemy==2.0.35
+asyncpg==0.29.0
+python-dotenv==1.0.1
+httpx==0.27.2
+numpy==2.1.3
+langgraph==1.2.11
+openai==2.54.0

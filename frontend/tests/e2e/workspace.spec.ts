@@ -1,7 +1,15 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "reduce" }); });
+test.beforeEach(async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.route("**/*", async (route) => {
+    if (!route.request().url().startsWith("http://127.0.0.1:3000")) {
+      throw new Error("Browser suite attempted a non-loopback request");
+    }
+    await route.continue();
+  });
+});
 
 test("all primary routes render without leaking requests", async ({ page }) => {
   const external: string[] = [];

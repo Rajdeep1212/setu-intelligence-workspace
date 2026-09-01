@@ -10,9 +10,8 @@ The publication baseline records:
 
 | Check | Result |
 |---|---:|
-| Backend tests | 98 passed |
-| Frontend default unit/integration tests | 18 passed |
-| Opt-in local BFF integration test | 1 passed separately |
+| Backend tests | 112 passed |
+| Frontend default unit/integration tests | 25 passed; 1 opt-in integration case skipped by default |
 | Playwright browser tests | 9 passed |
 | TypeScript | Passed |
 | ESLint | Passed with zero warnings |
@@ -29,14 +28,44 @@ responsive routes. The default suite cannot make a live backend request. The
 local integration case is guarded by an explicit opt-in and a loopback-only
 origin policy.
 
-## Retrieval and grounding fixtures
+## Versioned offline evaluation
+
+Evaluation `4C-2.1` adds 60 unique deterministic cases, balanced at 20 each
+for English, Hindi, and Bengali:
+
+| Category | Cases | Provenance |
+|---|---:|---|
+| Retrieval-label replay | 15 | Corpus-linked labels |
+| Grounding contract replay | 15 | Mock/synthetic |
+| Numerical grounding | 15 | Mock/synthetic |
+| Routing guard | 9 | Mock/synthetic |
+| Adversarial configured behavior | 6 | Mock/synthetic |
+
+The answerability split is 27 answerable, 3 unanswerable, and 30 cases where
+answerability is not applicable. The provenance split is 15 corpus-linked and
+45 mock/synthetic. The generated [offline report](offline-evaluation-report.md)
+records 60/60 passing cases and the exact fixture-replay metrics.
+
+The numerical cases cover ASCII and Unicode digits, the reviewed words one to
+three and first to third in the three supported languages, lakh/crore, dates,
+percentages, INR/USD identity, ranges, ordinals, and units. This is a small
+lexical extension, not general number-language understanding. Code-mixed and
+transliterated input remains a labeled limitation.
+
+The routing score measures only the deterministic personal-eligibility
+quarantine guard. Research and ambiguous routes are explicitly recorded as
+provider-deferred and are not assigned a mocked provider decision. The prompt
+hierarchy case proves configured separation and fail-closed behavior, not
+universal prompt-injection resistance.
+
+## Retrieval and grounding source fixtures
 
 `eval/eval_set.jsonl` contains 15 short multilingual query-to-relevant-chunk
 records. `eval/grounding_set.jsonl` contains 15 answerability and supporting
 chunk annotations: answerable examples plus one unanswerable control for each
 of English, Hindi, and Bengali.
 
-The grounding evaluator reports:
+The standalone grounding evaluator reports:
 
 - citation precision;
 - support coverage;
@@ -45,7 +74,8 @@ The grounding evaluator reports:
 - citation count; and
 - grounded abstention behavior.
 
-These are deterministic metrics over explicit reviewer judgments. Sentence
+These are deterministic metrics over explicit reviewer judgments. Citation-ID
+membership is not semantic entailment. Sentence
 splitting is a review aid, not semantic entailment, and the small fixtures are
 regression cases rather than a statistically representative benchmark.
 
@@ -83,9 +113,10 @@ end to end:
 The answer connected digital identity, payments, data exchange, interoperable
 public rails, open APIs, and the JAM foundation. Manual review found each
 material claim supported by the three stored chunks. The word “three” required
-manual numeric review because the deployed validator recognizes digit
-expressions, not word-form numbers; the review found no unsupported numeric
-claim.
+manual numeric review because the deployed revision's validator recognized
+digit expressions, not word-form numbers; the review found no unsupported
+numeric claim. The repository now has a small typed and tested number-word
+extension, but the historical deployed image was not changed.
 
 This historical manual review is why the case study may say those particular
 claims were reviewed. The runtime validator alone proves retrieved-ID membership
@@ -120,7 +151,8 @@ No endpoint or provider was called during repository publication.
 
 ```bash
 python -m unittest discover -s tests -v
-python -m eval.precision_at_k
+python -m eval.offline_evaluation
+python scripts/ci_static_checks.py
 ```
 
 ```bash
@@ -132,13 +164,23 @@ npm run build
 npm run test:e2e
 ```
 
-Retrieval evaluation needs a compatible populated local database. It must not
-be pointed at the protected cloud database for portfolio validation.
+The offline evaluation is provider-free, network-free, and database-free. Live
+retrieval evaluation (`python -m eval.precision_at_k`) remains a separately
+authorized local release check requiring a compatible populated local database;
+it must not target the protected cloud database.
+
+GitHub Actions runs four `ubuntu-latest` jobs: backend quality, frontend
+quality, browser smoke/accessibility, and lightweight publication safety. The
+workflow has `contents: read`, references no repository secret or cloud
+credential, builds no image, uploads no artifact, and pins every action to a
+reviewed full commit SHA. The publication scan is deliberately described as
+lightweight rather than a comprehensive security audit.
 
 ## Limitations and next evaluation work
 
 - add structured Cloud Logging for request/provider attempt observability;
-- expand numeric validation to carefully reviewed word-form expressions;
+- expand beyond the current small reviewed number-word lexicon only with new
+  labeled tests;
 - report larger multilingual retrieval and grounding sets with confidence
   intervals;
 - measure warm and cold latency distributions rather than one execution;
