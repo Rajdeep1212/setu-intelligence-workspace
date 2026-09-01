@@ -1,343 +1,288 @@
-# Setu — Multilingual Agentic RAG Assistant (Starter Scaffold)
+# SETU Intelligence Workspace
 
-A runnable skeleton for the Setu project: Postgres + pgvector and a FastAPI app
-are wired up and healthy out of the box, with clear extension points for each
-week of the build plan in `docs/ROADMAP.md`.
+SETU is an evidence-first workspace for exploring India’s digital public
+infrastructure and selected public-program eligibility rules. It combines a
+multilingual retrieval-augmented generation (RAG) backend with a recruiter-ready
+Next.js interface that makes the route, confidence, citations, and source context
+visible alongside each answer.
 
-## What's included
-- **Docker Compose**: Postgres 16 with the `pgvector` extension + the FastAPI app
-- **DB schema** (`db/init.sql`): `documents`, `chunks` (vector column + full-text
-  search column), `query_logs`, `feedback`, `eval_runs`, `eligibility_criteria`
-- **FastAPI app** with `/health`, `/health/db`, and a stubbed `/query` endpoint
-  returning the shape defined in `app/schemas.py`
-- **`ingestion/ingest.py`**: the four functions you'll implement in Week 1
-- **`docs/ROADMAP.md`**: the full week-by-week plan
+This repository is a portfolio case study in building an AI system whose claims
+can be inspected. It does not claim production scale, continuous public
+availability, or commercial adoption.
 
-## Prerequisites
-- Docker + Docker Compose
-- Python 3.11 (only needed if you run scripts like ingestion outside Docker)
-- A free Groq or Gemini API key — needed from Week 3 onward, not for this scaffold
+## Why SETU
 
-## Quickstart
+Policy and public-infrastructure information is often distributed across long,
+multilingual source documents. A fluent answer alone is not enough: a reader
+needs to know which evidence was retrieved, whether citations are real, and
+where the system’s confidence should stop.
+
+SETU addresses that problem with:
+
+- hybrid dense and keyword retrieval over a private PostgreSQL/pgvector corpus;
+- reranking before answer generation;
+- agent routing between document retrieval and structured eligibility lookup;
+- multilingual answer controls for English, Hindi, and Bengali;
+- citation selection, validation, stable ordering, and de-duplication;
+- deterministic checks for digit-form numerical claims;
+- a secure Next.js backend-for-frontend (BFF) boundary; and
+- explicit abstention and safe error behavior when evidence or configuration is
+  insufficient.
+
+## Product experience
+
+The frontend includes four portfolio views:
+
+- **[Workspace](frontend/src/app/workspace/page.tsx)** — a guided intelligence
+  surface with a sanitized grounded-answer demonstration and eligibility flow.
+- **[Sources](frontend/src/app/sources/page.tsx)** — a bounded evidence explorer
+  with search, language, eligibility, pagination, and source-detail states.
+- **[System trust](frontend/src/app/system/page.tsx)** — a content-safe view of
+  identity, secret, networking, database, and grounding controls.
+- **[Case study](frontend/src/app/case-study/page.tsx)** — the engineering journey
+  and evidence from one controlled authenticated cloud query.
+
+Demo mode is the default. Its fixtures are sanitized and make no backend,
+provider, database, or cloud request.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    B[Browser] --> N[Next.js application]
+    N --> F[Server-only BFF]
+    F -. demo mode .-> D[Sanitized fixtures]
+    F -. controlled integration .-> I[IAM-authenticated Cloud Run API]
+    I --> A[FastAPI + LangGraph]
+    A --> R[Hybrid retrieval + reranking]
+    R --> Q[(Private Cloud SQL<br/>PostgreSQL + pgvector)]
+    A --> L[Structured LLM completion]
+    A --> G[Citation + numerical grounding]
+    S[Secret Manager] --> I
+    V[Direct VPC path] --> Q
+```
+
+The browser sends same-site requests to Next.js API routes. Credentials stay in
+the server process; they are never exposed as `NEXT_PUBLIC_` configuration. The
+current local adapter accepts only an HTTP loopback origin. The future cloud
+adapter is deliberately disabled until a deployed frontend identity can obtain
+an audience-bound IAM token server-side.
+
+The deployed backend is private-by-authentication: Cloud Run ingress is
+internet-reachable but has no public principal, so IAM authentication is
+required before the application API-key check. Cloud SQL has a private address
+only and is reached through private networking. See
+[Architecture](docs/architecture.md) and [Security](docs/security.md).
+
+## Grounded query workflow
+
+1. Validate request size, schema, origin, authentication, and rate limit.
+2. Ask the structured router to select `retrieve_docs` or
+   `check_eligibility`.
+3. For retrieval, combine pgvector similarity and PostgreSQL full-text search
+   with reciprocal-rank fusion, then rerank the candidate set.
+4. Generate a schema-constrained answer from the selected evidence.
+5. Accept only cited chunk identifiers present in the retrieved set; remove
+   duplicate identifiers and duplicate evidence.
+6. Check digit-form numeric claims against the supporting evidence. A bounded
+   correction completion is available when this check fails.
+7. Return the answer, selected route, confidence, citations, and request ID—or
+   a stable, content-safe error/abstention response.
+
+Eligibility answers use structured database criteria rather than pretending
+that table rows are document citations.
+
+## Technology
+
+| Layer | Stack |
+|---|---|
+| Frontend | Next.js 16, React 19, TypeScript, TanStack Query, Zod, Radix UI |
+| BFF | Next.js Route Handlers, same-site checks, bounded payloads, server-only secrets |
+| API | Python 3.11, FastAPI, Pydantic, SQLAlchemy async, LangGraph |
+| Retrieval | PostgreSQL 16, pgvector, full-text search, BGE-M3, BGE reranker, OpenVINO |
+| Providers | Groq primary; Gemini adapter present but not used in the validated cloud query |
+| Infrastructure | Docker, Artifact Registry, Cloud Run, Cloud SQL, Secret Manager, Direct VPC networking |
+| Quality | unittest/pytest, Vitest, Testing Library, Playwright, ESLint, TypeScript, GitHub Actions |
+
+## Verified evidence baseline
+
+The evidence frozen before publication records:
+
+| Area | Verified result |
+|---|---|
+| Corpus | 8 documents / 239 chunks / 3 eligibility records |
+| Backend regression suite | 98 tests passed |
+| Frontend unit/integration suite | 18 default tests passed; 1 opt-in local integration test separately passed |
+| Browser suite | 9 Playwright tests passed |
+| Frontend production build | Passed with Node.js 22 |
+| Frontend dependency audit | 0 known vulnerabilities reported by `npm audit` |
+| Cloud backend | 1 service; 1 active-ready revision at 100% traffic; 1 retained historical revision at 0% |
+| Cloud health | Authenticated `/health`, `/health/db`, and `/ready` returned 200 |
+| Controlled cloud query | HTTP 200; `retrieve_docs`; confidence 0.9; 3 distinct valid citations |
+| Query preservation | 1 external submission, no manual retry, no database query-log insertion |
+
+The controlled query took approximately 69 seconds end to end. It is evidence
+that the path worked once under a strict request budget, not a latency or
+availability benchmark. Evaluation methods and boundaries are documented in
+[Evaluation](docs/evaluation.md).
+
+## Local development
+
+### Requirements
+
+- Node.js 22.x for the frontend (the validated runtime was Node.js 22)
+- Python 3.11 for the backend
+- Docker Desktop with Compose for the local PostgreSQL/API stack
+
+### Safe frontend demo
+
+```bash
+cd frontend
+npm ci
+npm run dev -- --hostname 127.0.0.1 --port 3000
+```
+
+Open `http://127.0.0.1:3000/workspace`. No environment file is required: demo
+mode is the fail-safe default and uses only sanitized local fixtures. See the
+[local demo guide](docs/local-demo.md) for routes and controlled adapter modes.
+
+### Local backend
+
+Copy the example file locally and replace every credential placeholder with a
+local-only value. `.env` is ignored and must never be committed.
+
 ```bash
 cp .env.example .env
-docker compose up --build
+docker compose up -d --build db api
+curl --fail http://127.0.0.1:8000/health
+curl --fail http://127.0.0.1:8000/health/db
+curl --fail http://127.0.0.1:8000/ready
 ```
 
-Then check:
-- http://localhost:8000/health → `{"status": "ok"}`
-- http://localhost:8000/health/db → `{"db": "ok"}`
+`/ready` is expected to fail closed until database, API authentication, one LLM
+provider, and the selected inference backend are correctly configured. Never
+put a provider key, application API key, database password, identity token, or
+cloud identifier in a tracked file.
 
-If `/health/db` fails on the very first run, give Postgres a few seconds to
-finish executing `db/init.sql`, then retry.
+The backend health commands do not execute `/query`. A real query invokes a
+provider and should be run only with an explicit request budget.
 
-## Project layout
-```
-setu/
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt           # API deps — installed inside the Docker image
-├── requirements-ingestion.txt # ingestion deps — installed in a local venv, not Docker
-├── requirements-later.txt     # reference — add to requirements.txt week by week
-├── .env.example
-├── app/
-│   ├── main.py                 # FastAPI app + routes
-│   ├── config.py                # env-based settings
-│   ├── db.py                    # async SQLAlchemy engine/session
-│   └── schemas.py                # Pydantic request/response models
-├── db/
-│   └── init.sql                  # schema, run automatically on first container start
-├── ingestion/                     # Week 1 — implemented, run locally (see below)
-│   ├── scraper.py                  # fetch PIB press releases + language variants
-│   ├── chunking.py                  # language-aware sentence-boundary chunking
-│   ├── embeddings.py                 # bge-m3 embedding
-│   ├── db_writer.py                   # async writes to documents/chunks
-│   └── ingest.py                       # CLI entry point, wires the above together
-├── app/retrieval/                 # Week 2 — implemented
-│   ├── dense.py                    # pgvector cosine search
-│   ├── keyword.py                   # Postgres full-text search
-│   ├── fusion.py                     # reciprocal rank fusion
-│   ├── rerank.py                      # bge-reranker-v2-m3 cross-encoder
-│   └── pipeline.py                     # wires the above into retrieve()
-├── app/agent/                      # Week 3 — implemented
-│   ├── llm.py                       # Groq/Gemini behind one generate_structured() call
-│   ├── models.py                     # RouteDecision, GeneratedAnswer (instructor response models)
-│   ├── state.py                       # AgentState shared across graph nodes
-│   ├── tools.py                        # retrieve_docs / check_eligibility tool functions
-│   └── graph.py                         # LangGraph wiring: route -> tool -> generate
-├── eval/                          # Week 2 — implemented
-│   ├── eval_set.jsonl               # hand-labeled query -> relevant chunks (you fill this in)
-│   └── precision_at_k.py             # precision@5, overall + per language
-└── docs/
-    └── ROADMAP.md                       # full week-by-week build plan
-```
+## Validation commands
 
-## Running Week 1 ingestion
-Ingestion runs outside Docker, in its own virtualenv, so the always-on API
-container doesn't have to carry `torch`/`sentence-transformers`:
+Backend checks from the repository root:
 
 ```bash
-python3.11 -m venv .venv-ingest
-source .venv-ingest/bin/activate
-pip install -r requirements-ingestion.txt
-
-# Postgres must already be running (docker compose up -d db)
-export INGEST_DATABASE_DSN="postgresql://setu:setu@localhost:5432/setu"
-
-python -m ingestion.ingest --prids 2235812,2224505,2206477
+python -m compileall -q app ingestion eval tests
+python -m unittest discover -s tests -v
+python -m pip check
+docker compose config --quiet
 ```
 
-Where to get PRIDs: browse pib.gov.in, open a release, and copy the number
-from `?PRID=...` in the URL (also shown as "Release ID" at the bottom of the
-article). Pick ~20-30 releases across a few ministries to start — see
-`docs/ROADMAP.md` (Week 1) for the full rationale, and the docstring at the
-top of `ingestion/scraper.py` for a couple of things to double-check against
-the live site before a full run (it couldn't be tested against pib.gov.in
-from this build environment).
-
-## Trying Week 2 retrieval
-Once you've ingested some documents (Week 1) and rebuilt the API image
-(`docker compose up --build` — the image is bigger now, see the note in
-`requirements.txt`):
+Frontend checks:
 
 ```bash
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "how do I get a PAN card"}'
+cd frontend
+npm run typecheck
+npm run lint
+npm run test:run
+npm run build
+npm run test:e2e
+npm audit
 ```
 
-The `answer` field is still a placeholder (raw concatenated chunks) until
-Week 3 adds LLM generation — this endpoint exists to let you sanity-check
-retrieval quality end to end before adding the agent layer on top.
+Playwright expects the safe local frontend to be running. The opt-in local BFF
+test is intentionally excluded from the default suite unless its explicit
+environment gate is set; it uses a loopback test transport, not the cloud
+backend.
 
-Build `eval/eval_set.jsonl` (see `eval/README.md`) and run:
-```bash
-python -m eval.precision_at_k
+## Repository structure
+
+```text
+app/                    FastAPI, agent graph, grounding, security, retrieval
+db/                     PostgreSQL/pgvector bootstrap schema
+docs/                   Architecture, security, evaluation, demo, deployment
+eval/                   Small multilingual regression fixtures and metrics
+frontend/               Next.js application, BFF, tests, and demo fixtures
+ingestion/              PIB fetch, language-aware chunking, embeddings, writes
+scripts/                Isolated OpenVINO export helper
+tests/                  Backend regression tests
+.github/workflows/      CI and supply-chain evidence generation
 ```
 
-## Trying Week 3 — the agent
-Set `GROQ_API_KEY` (or `GEMINI_API_KEY`) in `.env` — Groq's free tier is the
-simpler path (see the note at the top of `app/agent/llm.py` for why). Then
-seed a few eligibility rows and rebuild:
+## Security principles
 
-```bash
-# with the ingestion venv active (has asyncpg):
-export INGEST_DATABASE_DSN="postgresql://setu:setu@localhost:5432/setu"
-python -m ingestion.seed_eligibility
+- fail closed when identity, secret, provider, database, or model configuration
+  is missing;
+- keep browser-safe configuration separate from server-only credentials;
+- use IAM plus application authentication, with no public Cloud Run principal;
+- give runtime identities only the Cloud SQL and per-secret access they need;
+- keep the database private, encrypted, deletion-protected, and free of public
+  authorized networks;
+- deploy immutable images and preserve failed historical revisions as audit
+  evidence;
+- return bounded schemas and content-safe diagnostics, never prompts, document
+  bodies, credentials, or stack traces; and
+- treat citations, numeric validation, and human review as controls—not proof
+  that every answer is correct.
 
-docker compose up --build
-```
+## Known limitations
 
-Try both routes:
-```bash
-# should route to retrieve_docs
-curl -X POST http://localhost:8000/query -H "Content-Type: application/json" \
-  -d '{"query": "what is Digital Public Infrastructure"}'
+- Production `query_logs` insertion is not implemented. If observability is
+  added, structured Cloud Logging is preferred over granting the runtime
+  database user write access only to populate that table.
+- Exact successful Groq HTTP-attempt telemetry is unavailable, and the
+  configured provider HTTP-attempt ceiling is higher than the normal two-step
+  logical workflow.
+- The deployed numeric guard detects digit expressions; word-form numbers need
+  manual review or a future expanded validator.
+- The validated query took approximately 69 seconds.
+- The deployed OCI image is approximately 3.37 GB and scale-to-zero can produce
+  cold starts.
+- Backend ingress is internet-reachable but IAM-protected; public principals
+  remain absent.
+- The current frontend is production-quality locally, but public frontend
+  hosting and production session authentication are not complete.
+- The alerts-only cloud budget is not a spending cap, and the Cloud SQL trial
+  requires timely teardown.
+- The evaluation sets are small regression fixtures, not statistically robust
+  accuracy claims.
 
-# should route to check_eligibility
-curl -X POST http://localhost:8000/query -H "Content-Type: application/json" \
-  -d '{"query": "am I eligible for PM Kisan"}'
-```
+## Screenshots
 
-`route` in the response tells you which path the agent took — useful for
-building the Week 3 tool-selection-accuracy eval mentioned in
-`docs/ROADMAP.md`.
+No screenshots are published in this revision because the controlled in-app
+capture runtime was unavailable during the publication audit. The interface is
+fully reproducible in sanitized demo mode using the [local demo](docs/local-demo.md)
+instructions; no image or production result has been invented as a substitute.
 
-## Optional OpenVINO local inference
+## Further reading
 
-PyTorch is the default and rollback-safe local retrieval backend:
+- [Architecture](docs/architecture.md)
+- [Security model](docs/security.md)
+- [Evaluation and validated evidence](docs/evaluation.md)
+- [Local demo guide](docs/local-demo.md)
+- [Citation-grounding design](docs/CITATION_GROUNDING.md)
+- [Deployment runbook](docs/DEPLOYMENT.md)
+- [Build roadmap](docs/ROADMAP.md)
 
-```dotenv
-LOCAL_INFERENCE_BACKEND=pytorch
-```
+## Roadmap
 
-For Intel CPU deployments, generate the validated FP32 OpenVINO artifacts
-once in the isolated exporter environment. The named Hugging Face cache is
-shared with the API service and reused across container recreations and
-exporter runs; generated multi-gigabyte IR files remain under the Git-ignored
-`models/openvino/` directory and are mounted read-only into the API container.
+The next engineering step is a separately authorized frontend deployment with
+a dedicated service identity, server-side audience-bound IAM tokens, and
+production session authentication. Later work should improve structured query
+observability, provider-attempt telemetry, word-form numerical checks, image
+size, cold-start latency, and the depth of multilingual evaluation. None of
+those changes are implemented by this publication commit.
 
-```bash
-docker compose --profile openvino-export build openvino-export
-docker compose --profile openvino-export run --rm openvino-export
-```
+## Data and licensing
 
-After both artifact directories exist, opt in and rebuild the API:
+The ingestion code targets public PIB release pages, but this repository does
+not publish the live database, backups, embeddings, or full source-document
+bodies. The tracked evaluation fixtures contain short authored queries, labels,
+expected facts, and chunk identifiers for regression testing.
 
-```dotenv
-LOCAL_INFERENCE_BACKEND=openvino
-OPENVINO_MODEL_DIR=/models/openvino
-```
+No `LICENSE` file is included. Public visibility makes the work reviewable; it
+does not grant an open-source reuse license.
 
-```bash
-docker compose up -d --build api
-```
+## Author
 
-OpenVINO uses the same BGE-M3 and BGE reranker checkpoints, FP32 weights,
-tokenization, CLS pooling, normalization, and ranking semantics. It uses more
-memory than PyTorch in the validated CPU experiment. Missing, incomplete, or
-non-FP32 artifacts fail explicitly on first retrieval initialization; there
-is no silent fallback. To roll back immediately, set
-`LOCAL_INFERENCE_BACKEND=pytorch` and recreate the API container.
-
-## Operations and reliability
-
-SETU exposes three probe surfaces with deliberately different semantics:
-
-- `GET /health` is a liveness check. It returns `status` and the configured
-  inference backend without touching the database or loading model weights.
-- `GET /health/db` checks PostgreSQL and returns HTTP 503 with a safe error
-  envelope when the database is unavailable.
-- `GET /ready` checks PostgreSQL, LLM configuration, and local inference
-  configuration. OpenVINO readiness verifies the required files but does not
-  compile or run the multi-gigabyte models. It returns HTTP 503 with safe
-  issue codes when the service should not receive query traffic.
-
-Every response includes an `X-Request-ID` header. Application logs include
-the same ID, selected backend, major initialization events, request duration,
-and classified failures. Keys, full prompts, and document bodies are not
-logged. Query errors use a stable `error.code`, `error.message`, and
-`error.request_id` envelope; internal stack traces are not returned.
-
-Operational configuration:
-
-| Variable | Requirement |
-|---|---|
-| `DATABASE_URL` | Must be a `postgresql+asyncpg` URL with host and database. Compose supplies it. |
-| `GROQ_API_KEY` / `GEMINI_API_KEY` | At least one is required for readiness and queries; Groq takes precedence. |
-| `LOCAL_INFERENCE_BACKEND` | `pytorch` (default) or `openvino`. Other values fail validation. |
-| `OPENVINO_MODEL_DIR` | Container path containing both exported model directories. |
-
-The two validated FP32 OpenVINO artifacts occupy about 4.28 GiB in total.
-Milestone 3K observed approximately 2.70 GiB API memory use for a real
-OpenVINO query within a 3.70 GiB Docker limit. This is validation evidence,
-not a production-capacity claim. Do not run loaded PyTorch and OpenVINO API
-workers concurrently under that limit.
-
-Keep the PostgreSQL volume, `setu_hf_cache`, current API/database images, and
-`models/openvino/` artifacts. When host disk space is low, inspect with
-`docker system df` and remove only resources proven obsolete. Never use a
-broad volume prune. The isolated exporter image can be removed after exports
-are verified and rebuilt later from its pinned Dockerfile if needed.
-
-Rollback to PyTorch by setting `LOCAL_INFERENCE_BACKEND=pytorch` and
-recreating only the API service:
-
-```bash
-docker compose up -d --no-deps --no-build --force-recreate api
-```
-
-## Security baseline
-
-`POST /query` is fail-closed and requires the API key configured through
-`SETU_API_KEY`. Send it in the `X-API-Key` header; never place it in a URL,
-commit it, or log it:
-
-```bash
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: $SETU_API_KEY" \
-  -d '{"query": "what is Digital Public Infrastructure"}'
-```
-
-`/health`, `/health/db`, and `/ready` remain public probe endpoints. They
-expose only coarse service state, never credentials, connection strings, or
-stack traces. Readiness returns `api_auth_not_configured` until
-`SETU_API_KEY` is set.
-
-Query traffic is limited in memory using `QUERY_RATE_LIMIT` requests per
-`QUERY_RATE_WINDOW_SECONDS` (defaults: 10 per 60 seconds). The limiter is
-global to one API process: it is neither shared across workers/replicas nor
-durable across restarts. Replace it with a distributed gateway or Redis-backed
-limit before horizontal scaling.
-
-Request safety and browser access are controlled by:
-
-| Variable | Default | Purpose |
-|---|---:|---|
-| `MAX_REQUEST_BODY_BYTES` | `16384` | Reject oversized `/query` request bodies with HTTP 413. |
-| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated exact browser origins; `*` is rejected. |
-
-CORS allows only GET, POST, and OPTIONS with `Content-Type` and `X-API-Key`;
-credentials are disabled. Responses include `X-Content-Type-Options: nosniff`,
-`X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Cache-Control:
-no-store`, and the existing `X-Request-ID`. A Content Security Policy is not
-set because SETU is a JSON API and the built-in interactive API documentation
-loads its own browser assets.
-
-GitHub Actions runs Python 3.11 compilation, all mocked unit tests, `pip
-check`, and Compose configuration validation on pushes and pull requests. CI
-does not require `.env`, PostgreSQL, provider/API keys, model artifacts,
-Docker builds, external LLM calls, or BGE downloads. Dependency installation
-does include the production Python packages; model weights are never fetched.
-
-## Container and supply-chain hardening
-
-The API Dockerfile uses a multi-stage build. Compilers and development headers
-remain in the builder stage; the final stage contains the installed virtual
-environment, the runtime `libgomp1` library, and only `app/` plus `ingestion/`.
-It runs as the dedicated `setu` user with stable UID/GID `10001:10001`.
-Python is fixed at the currently validated `3.11.16` patch release, and the
-formerly floating direct application requirements are fixed to the versions
-already installed in the validated image. Transitive dependencies are not yet
-hash-locked; the generated SBOM records what CI actually resolved.
-
-Default Compose ports bind only to `127.0.0.1`, and application source mounts
-are read-only. The Hugging Face cache remains writable in the local-development
-configuration so a missing PyTorch model can be acquired deliberately. An
-existing cache created by the former root container may need a one-time
-ownership migration after the hardened image is built:
-
-```bash
-docker compose run --rm --no-deps --user 0 api \
-  sh -c 'chown -R 10001:10001 /cache/huggingface'
-```
-
-Review the target volume before running that command. It changes ownership
-only; it must never be replaced with broad permission changes such as
-`chmod 777`.
-
-For a deployment-oriented configuration, combine the base file with the
-production overlay:
-
-```bash
-docker compose -f docker-compose.yml -f compose.production.yml config
-docker compose -f docker-compose.yml -f compose.production.yml up -d
-```
-
-The overlay removes host-published ports (the API remains reachable as
-`api:8000` on the private Compose network), removes development source mounts,
-makes the root filesystem and cached models read-only, provides a constrained
-64 MiB `/tmp`, drops all Linux capabilities, and enables
-`no-new-privileges`. Model downloads are disabled in that configuration, so
-the selected backend's artifacts must already exist. Cloud ingress should
-publish only the API through TLS; PostgreSQL should remain private.
-
-Dependency auditing and SBOM generation use tools isolated in
-`requirements-security.txt`; they do not modify application versions:
-
-```bash
-python -m pip install -r requirements.txt -r requirements-security.txt
-python -m pip_audit --local --progress-spinner off \
-  --format json --output pip-audit.json
-cyclonedx-py environment --output-format JSON \
-  --output-file setu-sbom.cdx.json
-```
-
-The CycloneDX document covers packages installed in that Python environment.
-CI runs both commands and retains the JSON audit and CycloneDX JSON SBOM as a
-30-day `supply-chain-reports` artifact. Vulnerability results are visibility,
-not proof of security: CI records a failing audit step and preserves its report
-without automatically upgrading the deliberately pinned ML/runtime stack.
-Generated reports are CI artifacts and should not be committed.
-
-## Deployment readiness
-
-Before any deployment, follow `docs/DEPLOYMENT.md` for the frozen backend
-contract, production configuration gates, database backup/restore procedure,
-latency decision, and API-only rollback plan.
-
-## Where to go next
-Open `docs/ROADMAP.md` — it walks through exactly what to build each week,
-mapped onto this scaffold, in the same order as the original project plan
-(ingestion → hybrid retrieval → agent → API/frontend → eval/MLOps → stretch).
+Built and documented by **Rajdeep Mahanty**.
