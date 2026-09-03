@@ -1,4 +1,4 @@
-import { getDemoSource, getDemoSources, demoResponse } from "@/lib/fixtures";
+import { getDemoSource, getDemoSources, demoResponseForQuery } from "@/lib/fixtures";
 import { queryResponseSchema, sourceDetailSchema, sourceFiltersSchema, sourcesResponseSchema, type QueryRequest, type QueryResponse, type SourceDetail, type SourcesResponse } from "@/lib/contracts";
 
 export type DataMode = "demo" | "local" | "cloud";
@@ -38,7 +38,7 @@ async function upstream<T>(path: string, init: RequestInit, schema: { parse(valu
 export async function queryThroughBff(input: QueryRequest, options: { transport?: Transport; environment?: NodeJS.ProcessEnv } = {}): Promise<QueryResponse> {
   const environment = options.environment ?? process.env; const mode = dataMode(environment);
   if (isEligibilityPreviewRequest(input)) throw new BffError("ELIGIBILITY_UNVERIFIED", 503, "Live eligibility evaluation is intentionally unavailable until its rules are reviewed, versioned, and linked to official-source provenance.");
-  if (mode === "demo") return demoResponse;
+  if (mode === "demo") return demoResponseForQuery(input);
   if (mode === "cloud") throw new BffError("CLOUD_ADAPTER_DISABLED", 503, "The future cloud adapter is not active.");
   return upstream("/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) }, queryResponseSchema, 90_000, options.transport ?? fetch, environment);
 }

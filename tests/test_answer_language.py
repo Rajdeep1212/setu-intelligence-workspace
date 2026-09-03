@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 from app.agent import graph
 from app.agent.models import GeneratedAnswer, RouteDecision
-from app.grounding import abstention_message
+from app.grounding import abstention_message, query_language
 from app.language import (
     answer_uses_target_language,
     supported_script_counts,
@@ -32,6 +32,13 @@ def _state(language: str = "en") -> dict:
 
 
 class DominantScriptContractTests(unittest.TestCase):
+    def test_query_language_infers_supported_scripts_and_respects_explicit_language(self):
+        self.assertEqual(query_language("What is Aadhaar used for?", None), "en")
+        self.assertEqual(query_language("आधार का उपयोग क्या है?", None), "hi")
+        self.assertEqual(query_language("আধারের ব্যবহার কী?", None), "bn")
+        self.assertEqual(query_language("आধারের ব্যবহার কী?", None), "bn")
+        self.assertEqual(query_language("What is Aadhaar?", "hi"), "hi")
+
     def test_explicit_target_instructions_cover_all_supported_languages(self):
         for language, name in (("en", "English"), ("hi", "Hindi"), ("bn", "Bengali")):
             with self.subTest(language=language):
@@ -174,6 +181,14 @@ class BoundedCorrectionTests(unittest.TestCase):
         self.assertEqual(stages.count("answer_generation"), 2)
         retrieve.assert_awaited_once_with(session, _state()["query"], "en")
         self.assertEqual(result["answer"], corrected.answer)
+
+    def test_inferred_answer_language_does_not_create_a_retrieval_filter(self):
+        retrieve = AsyncMock(return_value=[])
+        state = {"query": "भारत में आधार का क्या उपयोग है?", "route": "retrieve_docs"}
+        session = object()
+        with patch.object(graph, "retrieve_docs_tool", retrieve):
+            asyncio.run(graph.retrieve_docs_node(state, session))
+        retrieve.assert_awaited_once_with(session, state["query"], None)
 
 
 if __name__ == "__main__":

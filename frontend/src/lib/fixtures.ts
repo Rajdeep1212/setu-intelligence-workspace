@@ -14,7 +14,41 @@ export const demoResponse = queryResponseSchema.parse({
     { text: "Open interfaces allow these foundations to work as a shared stack, while the JAM foundation links identity, banking and connectivity.", citation_ids: ["dpi-evidence-02", "dpi-evidence-03"] },
   ],
 });
-export const suggestedQuestions = [establishedQuestion.query, "How do open APIs support India's DPI stack?", "What role does JAM play in digital delivery?"];
+
+const localizedDemoResponses = {
+  en: demoResponse,
+  hi: queryResponseSchema.parse({
+    ...demoResponse,
+    answer: "भारत का डिजिटल दृष्टिकोण डिजिटल पहचान, भुगतान और सहमति-आधारित डेटा विनिमय को इंटरऑपरेबल सार्वजनिक रेल के माध्यम से जोड़ता है। खुले इंटरफेस इन आधारों को साझा स्टैक की तरह काम करने देते हैं, जबकि JAM की नींव पहचान, बैंकिंग और कनेक्टिविटी को जोड़ती है।",
+    sections: [
+      { text: "भारत का डिजिटल दृष्टिकोण डिजिटल पहचान, भुगतान और सहमति-आधारित डेटा विनिमय को इंटरऑपरेबल सार्वजनिक रेल के माध्यम से जोड़ता है।", citation_ids: ["dpi-evidence-01"] },
+      { text: "खुले इंटरफेस इन आधारों को साझा स्टैक की तरह काम करने देते हैं, जबकि JAM की नींव पहचान, बैंकिंग और कनेक्टिविटी को जोड़ती है।", citation_ids: ["dpi-evidence-02", "dpi-evidence-03"] },
+    ],
+  }),
+  bn: queryResponseSchema.parse({
+    ...demoResponse,
+    answer: "ভারতের ডিজিটাল দৃষ্টিভঙ্গি ডিজিটাল পরিচয়, পেমেন্ট এবং সম্মতিভিত্তিক তথ্য বিনিময়কে আন্তঃকার্যক্ষম জনপরিকাঠামোর মাধ্যমে যুক্ত করে। উন্মুক্ত ইন্টারফেস এই ভিত্তিগুলিকে একটি ভাগ করা স্ট্যাক হিসেবে কাজ করতে দেয়, আর JAM-এর ভিত্তি পরিচয়, ব্যাংকিং ও সংযোগকে যুক্ত করে।",
+    sections: [
+      { text: "ভারতের ডিজিটাল দৃষ্টিভঙ্গি ডিজিটাল পরিচয়, পেমেন্ট এবং সম্মতিভিত্তিক তথ্য বিনিময়কে আন্তঃকার্যক্ষম জনপরিকাঠামোর মাধ্যমে যুক্ত করে।", citation_ids: ["dpi-evidence-01"] },
+      { text: "উন্মুক্ত ইন্টারফেস এই ভিত্তিগুলিকে একটি ভাগ করা স্ট্যাক হিসেবে কাজ করতে দেয়, আর JAM-এর ভিত্তি পরিচয়, ব্যাংকিং ও সংযোগকে যুক্ত করে।", citation_ids: ["dpi-evidence-02", "dpi-evidence-03"] },
+    ],
+  }),
+};
+
+export function demoResponseForQuery(input: QueryRequest) {
+  const language = input.language ?? (/[\u0980-\u09ff]/.test(input.query) ? "bn" : /[\u0900-\u097f]/.test(input.query) ? "hi" : "en");
+  return localizedDemoResponses[language];
+}
+
+export const suggestedQuestions = [
+  establishedQuestion.query,
+  "How do open APIs support India's DPI stack?",
+  "What role does JAM play in digital delivery?",
+  "भारत में आधार और डिजिटल सेवाओं का क्या संबंध है?",
+  "यूपीआई डिजिटल भुगतान को कैसे सक्षम करता है?",
+  "ভারতের ডিজিটাল জনপরিকাঠামোর মূল উপাদানগুলি কী?",
+  "ডিজিলকার নাগরিকদের কীভাবে সাহায্য করে?",
+];
 
 const demoSourceDetails = [
   { id: "dpi-brief-01", title: "India's Digital Public Infrastructure", source: "PIB", language: "en" as const, metadata: { posted_on: "Sanitized demo metadata" }, chunk_count: 80, eligibility_count: 0, has_eligibility: false, eligibility: [] },
