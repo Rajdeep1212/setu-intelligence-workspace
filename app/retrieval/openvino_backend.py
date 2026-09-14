@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,7 @@ EMBEDDING_DIMENSION = 1024
 EMBEDDING_MAX_LENGTH = 8192
 QUERY_MAX_LENGTH = 192
 RERANKER_MAX_LENGTH = 256
+_MODEL_INITIALIZATION_COUNTS: dict[str, int] = {}
 
 
 def _load_tokenizer(model_dir: Path):
@@ -78,14 +80,27 @@ class OpenVINOEmbeddingModel:
     """BGE-M3 feature extraction with CLS pooling and L2 normalization."""
 
     def __init__(self, model_dir: str | Path):
+        initialized_started = time.perf_counter()
         self.model_dir = Path(model_dir)
+        compile_started = time.perf_counter()
         self.compiled_model, self.output, self.input_names = _load_compiled_model(
             self.model_dir
         )
+        compile_ms = (time.perf_counter() - compile_started) * 1000
+        tokenizer_started = time.perf_counter()
         self.tokenizer = _load_tokenizer(self.model_dir)
+        tokenizer_ms = (time.perf_counter() - tokenizer_started) * 1000
+        model_name = "bge-m3"
+        _MODEL_INITIALIZATION_COUNTS[model_name] = _MODEL_INITIALIZATION_COUNTS.get(model_name, 0) + 1
         logger.info(
-            "model_initialized request_id=%s backend=openvino model=bge-m3",
+            "model_initialized request_id=%s backend=openvino model=%s "
+            "initialization_count=%s compile_ms=%.2f tokenizer_load_ms=%.2f total_ms=%.2f",
             get_request_id(),
+            model_name,
+            _MODEL_INITIALIZATION_COUNTS[model_name],
+            compile_ms,
+            tokenizer_ms,
+            (time.perf_counter() - initialized_started) * 1000,
         )
 
     def encode(self, texts: list[str], batch_size: int = 16) -> list[list[float]]:
@@ -95,8 +110,14 @@ class OpenVINOEmbeddingModel:
             raise ValueError("batch_size must be at least 1")
 
         vectors: list[np.ndarray] = []
+        tokenize_ms = 0.0
+        inference_ms = 0.0
+        postprocess_ms = 0.0
+        max_input_tokens = 0
+        total_started = time.perf_counter()
         for start in range(0, len(texts), batch_size):
             batch = texts[start : start + batch_size]
+            stage_started = time.perf_counter()
             tokenized = self.tokenizer(
                 batch,
                 padding=True,
@@ -104,7 +125,12 @@ class OpenVINOEmbeddingModel:
                 max_length=EMBEDDING_MAX_LENGTH,
                 return_tensors="np",
             )
+            tokenize_ms += (time.perf_counter() - stage_started) * 1000
+            max_input_tokens = max(max_input_tokens, int(np.asarray(tokenized["input_ids"]).shape[1]))
+            stage_started = time.perf_counter()
             outputs = self.compiled_model(_model_inputs(tokenized, self.input_names))
+            inference_ms += (time.perf_counter() - stage_started) * 1000
+            stage_started = time.perf_counter()
             hidden = np.asarray(outputs[self.output], dtype=np.float32)
             if hidden.ndim != 3 or hidden.shape[2] != EMBEDDING_DIMENSION:
                 raise RuntimeError(
@@ -115,8 +141,23 @@ class OpenVINOEmbeddingModel:
             if not np.isfinite(cls_vectors).all() or np.any(norms == 0):
                 raise RuntimeError("BGE-M3 produced invalid embedding values")
             vectors.append(cls_vectors / norms)
+            postprocess_ms += (time.perf_counter() - stage_started) * 1000
 
-        return np.concatenate(vectors, axis=0).astype(np.float32).tolist()
+        result = np.concatenate(vectors, axis=0).astype(np.float32).tolist()
+        logger.info(
+            "model_profile request_id=%s model=bge-m3 item_count=%s batch_size=%s "
+            "max_input_tokens=%s tokenize_ms=%.2f inference_ms=%.2f "
+            "postprocess_ms=%.2f total_ms=%.2f",
+            get_request_id(),
+            len(texts),
+            batch_size,
+            max_input_tokens,
+            tokenize_ms,
+            inference_ms,
+            postprocess_ms,
+            (time.perf_counter() - total_started) * 1000,
+        )
+        return result
 
 
 def _sigmoid(logits: np.ndarray) -> np.ndarray:
@@ -132,15 +173,28 @@ class OpenVINOReranker:
     """BGE reranker preserving FlagEmbedding's production pair semantics."""
 
     def __init__(self, model_dir: str | Path):
+        initialized_started = time.perf_counter()
         self.model_dir = Path(model_dir)
+        compile_started = time.perf_counter()
         self.compiled_model, self.output, self.input_names = _load_compiled_model(
             self.model_dir
         )
+        compile_ms = (time.perf_counter() - compile_started) * 1000
+        tokenizer_started = time.perf_counter()
         self.tokenizer = _load_tokenizer(self.model_dir)
+        tokenizer_ms = (time.perf_counter() - tokenizer_started) * 1000
+        model_name = "bge-reranker-v2-m3"
+        _MODEL_INITIALIZATION_COUNTS[model_name] = _MODEL_INITIALIZATION_COUNTS.get(model_name, 0) + 1
         logger.info(
             "model_initialized request_id=%s backend=openvino "
-            "model=bge-reranker-v2-m3",
+            "model=%s initialization_count=%s compile_ms=%.2f "
+            "tokenizer_load_ms=%.2f total_ms=%.2f",
             get_request_id(),
+            model_name,
+            _MODEL_INITIALIZATION_COUNTS[model_name],
+            compile_ms,
+            tokenizer_ms,
+            (time.perf_counter() - initialized_started) * 1000,
         )
 
     def compute_score(
@@ -149,18 +203,24 @@ class OpenVINOReranker:
         if not sentence_pairs:
             return []
 
+        total_started = time.perf_counter()
+        stage_started = time.perf_counter()
         queries = self.tokenizer(
             [pair[0] for pair in sentence_pairs],
             add_special_tokens=False,
             max_length=QUERY_MAX_LENGTH,
             truncation=True,
         )["input_ids"]
+        query_tokenize_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
         passages = self.tokenizer(
             [pair[1] for pair in sentence_pairs],
             add_special_tokens=False,
             max_length=RERANKER_MAX_LENGTH,
             truncation=True,
         )["input_ids"]
+        passage_tokenize_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
         prepared = [
             self.tokenizer.prepare_for_model(
                 query_ids,
@@ -180,11 +240,33 @@ class OpenVINOReranker:
             max_length=RERANKER_MAX_LENGTH,
             return_tensors="np",
         )
+        prepare_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
         outputs = self.compiled_model(_model_inputs(tokenized, self.input_names))
+        inference_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
         sorted_logits = np.asarray(outputs[self.output], dtype=np.float32).reshape(-1)
         sorted_scores = _sigmoid(sorted_logits) if normalize else sorted_logits
 
         scores = np.empty_like(sorted_scores)
         scores[length_order] = sorted_scores
         values = scores.astype(np.float32).tolist()
+        postprocess_ms = (time.perf_counter() - stage_started) * 1000
+        logger.info(
+            "model_profile request_id=%s model=bge-reranker-v2-m3 pair_count=%s "
+            "max_query_tokens=%s max_passage_tokens=%s model_input_tokens=%s "
+            "query_tokenize_ms=%.2f passage_tokenize_ms=%.2f prepare_ms=%.2f "
+            "inference_ms=%.2f postprocess_ms=%.2f total_ms=%.2f",
+            get_request_id(),
+            len(sentence_pairs),
+            max((len(ids) for ids in queries), default=0),
+            max((len(ids) for ids in passages), default=0),
+            int(np.asarray(tokenized["input_ids"]).shape[1]),
+            query_tokenize_ms,
+            passage_tokenize_ms,
+            prepare_ms,
+            inference_ms,
+            postprocess_ms,
+            (time.perf_counter() - total_started) * 1000,
+        )
         return values[0] if len(values) == 1 else values

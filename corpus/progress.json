@@ -1,0 +1,146 @@
+{
+  "updated_at": "2026-09-13T20:08:01Z",
+  "batch_id": "batch-003",
+  "manifest_path": "corpus/manifests/batch-003.json",
+  "staging_database": "setu_corpus_staging",
+  "application_database_baseline": {
+    "documents": 8,
+    "chunks": 239,
+    "eligibility_criteria": 3,
+    "verified_read_only_at": "2026-09-09T06:29:00Z"
+  },
+  "process": {
+    "running": false,
+    "pid": null,
+    "operation": "sync-verified-links"
+  },
+  "distinct_item_stage_counts": {
+    "discovered": 5,
+    "fetched": 5,
+    "extracted": 5,
+    "validated": 5,
+    "deduplicated": 5,
+    "chunked": 5,
+    "embedded": 5,
+    "indexed": 5,
+    "retrieval_checked": 5,
+    "excluded": 0
+  },
+  "source_document_stage_counts": {
+    "discovered": 5,
+    "fetched": 5,
+    "extracted": 5,
+    "validated": 5,
+    "deduplicated": 5,
+    "chunked": 5,
+    "embedded": 5,
+    "indexed": 5,
+    "retrieval_checked": 5,
+    "excluded": 0
+  },
+  "completed_item_ids": [
+    "scheme.central.sbm-gramin-ihhl",
+    "scheme.central.ddu-gky",
+    "scheme.central.naps",
+    "scheme.central.nats",
+    "service.central.udyam-registration"
+  ],
+  "pending_item_ids": [],
+  "failures": [],
+  "database_evidence": {
+    "database_name": "setu_corpus_staging",
+    "counts": {
+      "documents": 26,
+      "chunks": 331,
+      "eligibility_criteria": 0
+    },
+    "database_bytes": 14343191,
+    "raw_text_bytes": 265679
+  },
+  "journey_checkpoint": {
+    "status": "complete_deterministic_provider_boundary",
+    "checkpoint_path": "docs/everyday-use-journey-checkpoint.md",
+    "branch": "master",
+    "head": "602f1ee4f74d5ab590ed3d10d15b9c334f165c8d",
+    "changed_files_reviewed": [
+      "tests/test_config.py",
+      "tests/real_runtime_support.py",
+      "tests/real_runtime_server.py",
+      "tests/test_real_runtime_staging_integration.py",
+      "tests/test_question_boundary.py",
+      "frontend/src/lib/server/bff.ts",
+      "frontend/src/lib/server/bff.test.ts",
+      "frontend/tests/e2e/question-boundary.spec.ts",
+      "frontend/tests/e2e/connected-workspace.spec.ts",
+      "docs/everyday-use-journey-checkpoint.md",
+      "corpus/progress.json"
+    ],
+    "mismatch_cause": "The original browser diagnostic submitted before React hydration; the controlled textarea reverted to the server fixture. Exact-value fingerprint tests now wait for hydrated interaction and prove preservation without normalization.",
+    "real_components": [
+      "frontend",
+      "BFF",
+      "FastAPI",
+      "LangGraph 1.2.11",
+      "PostgreSQL staging retrieval",
+      "OpenVINO embedding and reranking",
+      "grounding and citation validation",
+      "response serialization and browser rendering"
+    ],
+    "deterministic_components": [
+      "route-decision provider boundary",
+      "answer-generation provider boundary"
+    ],
+    "verification": {
+      "backend_real_langgraph": "134 passed, 1 intentional default staging-integration skip",
+      "real_staging_journeys": "5 passed with deterministic provider boundary",
+      "ingestion_and_evaluation_unittest": "18 passed in .venv-ingest; pip check clean",
+      "everyday_use_evidence": "12/12 source passages and 12/12 saved retrieval checkpoints passed with zero external activity",
+      "frontend_typecheck": "passed",
+      "frontend_vitest": "35 passed, 1 skipped",
+      "frontend_eslint": "passed",
+      "frontend_production_build": "passed",
+      "frontend_playwright": "12 passed, 3 connected skips when run serially",
+      "connected_playwright": "1 passed in 13.0 minutes; English 6.4 minutes, Bengali 5.8 minutes",
+      "question_preservation": "browser boundaries length 52/fingerprint 0e5c0f8a... equal; backend boundaries length 49/fingerprint 832eec82... equal",
+      "git_diff_check": "passed with informational LF-to-CRLF warnings",
+      "live_provider_calls": 0
+    },
+    "database_safety": {
+      "application": {
+        "documents": 8,
+        "chunks": 239,
+        "eligibility_criteria": 3,
+        "query_logs": 0,
+        "corpus_documents": 0
+      },
+      "staging": {
+        "documents": 26,
+        "chunks": 331,
+        "eligibility_criteria": 0,
+        "query_logs": 0,
+        "verified_service_links": 10,
+        "duplicate_document_urls": 0,
+        "duplicate_chunk_positions": 0
+      },
+      "before_after_counts_unchanged": true,
+      "link_sync_idempotent": true
+    },
+    "languages_verified": {
+      "en": "connected real retrieval and rendered cited answer",
+      "hi": "real staging integration for PMUY and unsupported e-Shram amount",
+      "bn": "connected real retrieval over English WBSCC evidence and rendered Bengali answer"
+    },
+    "temporary_process_cleanup": "complete; no listeners remain on ports 3000 or 18000; existing setu-api and setu-db services are healthy",
+    "remaining_warnings": [
+      "Connected local retrieval is too slow for ordinary use: 6.4 minutes for e-Shram and 5.8 minutes for WBSCC after preload.",
+      "The 600-second local-only BFF timeout is an integration accommodation, not a performance fix.",
+      "Tokenizer reports the fix_mistral_regex compatibility warning for the local models.",
+      "OpenVINO telemetry directory creation was denied and no data was sent.",
+      "Reranker reports fast-tokenizer and padding efficiency warnings.",
+      "Four parallel Edge workers caused resource-contention timeouts; the same browser matrix passed serially.",
+      "Live provider answer quality has not been tested."
+    ]
+  },
+  "exact_resume_command": null,
+  "next_action": "Only with separate authorization, run a small budget-bounded live-provider answer-quality milestone. Do not promote staging, deploy, commit, push, or start batch 4 as part of this completed gate."
+}

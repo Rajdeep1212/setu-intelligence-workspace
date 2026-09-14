@@ -1,4 +1,5 @@
 from typing import Literal, Optional
+from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -6,6 +7,13 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 class QueryRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
     language: Optional[Literal["en", "hi", "bn"]] = None
+
+    @field_validator("query")
+    @classmethod
+    def reject_blank_query(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("query must not be blank")
+        return value
 
 
 class Citation(BaseModel):
@@ -19,6 +27,17 @@ class Citation(BaseModel):
 
 class AnswerSection(BaseModel):
     text: str = Field(min_length=1)
+    kind: Optional[
+        Literal[
+            "direct_answer",
+            "benefit",
+            "conditions",
+            "how_to_apply",
+            "next_steps",
+            "required_documents",
+            "limitations",
+        ]
+    ] = None
     citation_ids: list[str] = Field(default_factory=list, max_length=5)
 
     @field_validator("citation_ids")
@@ -31,15 +50,30 @@ class AnswerSection(BaseModel):
         return value
 
 
+class OfficialLink(BaseModel):
+    kind: Literal["application", "status", "help"]
+    label: str = Field(min_length=1, max_length=120)
+    url: str = Field(min_length=1, max_length=2048)
+
+    @field_validator("url")
+    @classmethod
+    def require_web_url(cls, value: str) -> str:
+        parsed = urlparse(value)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError("official link must be an absolute HTTP(S) URL")
+        return value
+
+
 class QueryResponse(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list, max_length=5)
     sections: list[AnswerSection] = Field(default_factory=list, max_length=12)
+    official_links: list[OfficialLink] = Field(default_factory=list, max_length=6)
     route: Optional[str] = None
     confidence: Optional[float] = None
-    response_status: Literal["answered", "abstained", "eligibility_unverified"] = (
-        "answered"
-    )
+    response_status: Literal[
+        "answered", "abstained", "clarification_needed", "eligibility_unverified"
+    ] = "answered"
 
     @field_validator("citations")
     @classmethod

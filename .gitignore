@@ -32,6 +32,14 @@ temp/
 *.out
 eval_results.json
 
+# Resumable corpus-expansion runtime artifacts. The source manifest and
+# compact progress report are tracked; downloaded originals, extracted text,
+# and generated embeddings remain local staging evidence.
+corpus/staging/
+
+# Codebuff agent metadata
+.freebuff/
+
 # Local database and Docker data
 *.sqlite
 *.sqlite3

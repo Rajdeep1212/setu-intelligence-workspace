@@ -29,6 +29,7 @@ from app.schemas import (
     AnswerSection,
     Citation,
     ErrorResponse,
+    OfficialLink,
     QueryRequest,
     QueryResponse,
     SourceDetail,
@@ -129,7 +130,8 @@ async def correlate_and_log_request(request: Request, call_next):
         duration_ms = (time.perf_counter() - started) * 1000
         log = logger.error if response.status_code >= 500 else logger.info
         log(
-            "request_complete request_id=%s method=%s path=%s status=%s duration_ms=%.2f",
+            "request_complete request_id=%s method=%s path=%s status=%s "
+            "stage=request_total duration_ms=%.2f",
             request_id,
             request.method,
             request.url.path,
@@ -267,15 +269,37 @@ async def source_detail(
     responses={422: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
 async def query(payload: QueryRequest, session: AsyncSession = Depends(get_session)):
-    final_state = await run_agent(session, payload.query, language=payload.language)
+    started = time.perf_counter()
+    try:
+        final_state = await run_agent(session, payload.query, language=payload.language)
+    finally:
+        logger.info(
+            "agent_complete request_id=%s stage=agent_pipeline duration_ms=%.2f",
+            get_request_id(),
+            (time.perf_counter() - started) * 1000,
+        )
+    serialization_started = time.perf_counter()
     citations = [Citation(**citation) for citation in final_state.get("citations", [])]
-    return QueryResponse(
+    response = QueryResponse(
         answer=final_state.get("answer", "No answer generated."),
         citations=citations,
         sections=[
             AnswerSection(**section) for section in final_state.get("sections", [])
         ],
+        official_links=[
+            OfficialLink(**link) for link in final_state.get("official_links", [])
+        ],
         route=final_state.get("route"),
         confidence=final_state.get("confidence"),
         response_status=final_state.get("response_status", "answered"),
     )
+    logger.info(
+        "response_profile request_id=%s stage=response_serialization "
+        "citation_count=%s section_count=%s official_link_count=%s duration_ms=%.2f",
+        get_request_id(),
+        len(response.citations),
+        len(response.sections),
+        len(response.official_links),
+        (time.perf_counter() - serialization_started) * 1000,
+    )
+    return response

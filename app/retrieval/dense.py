@@ -33,6 +33,7 @@ async def dense_search(
                 d.title,
                 d.source,
                 d.url,
+                d.metadata AS document_metadata,
                 1 - (c.embedding <=> CAST(:embedding AS vector)) AS score
             FROM chunks c
             JOIN documents d ON d.id = c.document_id

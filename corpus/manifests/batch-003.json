@@ -1,0 +1,955 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-003",
+  "title": "SETU corpus expansion +25 checkpoint final five",
+  "created_at": "2026-09-13T03:30:00Z",
+  "application_baseline_verified_at": "2026-09-09T06:29:00Z",
+  "staging_database": "setu_corpus_staging",
+  "prerequisite_manifest": "corpus/manifests/batch-001.json",
+  "counting_unit": "distinct scheme or public service; source documents are not additional items",
+  "fetch_policy": {
+    "allowed_hosts": [
+      "wb.gov.in",
+      "www.wb.gov.in"
+    ],
+    "connect_timeout_seconds": 10,
+    "read_timeout_seconds": 30,
+    "retries": 2,
+    "max_redirects": 5,
+    "max_response_bytes": 12582912,
+    "min_host_interval_seconds": 1,
+    "max_retry_after_seconds": 30,
+    "concurrency": 1
+  },
+  "items": [
+    {
+      "stable_id": "scheme.central.sbm-gramin-ihhl",
+      "canonical_title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+      "item_type": "central_scheme",
+      "category": "sanitation_basic_services",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "not stated",
+        "application_route": "supported through Gram Panchayat or rural development office",
+        "deadline": "not stated",
+        "jurisdiction": "supported: rural India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "sbm-gramin-ihhl.wb-overview.current.en",
+          "document_title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+          "document_identifier": "government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current overview; local verification and applicable component norms still govern",
+          "coverage_scope": "Rural household eligibility, financial incentive, local application route and verification process; no documents, deadline or status channel.",
+          "required_markers": [
+            "Individual Household Latrine",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:32:31+00:00",
+          "fetch_duration_ms": 361.35,
+          "snapshot_path": "corpus/staging/batch-003/snapshots/sbm-gramin-ihhl.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 58596,
+          "content_sha256": "8415757e363d711468a1408cdb456545aee5b9be2870fcdd50914b9ece9e7796",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:32:31+00:00",
+          "fetched_at": "2026-09-13T03:32:31+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-003/extracted/sbm-gramin-ihhl.wb-overview.current.en.txt",
+          "extracted_title": "Swachh Bharat Mission (Grameen) Individual Household Latrine (IHHL)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 565.26,
+          "extracted_sha256": "74d5b8f50cec0f96f1835290bc563f9d2d2f7711f5060d04aa2ed1368ebe488d",
+          "extracted_characters": 2592,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:32:32+00:00",
+          "validation_metrics": {
+            "character_count": 2592,
+            "word_count": 340,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:32:32+00:00",
+          "deduplication_key": "74d5b8f50cec0f96f1835290bc563f9d2d2f7711f5060d04aa2ed1368ebe488d",
+          "deduplicated_at": "2026-09-13T03:32:32+00:00",
+          "chunks_path": "corpus/staging/batch-003/chunks/sbm-gramin-ihhl.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 3,
+          "chunked_at": "2026-09-13T03:33:54+00:00",
+          "embedding_path": "corpus/staging/batch-003/embeddings/sbm-gramin-ihhl.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 14965.77,
+          "embedding_bytes": 12416,
+          "embedded_at": "2026-09-13T03:34:09+00:00",
+          "database_document_id": "76573680-b0f4-45f3-bd60-e4bfa16a0964",
+          "index_duration_ms": 476.31,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:34:10+00:00",
+          "retrieval_checked_at": "2026-09-13T03:35:52+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "sbm-ihhl.hi.apply",
+          "query": "ग्रामीण घर में शौचालय नहीं है तो SBM-G सहायता के लिए कहाँ आवेदन करें?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "local Gram Panchayat"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:35:52+00:00",
+          "latency_ms": 74475.49,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.30016961693763733,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "local gram panchayat": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…ained toilet use and improved hygiene practices.\n\nEligibility\n\n- Rural household without an Individual Household Latrine\n\n- Priority to Below Poverty Line (BPL) households as identified through official socio- economic surveys\n\n- Identified Above Poverty Line (APL) households belonging to vulnerable categories such as SC/ST, small and marginal farmers, landless laborers, and physically challenged persons\n\n- Must be a resident of a rural area covered under Swachh Bha",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+              "url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+              "language": "en",
+              "rerank_score": 0.30016961693763733,
+              "content_excerpt": "# Government of West Bengal\n\n…ained toilet use and improved hygiene practices.\n\nEligibility\n\n- Rural household without an Individual Household Latrine\n\n- Priority to Below Poverty Line (BPL) households as identified through official socio- economic surveys\n\n- Identified Above Poverty Line (APL) hous"
+            },
+            {
+              "rank": 2,
+              "title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+              "url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+              "language": "en",
+              "rerank_score": 0.1375487595796585,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nSwachh Bharat Mission (Grameen) - Individual Household Latrine (IHHL) focuses on promoting sanitation in rural areas by providing financial assistance and support to households for constructing t"
+            },
+            {
+              "rank": 3,
+              "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+              "url": "https://socialjustice.gov.in/common/47564",
+              "language": "en",
+              "rerank_score": 0.004525039345026016,
+              "content_excerpt": "#### About the Division\n\n…h Ayushman Bharat scheme of NHA has been done for providing health facilities under PMJAY scheme to Transgender persons.\n\n- As on 26.09.2024, total of 16 Garima Grehs as shelter homes for transgender persons are operational in 13 States of Delhi, Odisha, Gujarat, Tamil Nadu"
+            },
+            {
+              "rank": 4,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.004113142844289541,
+              "content_excerpt": "# Government of West Bengal\n\n…with dignity and independence.\n\n- Direct benefit transfer: Pension is credited directly to beneficiaries' bank accounts.\n\n- Reduction in financial dependency: Helps reduce dependency on family members or informal sources.\n\n- Improved social welfare: Strengthens social s"
+            },
+            {
+              "rank": 5,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.002119683660566807,
+              "content_excerpt": "# Government of West Bengal\n\n…CSCs)\n\nHow to apply / process\n\n- The applicant submits application form to the Gram Panchayat, ULB or designated office.\n\n- Required documents such as age proof, caste certificate, identity proof and bank account details are submitted.\n\n- Verification is conducted by lo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.ddu-gky",
+      "canonical_title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+      "item_type": "central_scheme",
+      "category": "rural_skills_employment",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported qualitatively; no amount stated",
+        "documents": "not stated",
+        "application_route": "supported through state skill mission or training partner",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "ddu-gky.wb-overview.current.en",
+          "document_title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana",
+          "document_identifier": "government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; course-specific criteria and openings require the implementing portal",
+          "coverage_scope": "Rural-youth eligibility, free training and placement-linked purpose, and high-level application route; documents and deadlines absent.",
+          "required_markers": [
+            "DDU-GKY",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:32:32+00:00",
+          "fetch_duration_ms": 142.66,
+          "snapshot_path": "corpus/staging/batch-003/snapshots/ddu-gky.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57388,
+          "content_sha256": "84665da614b868aefc4419381451383d33608b6ec443018c4b630d3eaa134b58",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:32:32+00:00",
+          "fetched_at": "2026-09-13T03:32:32+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-003/extracted/ddu-gky.wb-overview.current.en.txt",
+          "extracted_title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 363.73,
+          "extracted_sha256": "ae054f75415fdd6865d3aa2d58e036ffc398ce0629bcd09994a9ba316ac3c2d0",
+          "extracted_characters": 1477,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:32:32+00:00",
+          "validation_metrics": {
+            "character_count": 1477,
+            "word_count": 179,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:32:32+00:00",
+          "deduplication_key": "ae054f75415fdd6865d3aa2d58e036ffc398ce0629bcd09994a9ba316ac3c2d0",
+          "deduplicated_at": "2026-09-13T03:32:32+00:00",
+          "chunks_path": "corpus/staging/batch-003/chunks/ddu-gky.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-13T03:34:10+00:00",
+          "embedding_path": "corpus/staging/batch-003/embeddings/ddu-gky.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 2839.56,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-13T03:34:12+00:00",
+          "database_document_id": "ed2ef14e-d111-49ed-94be-3467fb04af4a",
+          "index_duration_ms": 61.3,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:34:13+00:00",
+          "retrieval_checked_at": "2026-09-13T03:36:22+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "ddu-gky.bn.eligibility",
+          "query": "DDU-GKY প্রশিক্ষণের জন্য কোন গ্রামীণ যুবকেরা যোগ্য?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Rural youth aged 15-35 years"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:36:22+00:00",
+          "latency_ms": 30060.36,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9821408987045288,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "rural youth aged 15-35 years": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nDDU-GKY is a placement-linked skill development program launched in 2014 aimed at rural youth from poor families to enhance employability and provide sustainable livelihood opportunities.\n\nBenefits Offered Under the Scheme\n\n- Free skill developmenttrainingforruralyouth\n\n- Placement guarantee after training\n\n- Focus on poor and marginalized communities\n\n- Residential training facilities\n\n- Car",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+              "url": "https://wb.gov.in/government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.9821408987045288,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nDDU-GKY is a placement-linked skill development program launched in 2014 aimed at rural youth from poor families to enhance employability and provide sustainable livelihood opportunities.\n\nBenefi"
+            },
+            {
+              "rank": 2,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.000756896915845573,
+              "content_excerpt": "# Government of West Bengal\n\n…project cost for special category beneficiaries\n\n- 10% for general category beneficiaries\n\nMaximum project cost limits:\n\n- Up to 50 lakh for manufacturing units\n\n- Up to 20 lakh for service/trading units\n\nEntrepreneurship development training:\n\n- Mandatory training (EDP"
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.00032875282340683043,
+              "content_excerpt": "### Important Note:\n\n…he following categories of beneificiaries of higher economic status shall not be elligible for benefit under the scheme.\n\n- All Institutional Land holders.\n\n- Farmer families which belong to one or more of the following categories:.\n\n- Former and present holders of constitution"
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.00019655749201774597,
+              "content_excerpt": "## Eligibility Criteria\n\n- Adult woman belonging to any of the following categories. SC Households ST Households Pradhan Mantri Awas Yojana (Gramin) Most Backward Classes Antyodaya Anna Yojana (AAY) Tea and Ex- Tea Garden tribes Forest Dwellers People residing in Islands and River Islands SECC House"
+            },
+            {
+              "rank": 5,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.00014932108751963824,
+              "content_excerpt": "# Government of West Bengal\n\n…with dignity and independence.\n\n- Direct benefit transfer: Pension is credited directly to beneficiaries' bank accounts.\n\n- Reduction in financial dependency: Helps reduce dependency on family members or informal sources.\n\n- Improved social welfare: Strengthens social s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.naps",
+      "canonical_title": "National Apprenticeship Promotion Scheme (NAPS)",
+      "item_type": "central_scheme",
+      "category": "apprenticeship",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level; trade-specific conditions may vary",
+        "benefit": "supported qualitatively; reimbursement limit not stated",
+        "documents": "not stated",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": "https://www.apprenticeshipindia.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "naps.wb-overview.current.en",
+          "document_title": "National Apprenticeship Promotion Scheme",
+          "document_identifier": "government-schemes-details-national-apprenticeship-promotion-scheme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; trade and employer-specific requirements require portal verification",
+          "coverage_scope": "Youth and employer eligibility overview, apprenticeship benefits and portal application steps; documents and deadlines absent.",
+          "required_markers": [
+            "National Apprenticeship Promotion Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:32:32+00:00",
+          "fetch_duration_ms": 609.52,
+          "snapshot_path": "corpus/staging/batch-003/snapshots/naps.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57716,
+          "content_sha256": "acf3331a0c52645ab6016cd718e351dfc33fc93ea3edc60d23887e255316e865",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:32:33+00:00",
+          "fetched_at": "2026-09-13T03:32:33+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-003/extracted/naps.wb-overview.current.en.txt",
+          "extracted_title": "National Apprenticeship Promotion Scheme (NAPS)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 418.31,
+          "extracted_sha256": "335e4462af176d9ea0a42e877bd6e88972300330bdd4eae10dca701beda0eb76",
+          "extracted_characters": 1782,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:32:33+00:00",
+          "validation_metrics": {
+            "character_count": 1782,
+            "word_count": 222,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:32:33+00:00",
+          "deduplication_key": "335e4462af176d9ea0a42e877bd6e88972300330bdd4eae10dca701beda0eb76",
+          "deduplicated_at": "2026-09-13T03:32:33+00:00",
+          "chunks_path": "corpus/staging/batch-003/chunks/naps.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-13T03:34:13+00:00",
+          "embedding_path": "corpus/staging/batch-003/embeddings/naps.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 2972.75,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-13T03:34:16+00:00",
+          "database_document_id": "933ec5eb-0e56-4f05-aa48-0802dfbb5e62",
+          "index_duration_ms": 50.64,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:34:16+00:00",
+          "retrieval_checked_at": "2026-09-13T03:36:46+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "naps.en.application",
+          "query": "How does a young person apply for an apprenticeship under NAPS?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Choose desired trade and employer"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:36:46+00:00",
+          "latency_ms": 24233.15,
+          "expected_rank": 1,
+          "useful_passage_rank": 3,
+          "top_score": 0.7875418066978455,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "choose desired trade and employer": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…ries/employers must be registered under Apprenticeship Act\n\nApplication Details\n\n- Register on the Apprenticeship Portal\n\n- Choose desired trade and employer\n\n- Apply for apprenticeship opportunity\n\n- Selection by employer\n\n- Training begins with stipend support\n\n- Home\n\n- |\n\n- About The Portal\n\n- |\n\n- Site Map\n\n- |\n\n- Copyright Policy\n\n- |\n\n- Terms Of Use\n\n- |\n\n- Feedback\n\n- |\n\n- Help\n\n- |\n\n- Contact Us\n\n- |\n\n- Downloads\n\nDisclaimer: Site Contents owned, designed, ",
+          "results": [
+            {
+              "rank": 1,
+              "title": "National Apprenticeship Promotion Scheme (NAPS)",
+              "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.7875418066978455,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Promotion Scheme (NAPS) is a Government of India initiative launched in 2016 to promote apprenticeship training and skill development among youth. It aims to encourage ind"
+            },
+            {
+              "rank": 2,
+              "title": "National Apprenticeship Training Scheme (NATS)",
+              "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.032965995371341705,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Training Scheme (NATS) is a program under the Ministry of Education that provides practical training to graduates, diploma holders, and technically qualified youth in indu"
+            },
+            {
+              "rank": 3,
+              "title": "National Apprenticeship Promotion Scheme (NAPS)",
+              "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.016449596732854843,
+              "content_excerpt": "# Government of West Bengal\n\n…ries/employers must be registered under Apprenticeship Act\n\nApplication Details\n\n- Register on the Apprenticeship Portal\n\n- Choose desired trade and employer\n\n- Apply for apprenticeship opportunity\n\n- Selection by employer\n\n- Training begins with stipend support\n\n- Home"
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Vishwakarma",
+              "url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.0008175693801604211,
+              "content_excerpt": "# Government of West Bengal\n\n…Overall support: End-to-end assistance including skill upgradation, modern technology access, and improved market access\n\nEligibility:\n\n- Artisan/Craftsperson requirement: Applicant must be an artisan or craftsperson working with hands and tools in one of the notified t"
+            },
+            {
+              "rank": 5,
+              "title": "Atal Pension Yojana (APY)",
+              "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+              "language": "en",
+              "rerank_score": 0.0006688368739560246,
+              "content_excerpt": "#### Eligibility & Administration\n\nAPY is available to all Indian citizens with savings bank account in banks or Department of Posts. The minimum age of joining APY is 18 years and maximum age is 40 years. Provided that from 1st October, 2022, any citizen who is or has been an income-tax payer, is n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.nats",
+      "canonical_title": "National Apprenticeship Training Scheme (NATS)",
+      "item_type": "central_scheme",
+      "category": "graduate_apprenticeship",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported qualitatively; stipend amount not stated",
+        "documents": "not stated",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": "https://nats.education.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "nats.wb-overview.current.en",
+          "document_title": "National Apprenticeship Training Scheme",
+          "document_identifier": "government-schemes-details-national-apprenticeship-training-scheme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; opportunity-specific requirements require portal verification",
+          "coverage_scope": "Graduate, diploma-holder and technical-student scope, benefits and portal steps; documents, stipend amount and deadlines absent.",
+          "required_markers": [
+            "National Apprenticeship Training Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:32:33+00:00",
+          "fetch_duration_ms": 534.42,
+          "snapshot_path": "corpus/staging/batch-003/snapshots/nats.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57300,
+          "content_sha256": "f10aed1087940f310596706332419a2bfd0bb79fefb855280356a7ab1fc9a816",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:32:34+00:00",
+          "fetched_at": "2026-09-13T03:32:34+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-003/extracted/nats.wb-overview.current.en.txt",
+          "extracted_title": "National Apprenticeship Training Scheme (NATS)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 371.74,
+          "extracted_sha256": "ba16c24bdcf3b0a8a6098fee92dfa0186fca3ed2fc2364105ec7816703cf37dc",
+          "extracted_characters": 1482,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:32:34+00:00",
+          "validation_metrics": {
+            "character_count": 1482,
+            "word_count": 181,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:32:34+00:00",
+          "deduplication_key": "ba16c24bdcf3b0a8a6098fee92dfa0186fca3ed2fc2364105ec7816703cf37dc",
+          "deduplicated_at": "2026-09-13T03:32:34+00:00",
+          "chunks_path": "corpus/staging/batch-003/chunks/nats.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-13T03:34:16+00:00",
+          "embedding_path": "corpus/staging/batch-003/embeddings/nats.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 2741.31,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-13T03:34:19+00:00",
+          "database_document_id": "563e1818-88f4-444f-a1fe-18dac4011db8",
+          "index_duration_ms": 43.14,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:34:19+00:00",
+          "retrieval_checked_at": "2026-09-13T03:37:10+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "nats.hi.eligibility",
+          "query": "NATS में स्नातक और डिप्लोमा धारक कैसे आवेदन करते हैं?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "graduates and diploma holders"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:37:10+00:00",
+          "latency_ms": 24461.93,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9630820155143738,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "graduates and diploma holders": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Training Scheme (NATS) is a program under the Ministry of Education that provides practical training to graduates, diploma holders, and technically qualified youth in industries.\n\nBenefits Offered Under the Scheme\n\n- On-the-job training for graduates and diploma holders\n\n- Monthly stipend paid during training\n\n- 50% stipend reimbursement to employers by government\n\n- E",
+          "results": [
+            {
+              "rank": 1,
+              "title": "National Apprenticeship Training Scheme (NATS)",
+              "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.9630820155143738,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Training Scheme (NATS) is a program under the Ministry of Education that provides practical training to graduates, diploma holders, and technically qualified youth in indu"
+            },
+            {
+              "rank": 2,
+              "title": "West Bengal Medhashree Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.0015004120068624616,
+              "content_excerpt": "# Government of West Bengal\n\n…re identified by school authorities (Headmaster/Headmistress).\n\n- School submits student details on the official portal.\n\n- Application form is filled (online/offline) with basic details.\n\n- Required documents are submitted, including caste certificate, income certifica"
+            },
+            {
+              "rank": 3,
+              "title": "West Bengal Student Credit Card Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.001072627492249012,
+              "content_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n-"
+            },
+            {
+              "rank": 4,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.001010096282698214,
+              "content_excerpt": "[Page 3]\n\n…admission as shown in the offer of admission or the relevant fee-slip\nissued by the educational institution.\n9. Closure\n\non maturity.-(1) The account shall mature on completion of a period of twenty-one years from\nthe date of its opening.\n(2) The closure of the account may also be permitt"
+            },
+            {
+              "rank": 5,
+              "title": "West Bengal Medhashree Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.00021988523076288402,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Medhashree Scheme provides financial assistance to meritorious students from Other Backward Communities (OBC) to support their higher education. It aims to reduce dropout rates by offering sc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "service.central.udyam-registration",
+      "canonical_title": "Udyam Registration",
+      "item_type": "central_public_service",
+      "category": "msme_registration",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central service",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level; current MSME thresholds not stated",
+        "benefit": "supported qualitatively",
+        "documents": "minimal-document statement and Aadhaar requirement supported; exhaustive list absent",
+        "application_route": "official central registration portal linked",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": "https://udyamregistration.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "udyam-registration.wb-overview.current.en",
+          "document_title": "Udyam Registration",
+          "document_identifier": "government-schemes-details-udyam-registration",
+          "source_type": "official_state_service_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-udyam-registration.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; current investment/turnover thresholds require the central portal or notification",
+          "coverage_scope": "Who may register, qualitative benefits, no-fee/minimal-document claim and central portal link; detailed steps, thresholds and deadline absent.",
+          "required_markers": [
+            "Udyam initiative",
+            "Eligibility"
+          ],
+          "min_extracted_characters": 900,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:32:34+00:00",
+          "fetch_duration_ms": 584.85,
+          "snapshot_path": "corpus/staging/batch-003/snapshots/udyam-registration.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-udyam-registration.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57951,
+          "content_sha256": "50b57e064eee67f29880540999bbdf92aa8c102e837ec6690c7fa43d4ac454ef",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:32:35+00:00",
+          "fetched_at": "2026-09-13T03:32:35+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-003/extracted/udyam-registration.wb-overview.current.en.txt",
+          "extracted_title": "Udyam Registration",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 410.68,
+          "extracted_sha256": "dd042cb1bfbb88c95bae9c05f642a9afbbad5670330f7cb52087427042a33a81",
+          "extracted_characters": 2445,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:32:35+00:00",
+          "validation_metrics": {
+            "character_count": 2445,
+            "word_count": 320,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:33:22+00:00",
+          "deduplication_key": "dd042cb1bfbb88c95bae9c05f642a9afbbad5670330f7cb52087427042a33a81",
+          "deduplicated_at": "2026-09-13T03:33:22+00:00",
+          "chunks_path": "corpus/staging/batch-003/chunks/udyam-registration.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 3,
+          "chunked_at": "2026-09-13T03:34:19+00:00",
+          "embedding_path": "corpus/staging/batch-003/embeddings/udyam-registration.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 4467.24,
+          "embedding_bytes": 12416,
+          "embedded_at": "2026-09-13T03:34:23+00:00",
+          "database_document_id": "6ff3524d-2cfe-4b43-a501-3f6b49febe5c",
+          "index_duration_ms": 86.97,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:34:23+00:00",
+          "retrieval_checked_at": "2026-09-13T03:37:35+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "udyam.en.basic-eligibility",
+          "query": "Can a new service business register under Udyam and is registration free?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Both new and existing businesses"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:37:35+00:00",
+          "latency_ms": 24392.76,
+          "expected_rank": 1,
+          "useful_passage_rank": 2,
+          "top_score": 0.8393304347991943,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "both new and existing businesses": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…, and trademark filing fees\n\n- Opportunities for participation in international trade fairs and exhibitions with support\n\n- Easier access to skill development, training, and technology upgradation programs\n\nEligibility:\n\n- The applicant must be a micro, small, or medium enterprise (MSME) engaged in manufacturing or service activities\n\n- The business should fall within the investment and turnover limits defined for MSMEs (as per government classification)\n\n- Both new",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Udyam Registration",
+              "url": "https://wb.gov.in/government-schemes-details-udyam-registration.aspx",
+              "language": "en",
+              "rerank_score": 0.8393304347991943,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Udyam initiative provides online registration and recognition to micro, small, and medium enterprises (MSMEs), making it easier for them to access benefits and support. It helps businesses av"
+            },
+            {
+              "rank": 2,
+              "title": "Udyam Registration",
+              "url": "https://wb.gov.in/government-schemes-details-udyam-registration.aspx",
+              "language": "en",
+              "rerank_score": 0.5677269697189331,
+              "content_excerpt": "# Government of West Bengal\n\n…, and trademark filing fees\n\n- Opportunities for participation in international trade fairs and exhibitions with support\n\n- Easier access to skill development, training, and technology upgradation programs\n\nEligibility:\n\n- The applicant must be a micro, small, or medium"
+            },
+            {
+              "rank": 3,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.0024064872413873672,
+              "content_excerpt": "# Government of West Bengal\n\n…project cost for special category beneficiaries\n\n- 10% for general category beneficiaries\n\nMaximum project cost limits:\n\n- Up to 50 lakh for manufacturing units\n\n- Up to 20 lakh for service/trading units\n\nEntrepreneurship development training:\n\n- Mandatory training (EDP"
+            },
+            {
+              "rank": 4,
+              "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+              "url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+              "language": "en",
+              "rerank_score": 0.00020371036953292787,
+              "content_excerpt": "# Government of West Bengal\n\n…00 in successive tranches).\n\n- Interest subsidy: Interest subsidy of 7% per annum provided on timely repayment of loans.\n\n- Cashback incentives: Incentives for digital transactions are provided to encourage cashless payments.\n\n- Financial inclusion: Facilitates inclusio"
+            },
+            {
+              "rank": 5,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.00013946428953204304,
+              "content_excerpt": "[Page 1]\n\n…/uni0930/uni0020/uni092F/uni093E/uni0020/uni0905/uni0902/uni0917/uni0942/uni0920/uni093E/uni0020/uni091B/uni093E/uni092A\n\nNOTIFICATION\nNew Delhi, the 12th December, 2019\nG.S.R. 914(E).— In exercise of the powers conferred by section 3A o f the Government Savings\nPromotion Act, 1873 (5 of "
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "batch_retrieval_checks": [
+    {
+      "check_id": "batch-003.naps-vs-nats.en",
+      "query": "I am a diploma holder seeking graduate-level practical industry training. Is this NAPS or NATS?",
+      "query_language": "en",
+      "expected_item_id": "scheme.central.nats",
+      "expected_rank_max": 3,
+      "expected_passage_markers": [
+        "graduates, diploma holders"
+      ],
+      "status": "passed",
+      "checked_at": "2026-09-13T03:37:59+00:00",
+      "latency_ms": 24573.88,
+      "expected_rank": 1,
+      "useful_passage_rank": 1,
+      "top_score": 0.9468477368354797,
+      "passage_passed": true,
+      "passage_marker_matches": {
+        "graduates, diploma holders": true
+      },
+      "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Training Scheme (NATS) is a program under the Ministry of Education that provides practical training to graduates, diploma holders, and technically qualified youth in industries.\n\nBenefits Offered Under the Scheme\n\n- On-the-job training for graduates and diploma holders\n\n- Monthly stipend paid during training\n\n- 50% stipend reimbursement to employers by government\n\n- E",
+      "results": [
+        {
+          "rank": 1,
+          "title": "National Apprenticeship Training Scheme (NATS)",
+          "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+          "language": "en",
+          "rerank_score": 0.9468477368354797,
+          "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Training Scheme (NATS) is a program under the Ministry of Education that provides practical training to graduates, diploma holders, and technically qualified youth in indu"
+        },
+        {
+          "rank": 2,
+          "title": "National Apprenticeship Promotion Scheme (NAPS)",
+          "url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+          "language": "en",
+          "rerank_score": 0.37609830498695374,
+          "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nNational Apprenticeship Promotion Scheme (NAPS) is a Government of India initiative launched in 2016 to promote apprenticeship training and skill development among youth. It aims to encourage ind"
+        },
+        {
+          "rank": 3,
+          "title": "Atal Pension Yojana (APY)",
+          "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+          "language": "en",
+          "rerank_score": 0.00014977013051975518,
+          "content_excerpt": "#### APY Reports\n\nAccessing APY Dashboard MIS: A Step-by-Step Guide\n\nFor APY-SPs : https://apy.nps-proteantech.in/CRAlite/ The APY Dashboard MIS (in summary form) is now available in the APY SPs login. APY SPs are requested to download the APY Dashboard MIS from the Dashboard Menu. Follow these step"
+        },
+        {
+          "rank": 4,
+          "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "url": "https://socialjustice.gov.in/common/47564",
+          "language": "en",
+          "rerank_score": 8.228031947510317e-05,
+          "content_excerpt": "#### About the Division\n\n…training, documentation, innovation and collection of relevant information to strengthen the above mentioned objectives.\n\nNasha Mukt Bharat Abhiyaan (NMBA) (a component of NAPDDR scheme) was launched on the 15 th August 2020 by Ministry of Social Justice & Empowerment in 27"
+        },
+        {
+          "rank": 5,
+          "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "url": "https://socialjustice.gov.in/common/47564",
+          "language": "en",
+          "rerank_score": 5.734355727327056e-05,
+          "content_excerpt": "#### About the Division\n\n…)'; and\n\n- Government Hospitals for Addiction Treatment Facilities (ATFs)\n\nThe major objectives of NAPDDR scheme are to:\n\n- Focus on preventive education, awareness generation, identification, counseling, treatment and rehabilitation of individuals with substance dependence"
+        }
+      ]
+    },
+    {
+      "check_id": "batch-003.ihhl.jurisdiction.bn",
+      "query": "আমার বাড়িতে শৌচাগার নেই। আমি শহরে থাকি—এই গ্রামীণ IHHL তথ্য কি আমার জন্য প্রযোজ্য?",
+      "query_language": "bn",
+      "expected_item_id": "scheme.central.sbm-gramin-ihhl",
+      "expected_rank_max": 5,
+      "expected_passage_markers": [
+        "rural area"
+      ],
+      "status": "passed",
+      "checked_at": "2026-09-13T03:38:29+00:00",
+      "latency_ms": 29629.21,
+      "expected_rank": 1,
+      "useful_passage_rank": 1,
+      "top_score": 0.2219994068145752,
+      "passage_passed": true,
+      "passage_marker_matches": {
+        "rural area": true
+      },
+      "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nSwachh Bharat Mission (Grameen) - Individual Household Latrine (IHHL) focuses on promoting sanitation in rural areas by providing financial assistance and support to households for constructing their own toilets. It aims to eliminate open defecation, improve hygiene practices, and enhance the health and dignity of rural populations, especially women and children.\n\nBenefits Offer Under the Sch",
+      "results": [
+        {
+          "rank": 1,
+          "title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+          "url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+          "language": "en",
+          "rerank_score": 0.2219994068145752,
+          "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nSwachh Bharat Mission (Grameen) - Individual Household Latrine (IHHL) focuses on promoting sanitation in rural areas by providing financial assistance and support to households for constructing t"
+        },
+        {
+          "rank": 2,
+          "title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+          "url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+          "language": "en",
+          "rerank_score": 0.028241373598575592,
+          "content_excerpt": "# Government of West Bengal\n\n…ained toilet use and improved hygiene practices.\n\nEligibility\n\n- Rural household without an Individual Household Latrine\n\n- Priority to Below Poverty Line (BPL) households as identified through official socio- economic surveys\n\n- Identified Above Poverty Line (APL) hous"
+        },
+        {
+          "rank": 3,
+          "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "url": "https://socialjustice.gov.in/common/47564",
+          "language": "en",
+          "rerank_score": 0.0010539928916841745,
+          "content_excerpt": "#### About the Division\n\n…h Ayushman Bharat scheme of NHA has been done for providing health facilities under PMJAY scheme to Transgender persons.\n\n- As on 26.09.2024, total of 16 Garima Grehs as shelter homes for transgender persons are operational in 13 States of Delhi, Odisha, Gujarat, Tamil Nadu"
+        },
+        {
+          "rank": 4,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "language": "en",
+          "rerank_score": 0.0008566328324377537,
+          "content_excerpt": "[Page 6]\n\n…tal along\nwith other required details for this disbursement of benefit under the scheme.”\n6. Strategy for Implementation\n\n6.1 The States shall prepare database of eligible beneficiary land holder farmer\nfamilies in the villages capturing the Name, Age, Gender, Category (SC/ST), Aadhaar\nNu"
+        },
+        {
+          "rank": 5,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "language": "en",
+          "rerank_score": 0.0007238428224809468,
+          "content_excerpt": "[Page 3]\n\n…cluding Multi Tasking Staff / Class IV / Group D employees)\n\nv) All Persons who paid Income Tax in last assessment year.\n\nvi) Professionals like Doctors, Engineers, Lawyers, Chartered Accountants, and\nArchitects registered with Professional bodies and carrying out profession by\nundertakin"
+        }
+      ]
+    }
+  ],
+  "updated_at": "2026-09-13T03:38:29+00:00"
+}

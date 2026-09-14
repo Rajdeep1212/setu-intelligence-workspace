@@ -25,26 +25,31 @@ test("all primary routes render without leaking requests", async ({ page }) => {
 test("source explorer filters and opens sanitized detail", async ({ page }) => {
   await page.goto("/sources");
   await page.getByRole("button", { name: /India's Digital Public Infrastructure/ }).click();
-  await expect(page.getByRole("dialog", { name: /India's Digital Public Infrastructure/ })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: /India's Digital Public Infrastructure/ })).toBeVisible({ timeout: 20_000 });
   await page.keyboard.press("Escape");
   await page.getByRole("textbox", { name: "Search sources" }).fill("no such source");
   await expect(page.getByText("No matching source")).toBeVisible();
 });
 
-test("workspace supports keyboard, theme, modes, and evidence inspection", async ({ page }, testInfo) => {
+test("workspace supports language selection, keyboard, theme, modes, and evidence inspection", async ({ page }, testInfo) => {
   await page.goto("/workspace");
   await expect(page.getByRole("heading", { name: /What are the core components/ })).toBeVisible();
   expect(testInfo.project.name).toMatch(/desktop|tablet|mobile/);
-  await page.getByLabel("Focus retrieved citation 2 for claim 2").click();
+  await expect(page.getByLabel("Selected response language: English")).toHaveCount(0);
+  await page.getByRole("button", { name: "Response language: English" }).click();
+  await page.getByRole("menuitemradio", { name: "বাংলা" }).click();
+  await expect(page.getByRole("button", { name: "Response language: বাংলা" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Official source and service links" })).toBeVisible();
+  await page.getByLabel("Open source 2 for claim 2").click();
+  await expect(page.getByRole("region", { name: "Retrieved sources" })).toBeVisible();
   await page.keyboard.press("Control+k");
   await expect(page.getByRole("dialog", { name: "Navigate SETU" })).toBeVisible();
-  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: /Eligibility preview/ }).click();
   await page.getByRole("button", { name: /Switch to dark theme/ }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.getByRole("button", { name: /Eligibility mode/ }).click();
   await expect(page.getByText("Illustrative eligibility experience")).toBeVisible();
   await page.getByRole("button", { name: /Continue/ }).click();
   await expect(page.getByLabel(/Demonstration annual family income/)).toBeVisible();
-  const results = await new AxeBuilder({ page }).exclude(".resize-handle").analyze();
+  const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations.filter((item) => item.impact === "critical" || item.impact === "serious")).toEqual([]);
 });

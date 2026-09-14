@@ -1,18 +1,28 @@
 import { z } from "zod";
 export const languageSchema = z.enum(["en", "hi", "bn"]);
-export const queryRequestSchema = z.object({ query: z.string().trim().min(1).max(2000), language: languageSchema.optional() });
+export const queryRequestSchema = z.object({
+  query: z.string().max(2000).refine((value) => value.trim().length > 0, "Question must not be blank."),
+  language: languageSchema.optional(),
+});
 export const citationSchema = z.object({ chunk_id: z.string().min(1), document_id: z.string().min(1), title: z.string().nullable().optional(), source: z.string().nullable().optional(), url: z.url().nullable().optional(), snippet: z.string().nullable().optional() });
 export const answerSectionSchema = z.object({
   text: z.string().trim().min(1),
+  kind: z.enum(["direct_answer", "benefit", "conditions", "how_to_apply", "next_steps", "required_documents", "limitations"]).nullable().optional(),
   citation_ids: z.array(z.string().min(1)).max(5).refine((ids) => new Set(ids).size === ids.length, "Section citation IDs must be unique."),
+});
+export const officialLinkSchema = z.object({
+  kind: z.enum(["application", "status", "help"]),
+  label: z.string().trim().min(1).max(120),
+  url: z.url(),
 });
 export const queryResponseSchema = z.object({
   answer: z.string(),
   citations: z.array(citationSchema).max(5),
   sections: z.array(answerSectionSchema).max(12).default([]),
+  official_links: z.array(officialLinkSchema).max(6).default([]),
   route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(),
   confidence: z.number().min(0).max(1).nullable().optional(),
-  response_status: z.enum(["answered", "abstained", "eligibility_unverified"]).default("answered"),
+  response_status: z.enum(["answered", "abstained", "clarification_needed", "eligibility_unverified"]).default("answered"),
   data_mode: z.enum(["demo", "local", "cloud"]).optional(),
 }).superRefine((response, context) => {
   const citationIds = response.citations.map((citation) => citation.chunk_id);
@@ -43,9 +53,11 @@ export const sourceFiltersSchema = z.object({
   has_eligibility: z.enum(["true", "false"]).optional(),
 });
 export type QueryRequest = z.infer<typeof queryRequestSchema>;
+export type ResponseLanguage = z.infer<typeof languageSchema>;
 export type QueryResponse = z.infer<typeof queryResponseSchema>;
 export type AnswerSection = z.infer<typeof answerSectionSchema>;
 export type Citation = z.infer<typeof citationSchema>;
+export type OfficialLink = z.infer<typeof officialLinkSchema>;
 export type SourceSummary = z.infer<typeof sourceSummarySchema>;
 export type SourceDetail = z.infer<typeof sourceDetailSchema>;
 export type SourcesResponse = z.infer<typeof sourcesResponseSchema>;

@@ -31,6 +31,7 @@ async def keyword_search(
                 d.title,
                 d.source,
                 d.url,
+                d.metadata AS document_metadata,
                 ts_rank(c.tsv, plainto_tsquery('simple', :query)) AS score
             FROM chunks c
             JOIN documents d ON d.id = c.document_id

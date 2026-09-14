@@ -1,0 +1,2026 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-001",
+  "title": "SETU corpus expansion first bounded batch",
+  "created_at": "2026-09-09T06:33:32Z",
+  "updated_at": "2026-09-09T07:44:24+00:00",
+  "application_baseline_verified_at": "2026-09-09T06:29:00Z",
+  "staging_database": "setu_corpus_staging",
+  "counting_unit": "distinct scheme or legal instrument; sources and versions are counted separately",
+  "fetch_policy": {
+    "allowed_hosts": [
+      "pmkisan.gov.in",
+      "www.pmkisan.gov.in",
+      "pmjdy.gov.in",
+      "www.pmjdy.gov.in",
+      "pfrda.org.in",
+      "www.pfrda.org.in",
+      "pmuy.gov.in",
+      "www.pmuy.gov.in",
+      "nha.gov.in",
+      "www.nha.gov.in",
+      "beneficiary.nha.gov.in",
+      "indiapost.gov.in",
+      "www.indiapost.gov.in",
+      "kanyashree.wb.gov.in",
+      "indiacode.nic.in",
+      "www.indiacode.nic.in",
+      "dfpd.gov.in",
+      "www.dfpd.gov.in",
+      "consumeraffairs.nic.in",
+      "www.consumeraffairs.nic.in",
+      "socialjustice.gov.in",
+      "www.socialjustice.gov.in",
+      "pib.gov.in",
+      "www.pib.gov.in",
+      "static.pib.gov.in"
+    ],
+    "connect_timeout_seconds": 10,
+    "read_timeout_seconds": 30,
+    "retries": 2,
+    "max_redirects": 5,
+    "max_response_bytes": 12582912,
+    "min_host_interval_seconds": 1,
+    "max_retry_after_seconds": 30,
+    "concurrency": 1
+  },
+  "items": [
+    {
+      "stable_id": "scheme.central.pm-kisan",
+      "canonical_title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "item_type": "central_scheme",
+      "category": "agriculture_income_support",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Agriculture and Farmers Welfare, Government of India",
+      "current_status": "active; current portal plus dated guidelines",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": "One or more retrieval checks did not pass",
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "pm-kisan.portal.current",
+          "document_title": "PM Kisan Samman Nidhi official portal",
+          "document_identifier": "official-scheme-portal",
+          "source_type": "official_scheme_page",
+          "official_url": "https://pmkisan.gov.in/",
+          "publisher": "Department of Agriculture and Farmers Welfare, Government of India",
+          "publication_date": null,
+          "updated_date": "2026-02-17",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official portal as checked; dynamic operational figures are time-sensitive",
+          "coverage_scope": "Current scheme identity, funding model, and portal-level public information; not a substitute for every later circular.",
+          "required_markers": [
+            "PM Kisan Samman Nidhi",
+            "Central Sector scheme"
+          ],
+          "min_extracted_characters": 500,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T06:57:15+00:00",
+          "fetch_duration_ms": 463.95,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/pm-kisan.portal.current.html",
+          "final_url": "https://pmkisan.gov.in/",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 64475,
+          "content_sha256": "d16fee667462d383a6fcf31a010fff5715a0d3bf0cad87e1027884319d934b59",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-09T06:57:15+00:00",
+          "fetched_at": "2026-09-09T06:57:15+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/pm-kisan.portal.current.txt",
+          "extracted_title": "PM-Kisan Samman Nidhi",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 42.99,
+          "extracted_sha256": "b68b7b5cf59ee12c75341d0a2a3d4c98395f5fb7d2464f6c43aa3935a37434e3",
+          "extracted_characters": 4995,
+          "extracted_locations": 2,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T07:15:23+00:00",
+          "processing_history": [
+            {
+              "recorded_at": "2026-09-09T06:57:15+00:00",
+              "operation": "extract",
+              "result": "failed_quality_gate",
+              "reason": "ExtractionError: Extracted text has 0 characters; minimum is 500",
+              "remediation": "Retry from the persisted snapshot after adding the empty-main body fallback."
+            },
+            {
+              "recorded_at": "2026-09-09T07:12:08+00:00",
+              "operation": "extract",
+              "result": "failed_quality_gate",
+              "reason": "ExtractionError: Extracted text has 0 characters; minimum is 500",
+              "remediation": "Preserve content inside whole-page ASP.NET form wrappers while removing individual form controls."
+            }
+          ],
+          "validation_metrics": {
+            "character_count": 4995,
+            "word_count": 815,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:15:23+00:00",
+          "deduplication_key": "b68b7b5cf59ee12c75341d0a2a3d4c98395f5fb7d2464f6c43aa3935a37434e3",
+          "deduplicated_at": "2026-09-09T07:15:23+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/pm-kisan.portal.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 7,
+          "chunked_at": "2026-09-09T07:23:12+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/pm-kisan.portal.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 22868.89,
+          "embedding_bytes": 28800,
+          "embedded_at": "2026-09-09T07:23:35+00:00",
+          "database_document_id": "ac261fb7-32e6-4b8f-90ec-d957634963a0",
+          "index_duration_ms": 304.51,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:23:36+00:00",
+          "retrieval_checked_at": "2026-09-09T07:29:12+00:00"
+        },
+        {
+          "source_id": "pm-kisan.guidelines.2020-03-29.en",
+          "document_title": "PM-KISAN Operational Guidelines (Revised as on 29 March 2020)",
+          "document_identifier": "RevisedPM-KISANOperationalGuidelines-English-2020-03-29",
+          "source_type": "operational_guidelines",
+          "official_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "publisher": "Department of Agriculture, Cooperation and Farmers Welfare, Government of India",
+          "publication_date": "2020-03-29",
+          "updated_date": "2020-03-29",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "dated revised guidelines; later official amendments and circulars exist",
+          "coverage_scope": "Scheme objectives, benefit structure, eligibility exclusions, implementation, and the revision state explicitly dated 29 March 2020.",
+          "required_markers": [
+            "PRADHAN MANTRI KISAN SAMMAN NIDHI",
+            "OPERATIONAL GUIDELINES",
+            "29.03.2020"
+          ],
+          "min_extracted_characters": 5000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T06:57:15+00:00",
+          "fetch_duration_ms": 1202.26,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/pm-kisan.guidelines.2020-03-29.en.pdf",
+          "final_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "http_status": 200,
+          "content_type": "application/pdf",
+          "content_bytes": 824649,
+          "content_sha256": "ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+          "etag": "\"548b7bf92de1d81:0\"",
+          "last_modified": "Sun, 16 Oct 2022 07:07:38 GMT",
+          "checked_at": "2026-09-09T06:57:17+00:00",
+          "fetched_at": "2026-09-09T06:57:17+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/pm-kisan.guidelines.2020-03-29.en.txt",
+          "extracted_title": "Microsoft Word - Updated PM-Kisan Operational Guidelines.docx",
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 1425.53,
+          "extracted_sha256": "0b61d1c7e57774c87bd552f2975e70285c5e89cd405f1836ba03da965624d8a5",
+          "extracted_characters": 27634,
+          "extracted_locations": 12,
+          "pdf_pages": 12,
+          "extracted_at": "2026-09-09T06:57:18+00:00",
+          "validation_metrics": {
+            "character_count": 27634,
+            "word_count": 4451,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T06:57:18+00:00",
+          "deduplication_key": "0b61d1c7e57774c87bd552f2975e70285c5e89cd405f1836ba03da965624d8a5",
+          "deduplicated_at": "2026-09-09T06:57:18+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/pm-kisan.guidelines.2020-03-29.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 36,
+          "chunked_at": "2026-09-09T07:23:36+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/pm-kisan.guidelines.2020-03-29.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 37953.97,
+          "embedding_bytes": 147584,
+          "embedded_at": "2026-09-09T07:24:14+00:00",
+          "database_document_id": "5d3e1886-1d78-4b0b-8edb-bb8ae9a87cd3",
+          "index_duration_ms": 300.09,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:24:14+00:00",
+          "retrieval_checked_at": "2026-09-09T07:29:12+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pm-kisan.en.benefit",
+          "query": "Under PM-KISAN how much annual income support is provided and in how many instalments?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:27:59+00:00",
+          "last_error": "RetrievalUnavailableError: ",
+          "latency_ms": 60554.59,
+          "expected_rank": 1,
+          "top_score": 0.9947894811630249,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.9947894811630249
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.8980348110198975
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.6776435971260071
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.2298087626695633
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.1464504599571228
+            }
+          ]
+        },
+        {
+          "check_id": "pm-kisan.hi.benefit",
+          "query": "पीएम-किसान योजना के तहत किसानों को सालाना कितनी सहायता मिलती है और कितनी किस्तों में?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:28:39+00:00",
+          "last_error": "RetrievalUnavailableError: ",
+          "latency_ms": 39532.09,
+          "expected_rank": 1,
+          "top_score": 0.9115510582923889,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.9115510582923889
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.8581094741821289
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.43121299147605896
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.1428479105234146
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.09649209678173065
+            }
+          ]
+        },
+        {
+          "check_id": "pm-kisan.bn.benefit",
+          "query": "পিএম-কিষান প্রকল্পে বছরে কত টাকা সহায়তা দেওয়া হয় এবং কত কিস্তিতে?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:29:12+00:00",
+          "last_error": "RetrievalUnavailableError: ",
+          "latency_ms": 33220.86,
+          "expected_rank": 1,
+          "top_score": 0.870721697807312,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.870721697807312
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.8628511428833008
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.34652602672576904
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.17682844400405884
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.06793845444917679
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmjdy",
+      "canonical_title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+      "item_type": "central_scheme",
+      "category": "financial_inclusion",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "pmjdy.scheme-details.current",
+          "document_title": "PMJDY Scheme Details",
+          "document_identifier": "scheme-detail.aspx",
+          "source_type": "official_scheme_page",
+          "official_url": "https://pmjdy.gov.in/scheme-detail.aspx",
+          "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": "2014-08-28",
+          "language": "en",
+          "source_status": "current official page as checked; page does not state a revision date",
+          "coverage_scope": "Scheme purpose, account access, and benefits shown on the official scheme-details page.",
+          "required_markers": [
+            "Pradhan Mantri Jan-Dhan Yojana",
+            "Benefits under PMJDY"
+          ],
+          "min_extracted_characters": 500,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 2,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T07:12:08+00:00",
+          "source_history": [
+            {
+              "official_url": "https://www.pmjdy.gov.in/scheme-detail.aspx",
+              "attempted_at": "2026-09-09T06:57:18+00:00",
+              "result": "fetch_failed",
+              "reason": "TLS certificate hostname mismatch for the www host; certificate verification was not bypassed.",
+              "replacement_reason": "Use the same official page on the certificate-valid non-www host."
+            }
+          ],
+          "fetch_duration_ms": 363.05,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/pmjdy.scheme-details.current.html",
+          "final_url": "https://pmjdy.gov.in/scheme-detail.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 17817,
+          "content_sha256": "65ae549709d8eb86e8878edb695c5a630ed32010b3a37db5a147eda8171eee4a",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-09T07:12:09+00:00",
+          "fetched_at": "2026-09-09T07:12:09+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/pmjdy.scheme-details.current.txt",
+          "extracted_title": "Pradhan Mantri Jan-Dhan Yojana | Department of Financial Services | Ministry of Finance",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 18.91,
+          "extracted_sha256": "9e82a1f25312e3ceaa477186fdd61ad1ca4b83a77709f4e31fd312318dbd1192",
+          "extracted_characters": 1610,
+          "extracted_locations": 2,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T07:15:23+00:00",
+          "processing_history": [
+            {
+              "recorded_at": "2026-09-09T07:12:09+00:00",
+              "operation": "extract",
+              "result": "failed_quality_gate",
+              "reason": "ExtractionError: Extracted text has 0 characters; minimum is 500",
+              "remediation": "Preserve content inside whole-page ASP.NET form wrappers while removing individual form controls."
+            }
+          ],
+          "validation_metrics": {
+            "character_count": 1610,
+            "word_count": 235,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:15:23+00:00",
+          "deduplication_key": "9e82a1f25312e3ceaa477186fdd61ad1ca4b83a77709f4e31fd312318dbd1192",
+          "deduplicated_at": "2026-09-09T07:15:23+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/pmjdy.scheme-details.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-09T07:30:39+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/pmjdy.scheme-details.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 8149.81,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-09T07:30:48+00:00",
+          "database_document_id": "37dda224-3384-4f6c-b757-8e67eb034d63",
+          "index_duration_ms": 227.59,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:30:48+00:00",
+          "retrieval_checked_at": "2026-09-09T07:36:54+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmjdy.en.overdraft",
+          "query": "What overdraft facility and minimum-balance requirement apply to a PMJDY account?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:36:54+00:00",
+          "latency_ms": 49778.88,
+          "expected_rank": 1,
+          "top_score": 0.9815643429756165,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+              "url": "https://pmjdy.gov.in/scheme-detail.aspx",
+              "language": "en",
+              "rerank_score": 0.9815643429756165
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+              "url": "https://pmjdy.gov.in/scheme-detail.aspx",
+              "language": "en",
+              "rerank_score": 0.28768491744995117
+            },
+            {
+              "rank": 3,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.009390061721205711
+            },
+            {
+              "rank": 4,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.00760554987937212
+            },
+            {
+              "rank": 5,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.0064498623833060265
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.apy",
+      "canonical_title": "Atal Pension Yojana (APY)",
+      "item_type": "central_pension_scheme",
+      "category": "pension_social_security",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Pension Fund Regulatory and Development Authority",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "apy.pfrda.scheme.current",
+          "document_title": "Atal Pension Yojana (APY): Overview, Eligibility and Features",
+          "document_identifier": "pfrda-scheme-apy",
+          "source_type": "official_regulator_scheme_page",
+          "official_url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+          "publisher": "Pension Fund Regulatory and Development Authority",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": "2015-06-01",
+          "language": "en",
+          "source_status": "current official page as checked; includes the taxpayer restriction effective 1 October 2022",
+          "coverage_scope": "Eligibility, administration, contribution nature, pension bands, spouse/nominee benefits, and joining routes.",
+          "required_markers": [
+            "Atal Pension Yojana",
+            "minimum age",
+            "income-tax payer"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T06:57:23+00:00",
+          "fetch_duration_ms": 519.16,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/apy.pfrda.scheme.current.html",
+          "final_url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 495622,
+          "content_sha256": "37ea316b83073bc5c7be44d49dff14c1ab27431d51e2a12e6e3d0ac22556c86b",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-09T06:57:24+00:00",
+          "fetched_at": "2026-09-09T06:57:24+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/apy.pfrda.scheme.current.txt",
+          "extracted_title": "Atal Pension Yojana (APY) – PFRDA | Government-Backed Retirement Scheme for Unorganized Sector - PFRDA",
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 1292.4,
+          "extracted_sha256": "45e5f81807ed04eea37130aa3fee285310b09516fe82dd31cfad8deecb6cf751",
+          "extracted_characters": 3824,
+          "extracted_locations": 7,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T06:57:25+00:00",
+          "validation_metrics": {
+            "character_count": 3824,
+            "word_count": 612,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T06:57:25+00:00",
+          "deduplication_key": "45e5f81807ed04eea37130aa3fee285310b09516fe82dd31cfad8deecb6cf751",
+          "deduplicated_at": "2026-09-09T06:57:25+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/apy.pfrda.scheme.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 6,
+          "chunked_at": "2026-09-09T07:30:48+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/apy.pfrda.scheme.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 7666.82,
+          "embedding_bytes": 24704,
+          "embedded_at": "2026-09-09T07:30:56+00:00",
+          "database_document_id": "87ab2095-9ccb-4d9a-9e86-e48e5d1d3c29",
+          "index_duration_ms": 75.01,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:30:56+00:00",
+          "retrieval_checked_at": "2026-09-09T07:37:21+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "apy.en.eligibility",
+          "query": "Who can join Atal Pension Yojana, what is the joining age, and are income-tax payers eligible?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:37:21+00:00",
+          "latency_ms": 26986.16,
+          "expected_rank": 1,
+          "top_score": 0.9368625283241272,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Atal Pension Yojana (APY)",
+              "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+              "language": "en",
+              "rerank_score": 0.9368625283241272
+            },
+            {
+              "rank": 2,
+              "title": "Atal Pension Yojana (APY)",
+              "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+              "language": "en",
+              "rerank_score": 0.5537107586860657
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.038678355515003204
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.03484988585114479
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.01823284663259983
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmuy",
+      "canonical_title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+      "item_type": "central_scheme",
+      "category": "clean_cooking_fuel",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Ministry of Petroleum and Natural Gas, Government of India",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "pmuy.about.current",
+          "document_title": "About Pradhan Mantri Ujjwala Yojana",
+          "document_identifier": "about.html",
+          "source_type": "official_scheme_page",
+          "official_url": "https://www.pmuy.gov.in/about.html",
+          "publisher": "Ministry of Petroleum and Natural Gas, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": "2016-05-01",
+          "language": "en",
+          "source_status": "current official page as checked; live target figures are time-sensitive",
+          "coverage_scope": "Scheme history, eligibility, required documents, and connection assistance described by the official portal.",
+          "required_markers": [
+            "Pradhan Mantri",
+            "Eligibility Criteria",
+            "PMUY Benefits"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T06:57:25+00:00",
+          "fetch_duration_ms": 224.26,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/pmuy.about.current.html",
+          "final_url": "https://www.pmuy.gov.in/about.html",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 37206,
+          "content_sha256": "26ce708c9fc4ada69c415e910fcdb6bf62be5ce16bf075c844de490479a9a8b4",
+          "etag": "\"ed7e8254ec23dd1:0\"",
+          "last_modified": "Tue, 04 Aug 2026 08:36:22 GMT",
+          "checked_at": "2026-09-09T06:57:25+00:00",
+          "fetched_at": "2026-09-09T06:57:25+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/pmuy.about.current.txt",
+          "extracted_title": "PMUY : About",
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 206.24,
+          "extracted_sha256": "22d1c59e6d249fbf2106bd124f60271a69905a8398fb8d9ea7098512a6c8aaa9",
+          "extracted_characters": 6498,
+          "extracted_locations": 38,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T06:57:25+00:00",
+          "validation_metrics": {
+            "character_count": 6498,
+            "word_count": 975,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T06:57:25+00:00",
+          "deduplication_key": "22d1c59e6d249fbf2106bd124f60271a69905a8398fb8d9ea7098512a6c8aaa9",
+          "deduplicated_at": "2026-09-09T06:57:25+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/pmuy.about.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 13,
+          "chunked_at": "2026-09-09T07:30:56+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/pmuy.about.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 8495.18,
+          "embedding_bytes": 53376,
+          "embedded_at": "2026-09-09T07:31:04+00:00",
+          "database_document_id": "98e70a5c-523a-4bd1-b997-1316fe075fd2",
+          "index_duration_ms": 118.0,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:31:04+00:00",
+          "retrieval_checked_at": "2026-09-09T07:37:41+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmuy.en.eligibility",
+          "query": "Who is eligible for a PMUY LPG connection and what documents are required?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:37:41+00:00",
+          "latency_ms": 19955.09,
+          "expected_rank": 1,
+          "top_score": 0.49608683586120605,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.49608683586120605
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.3140130043029785
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.19548404216766357
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.042746759951114655
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.036584656685590744
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.ab-pmjay",
+      "canonical_title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+      "item_type": "central_scheme",
+      "category": "health_assurance",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "National Health Authority",
+      "current_status": "active scheme; this source covers general beneficiary rights, not every later expansion",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "ab-pmjay.pib-explainer-pdf.2024-09-23",
+          "document_title": "Transforming Healthcare: Six Years of Ayushman Bharat PM-JAY",
+          "document_identifier": "PIB-specificdoc-doc2024923400001",
+          "source_type": "official_government_explainer_pdf",
+          "official_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "publisher": "Ministry of Health and Family Welfare; published by Press Information Bureau, Government of India",
+          "publication_date": "2024-09-23",
+          "updated_date": "2024-09-23",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "dated official Government of India explainer; statistics and programme coverage are only as stated on 23 September 2024",
+          "coverage_scope": "PM-JAY identity and features stated in the dated explainer, including annual family cover, secondary and tertiary hospitalization, cashless access, pre/post-hospitalization coverage, portability, and the September 2024 senior expansion; excludes later operational changes.",
+          "required_markers": [
+            "Transforming Healthcare: Six Years of Ayushman Bharat PM-JAY",
+            "Key Features of PM-JAY",
+            "Cashless Access to Healthcare"
+          ],
+          "min_extracted_characters": 3000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "source_id": "ab-pmjay.adhikar-patra.en-hi",
+              "official_url": "https://nha.gov.in/img/resources/Adhikar-Patra.pdf",
+              "attempted_at": "2026-09-09T06:57:25+00:00",
+              "result": "fetch_failed",
+              "reason": "TLS validation failed because the source presented a self-signed certificate chain; verification was not bypassed.",
+              "replacement_reason": "Use another exact, public National Health Authority source with a valid TLS path and narrow its coverage explicitly."
+            },
+            {
+              "source_id": "ab-pmjay.nha-data-privacy-policy.v3",
+              "official_url": "https://beneficiary.nha.gov.in/nha/NHA-data-privacy-policy.html",
+              "attempted_at": "2026-09-09T07:12:09+00:00",
+              "result": "fetch_failed",
+              "reason": "TLS validation failed because the beneficiary host also presented a self-signed certificate chain; verification was not bypassed.",
+              "replacement_reason": "Use a dated Press Information Bureau Government of India explainer that is directly accessible with valid TLS."
+            },
+            {
+              "source_id": "ab-pmjay.pib-explainer.2024-09-23",
+              "official_url": "https://www.pib.gov.in/PressNoteDetails.aspx?ModuleId=3&NoteId=153181&lang=1&reg=3",
+              "attempted_at": "2026-09-09T07:18:41+00:00",
+              "result": "fetch_failed",
+              "reason": "The official PIB HTML view returned HTTP 403 to the bounded collector; the restriction was respected.",
+              "replacement_reason": "Use the exact dated PDF published on PIB's official static-document host."
+            }
+          ],
+          "last_attempt_at": "2026-09-09T07:21:32+00:00",
+          "fetch_duration_ms": 784.91,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/ab-pmjay.pib-explainer-pdf.2024-09-23.pdf",
+          "final_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "http_status": 200,
+          "content_type": "application/pdf",
+          "content_bytes": 1455654,
+          "content_sha256": "0bb1de6ea0caff7f973116b68aeaa25dae776048bcc2c16d8143fbdf6525becc",
+          "etag": null,
+          "last_modified": "Mon, 23 Sep 2024 11:55:55 GMT",
+          "checked_at": "2026-09-09T07:21:33+00:00",
+          "fetched_at": "2026-09-09T07:21:33+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/ab-pmjay.pib-explainer-pdf.2024-09-23.txt",
+          "extracted_title": null,
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 534.64,
+          "extracted_sha256": "dfa2f70b06e040b0b71188ccca1f58eb602c00751c4de6d43150ac74ca6c1e3d",
+          "extracted_characters": 10642,
+          "extracted_locations": 9,
+          "pdf_pages": 9,
+          "extracted_at": "2026-09-09T07:21:33+00:00",
+          "validation_metrics": {
+            "character_count": 10642,
+            "word_count": 1668,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:21:33+00:00",
+          "deduplication_key": "dfa2f70b06e040b0b71188ccca1f58eb602c00751c4de6d43150ac74ca6c1e3d",
+          "deduplicated_at": "2026-09-09T07:21:33+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/ab-pmjay.pib-explainer-pdf.2024-09-23.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 13,
+          "chunked_at": "2026-09-09T07:31:04+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/ab-pmjay.pib-explainer-pdf.2024-09-23.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 17354.04,
+          "embedding_bytes": 53376,
+          "embedded_at": "2026-09-09T07:31:22+00:00",
+          "database_document_id": "897b1867-ab0e-4597-8e20-537fdd07f43a",
+          "index_duration_ms": 126.05,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:31:22+00:00",
+          "retrieval_checked_at": "2026-09-09T07:38:04+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "ab-pmjay.en.coverage",
+          "query": "According to the September 2024 Government of India explainer, what PM-JAY hospitalization cover, cashless access, and portability does it describe?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:38:04+00:00",
+          "latency_ms": 23527.17,
+          "expected_rank": 1,
+          "top_score": 0.9224446415901184,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.9224446415901184
+            },
+            {
+              "rank": 2,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.8914459347724915
+            },
+            {
+              "rank": 3,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.8623008131980896
+            },
+            {
+              "rank": 4,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.8405788540840149
+            },
+            {
+              "rank": 5,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.7759618163108826
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.sukanya-samriddhi",
+      "canonical_title": "Sukanya Samriddhi Account",
+      "item_type": "central_savings_scheme",
+      "category": "girl_child_savings",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Posts, Ministry of Communications, Government of India",
+      "current_status": "active scheme represented here by its dated 2019 base notification; later amendments and current rates require separate sources",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "sukanya-samriddhi.scheme-2019.en",
+          "document_title": "Sukanya Samriddhi Account Scheme, 2019",
+          "document_identifier": "G.S.R. 914(E)",
+          "source_type": "official_gazette_scheme_notification",
+          "official_url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "publisher": "Department of Economic Affairs, Ministry of Finance, Government of India",
+          "publication_date": "2019-12-12",
+          "updated_date": "2019-12-12",
+          "effective_date": "2019-12-12",
+          "language": "en",
+          "source_status": "base 2019 Scheme notification hosted by India Post; later amendments and current interest-rate notifications are not included",
+          "coverage_scope": "The original 2019 Scheme's account opening, documents, deposits, operation, withdrawal, and closure provisions; no claim that the stated rate or all provisions remain unamended.",
+          "required_markers": [
+            "Sukanya Samriddhi",
+            "G.S.R. 914(E)"
+          ],
+          "min_extracted_characters": 4000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "source_id": "sukanya-samriddhi.indiapost.current",
+              "official_url": "https://www.indiapost.gov.in/banking-services/savings?card_title=Sukanya%20Samriddhi%20Account%20%28SSA%29",
+              "attempted_at": "2026-09-09T06:57:30+00:00",
+              "result": "failed_quality_gate",
+              "reason": "The client-rendered page returned only 'Loading...' to the static extractor (10 extracted characters).",
+              "content_sha256": "8f88baba00b05ac7315cb90100aadc2a599cbbb4f6020f57cfe849d18da6d83b",
+              "replacement_reason": "Use the machine-extractable 2019 Scheme notification hosted on the same official India Post domain."
+            }
+          ],
+          "last_attempt_at": "2026-09-09T07:12:14+00:00",
+          "fetch_duration_ms": 7109.43,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/sukanya-samriddhi.scheme-2019.en.pdf",
+          "final_url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "http_status": 200,
+          "content_type": "application/pdf",
+          "content_bytes": 249542,
+          "content_sha256": "512a9ec0dc17f2aed48d58c8902a54cd6f3604eae0068416fe5cb035235b16b6",
+          "etag": "W/\"3cec6-1a07f466d08\"",
+          "last_modified": "Tue, 08 Sep 2026 04:28:37 GMT",
+          "checked_at": "2026-09-09T07:12:21+00:00",
+          "fetched_at": "2026-09-09T07:12:21+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/sukanya-samriddhi.scheme-2019.en.txt",
+          "extracted_title": null,
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 853.39,
+          "extracted_sha256": "63ffe9565529ac264c6d1a703b7d267095d56c7f7acf4695b7f7265f8f869958",
+          "extracted_characters": 30118,
+          "extracted_locations": 9,
+          "pdf_pages": 9,
+          "extracted_at": "2026-09-09T07:12:22+00:00",
+          "validation_metrics": {
+            "character_count": 30118,
+            "word_count": 4344,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:12:22+00:00",
+          "deduplication_key": "63ffe9565529ac264c6d1a703b7d267095d56c7f7acf4695b7f7265f8f869958",
+          "deduplicated_at": "2026-09-09T07:12:22+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/sukanya-samriddhi.scheme-2019.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 34,
+          "chunked_at": "2026-09-09T07:31:22+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/sukanya-samriddhi.scheme-2019.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 64891.81,
+          "embedding_bytes": 139392,
+          "embedded_at": "2026-09-09T07:32:27+00:00",
+          "database_document_id": "5c8625b3-32e8-4e4d-b196-00b3dd6968ab",
+          "index_duration_ms": 374.37,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:32:27+00:00",
+          "retrieval_checked_at": "2026-09-09T07:38:44+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "sukanya.en.documents",
+          "query": "Which documents must accompany Form-1 when opening a Sukanya Samriddhi Account under the 2019 Scheme?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:38:44+00:00",
+          "latency_ms": 39480.96,
+          "expected_rank": 1,
+          "top_score": 0.7341282963752747,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.7341282963752747
+            },
+            {
+              "rank": 2,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.6766164302825928
+            },
+            {
+              "rank": 3,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.15964214503765106
+            },
+            {
+              "rank": 4,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.0471467487514019
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.03516193479299545
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.kanyashree",
+      "canonical_title": "Kanyashree Prakalpa",
+      "item_type": "state_scheme",
+      "category": "education_and_child_marriage_prevention",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Department of Women Development and Social Welfare, Government of West Bengal",
+      "current_status": "active official scheme portal",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-09T05:30:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "kanyashree.faq.current",
+          "document_title": "Kanyashree Prakalpa FAQ",
+          "document_identifier": "kanyashree-9-faq",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://kanyashree.wb.gov.in/faq",
+          "publisher": "Department of Women Development and Social Welfare, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official FAQ as checked; page does not state a revision date",
+          "coverage_scope": "Objectives, K1/K2 conditions, benefits, exceptions, and application process for West Bengal residents.",
+          "required_markers": [
+            "Kanyashree Prakalpa",
+            "Conditions",
+            "West Bengal"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-09T05:30:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "last_attempt_at": "2026-09-09T06:57:34+00:00",
+          "fetch_duration_ms": 1027.99,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/kanyashree.faq.current.html",
+          "final_url": "https://kanyashree.wb.gov.in/faq",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 157446,
+          "content_sha256": "6c596d672e47cbb7b4b13dc7c929752a538cddeef77c3e6a0524a7602f2c2204",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-09T06:57:35+00:00",
+          "fetched_at": "2026-09-09T06:57:35+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/kanyashree.faq.current.txt",
+          "extracted_title": "Kanyashree 9.0",
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 211.34,
+          "extracted_sha256": "6b6259251285b72d108b0be7c9e37d0131b4617a779d07191d3d70bd58a3ddb7",
+          "extracted_characters": 3833,
+          "extracted_locations": 6,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T06:57:36+00:00",
+          "validation_metrics": {
+            "character_count": 3833,
+            "word_count": 608,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T06:57:36+00:00",
+          "deduplication_key": "6b6259251285b72d108b0be7c9e37d0131b4617a779d07191d3d70bd58a3ddb7",
+          "deduplicated_at": "2026-09-09T06:57:36+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/kanyashree.faq.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 6,
+          "chunked_at": "2026-09-09T07:32:27+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/kanyashree.faq.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 7116.34,
+          "embedding_bytes": 24704,
+          "embedded_at": "2026-09-09T07:32:34+00:00",
+          "database_document_id": "01558b8a-3c6a-4d99-bbcf-4ff3a8bbcee6",
+          "index_duration_ms": 64.44,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:32:34+00:00",
+          "retrieval_checked_at": "2026-09-09T07:39:48+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "kanyashree.en.conditions",
+          "query": "What are the age, education, marital-status and West Bengal residence conditions for Kanyashree K1 and K2?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:39:17+00:00",
+          "latency_ms": 32904.44,
+          "expected_rank": 1,
+          "top_score": 0.8250446319580078,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.8250446319580078
+            },
+            {
+              "rank": 2,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.8250446319580078
+            },
+            {
+              "rank": 3,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.14571398496627808
+            },
+            {
+              "rank": 4,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.006887037772685289
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.0017648026114329696
+            }
+          ]
+        },
+        {
+          "check_id": "kanyashree.bn.conditions",
+          "query": "কন্যাশ্রী প্রকল্পের K1 ও K2-এর বয়স, পড়াশোনা এবং অবিবাহিত থাকার শর্ত কী?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:39:48+00:00",
+          "latency_ms": 31710.11,
+          "expected_rank": 1,
+          "top_score": 0.48729801177978516,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.48729801177978516
+            },
+            {
+              "rank": 2,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.39715802669525146
+            },
+            {
+              "rank": 3,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.39715802669525146
+            },
+            {
+              "rank": 4,
+              "title": "Kanyashree Prakalpa",
+              "url": "https://kanyashree.wb.gov.in/faq",
+              "language": "en",
+              "rerank_score": 0.038956418633461
+            },
+            {
+              "rank": 5,
+              "title": "Sukanya Samriddhi Account",
+              "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+              "language": "en",
+              "rerank_score": 0.008729185909032822
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.national-food-security-act-2013",
+      "canonical_title": "National Food Security Act, 2013",
+      "item_type": "central_act",
+      "category": "food_security_law",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Legislative Department, Ministry of Law and Justice, Government of India",
+      "current_status": "base central Act text with appended notifications through the dated official compendium; later changes require separate sources",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "nfsa.act-20-of-2013.en",
+          "document_title": "The National Food Security Act, 2013",
+          "document_identifier": "Act No. 20 of 2013",
+          "source_type": "official_central_act_text",
+          "official_url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "publisher": "Legislative Department, Ministry of Law and Justice, Government of India; hosted by the Department of Food and Public Distribution",
+          "publication_date": "2013-09-10",
+          "updated_date": null,
+          "effective_date": "2013-07-05",
+          "language": "en",
+          "source_status": "official department-hosted compendium containing the base Act and appended dated notifications; not asserted complete after its latest included notification",
+          "coverage_scope": "Act identity, chapters, sections, schedules, and only the appended notifications present in this exact PDF; rules and later notifications outside the file are not covered.",
+          "required_markers": [
+            "THE NATIONAL FOOD SECURITY ACT, 2013",
+            "NO. 20 OF 2013"
+          ],
+          "min_extracted_characters": 10000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "official_url": "https://www.indiacode.nic.in/bitstream/123456789/2113/1/201320.pdf",
+              "attempted_at": "2026-09-09T06:57:36+00:00",
+              "result": "fetch_failed",
+              "reason": "Official source returned HTTP 403; the access restriction was respected.",
+              "replacement_reason": "Use the exact Act copy and notification compendium on the official Department of Food and Public Distribution domain."
+            }
+          ],
+          "last_attempt_at": "2026-09-09T07:12:22+00:00",
+          "fetch_duration_ms": 3327.31,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/nfsa.act-20-of-2013.en.pdf",
+          "final_url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "http_status": 200,
+          "content_type": "application/pdf",
+          "content_bytes": 4198801,
+          "content_sha256": "4f7f27f452ceda2a1951e4bde77177717971487453e45906b1ffc2bb75579c34",
+          "etag": "\"1d9d0cfe17fd391\"",
+          "last_modified": "Thu, 17 Aug 2023 05:58:44 GMT",
+          "checked_at": "2026-09-09T07:12:25+00:00",
+          "fetched_at": "2026-09-09T07:12:25+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/nfsa.act-20-of-2013.en.txt",
+          "extracted_title": null,
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 4086.19,
+          "extracted_sha256": "13d502fcad5cabede587ef70293f2e031ace126ff91778be356db29266adccad",
+          "extracted_characters": 78363,
+          "extracted_locations": 34,
+          "pdf_pages": 35,
+          "extracted_at": "2026-09-09T07:12:29+00:00",
+          "validation_metrics": {
+            "character_count": 78363,
+            "word_count": 13697,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:12:29+00:00",
+          "deduplication_key": "13d502fcad5cabede587ef70293f2e031ace126ff91778be356db29266adccad",
+          "deduplicated_at": "2026-09-09T07:12:29+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/nfsa.act-20-of-2013.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 86,
+          "chunked_at": "2026-09-09T07:32:34+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/nfsa.act-20-of-2013.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 138992.19,
+          "embedding_bytes": 352384,
+          "embedded_at": "2026-09-09T07:34:53+00:00",
+          "database_document_id": "5fd36032-ddc1-4028-ae8b-b7b0c4ebd74d",
+          "index_duration_ms": 775.78,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:34:54+00:00",
+          "retrieval_checked_at": "2026-09-09T07:40:24+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "nfsa.en.grievance",
+          "query": "Which provisions of the National Food Security Act establish internal and district grievance redressal?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:40:23+00:00",
+          "latency_ms": 35090.61,
+          "expected_rank": 1,
+          "top_score": 0.9238032102584839,
+          "results": [
+            {
+              "rank": 1,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.9238032102584839
+            },
+            {
+              "rank": 2,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.7892842888832092
+            },
+            {
+              "rank": 3,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.7168190479278564
+            },
+            {
+              "rank": 4,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.6362447142601013
+            },
+            {
+              "rank": 5,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.6047693490982056
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.consumer-protection-act-2019",
+      "canonical_title": "Consumer Protection Act, 2019",
+      "item_type": "central_act",
+      "category": "consumer_law",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Consumer Affairs, Ministry of Consumer Affairs, Food and Public Distribution, Government of India",
+      "current_status": "the 2019 central Act is described by a dated 2025 official government brief; the full statutory text and later changes are not covered by this source",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "consumer-protection.pib-brief.2025-03-14",
+          "document_title": "World Consumer Rights Day 2025: Key Initiatives and Developments in Consumer Protection",
+          "document_identifier": "PIB-specificdoc-doc2025314520301",
+          "source_type": "official_government_brief_pdf",
+          "official_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+          "publisher": "Ministry of Consumer Affairs, Food and Public Distribution; published by Press Information Bureau, Government of India",
+          "publication_date": "2025-03-14",
+          "updated_date": "2025-03-14",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "dated official government brief; it is not the Gazette Act text and 2024-25 operational figures are time-specific",
+          "coverage_scope": "The brief's identification of the Consumer Protection Act, 2019, the three-tier Consumer Commission machinery, Section 38(7) disposal targets, and selected 2024-25 consumer-protection initiatives; no claim of full statutory, rule, or amendment coverage.",
+          "required_markers": [
+            "World Consumer Rights Day 2025",
+            "Consumer Protection Act, 2019",
+            "Section 38"
+          ],
+          "min_extracted_characters": 4000,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "source_id": "consumer-protection.act-35-of-2019.en",
+              "official_url": "https://www.indiacode.nic.in/bitstream/123456789/15256/1/eng201935.pdf",
+              "attempted_at": "2026-09-09T06:57:36+00:00",
+              "result": "fetch_failed",
+              "reason": "Official source returned HTTP 403; the access restriction was respected.",
+              "replacement_reason": "Use the accessible Department of Consumer Affairs index and narrow coverage to document identity and listed instruments."
+            },
+            {
+              "source_id": "consumer-protection.doca-index.current",
+              "official_url": "https://consumeraffairs.nic.in/acts-and-rules/consumer-protection/consumer-protection",
+              "attempted_at": "2026-09-09T07:12:29+00:00",
+              "result": "fetch_failed",
+              "reason": "The official index timed out on all bounded connection attempts.",
+              "replacement_reason": "Try the exact Act PDF on the official www Department of Consumer Affairs host with a bounded 10-second connect timeout."
+            },
+            {
+              "source_id": "consumer-protection.act-35-of-2019.doca",
+              "official_url": "https://www.consumeraffairs.nic.in/sites/default/files/CP%20Act%202019.pdf",
+              "attempted_at": "2026-09-09T07:18:46+00:00",
+              "result": "fetch_failed",
+              "reason": "The official PDF timed out on all bounded connection attempts.",
+              "replacement_reason": "Use a compact, machine-extractable 14 March 2025 official government brief and narrow coverage to the Act facts it states."
+            }
+          ],
+          "last_attempt_at": "2026-09-09T07:21:33+00:00",
+          "fetch_duration_ms": 438.92,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/consumer-protection.pib-brief.2025-03-14.pdf",
+          "final_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+          "http_status": 200,
+          "content_type": "application/pdf",
+          "content_bytes": 480720,
+          "content_sha256": "f13d16b52f329ba6e9892221d98a53337d4e25d193d8df58b6f11ab5e181a1d9",
+          "etag": null,
+          "last_modified": "Fri, 14 Mar 2025 11:48:16 GMT",
+          "checked_at": "2026-09-09T07:21:34+00:00",
+          "fetched_at": "2026-09-09T07:21:34+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/consumer-protection.pib-brief.2025-03-14.txt",
+          "extracted_title": null,
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 252.19,
+          "extracted_sha256": "2b73cd3b560f5b743c987f72ddc133545704faed3188debcc06f5f06b2643ae1",
+          "extracted_characters": 11620,
+          "extracted_locations": 5,
+          "pdf_pages": 5,
+          "extracted_at": "2026-09-09T07:21:34+00:00",
+          "validation_metrics": {
+            "character_count": 11620,
+            "word_count": 1700,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:21:34+00:00",
+          "deduplication_key": "2b73cd3b560f5b743c987f72ddc133545704faed3188debcc06f5f06b2643ae1",
+          "deduplicated_at": "2026-09-09T07:21:34+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/consumer-protection.pib-brief.2025-03-14.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 14,
+          "chunked_at": "2026-09-09T07:34:54+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/consumer-protection.pib-brief.2025-03-14.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 14398.08,
+          "embedding_bytes": 57472,
+          "embedded_at": "2026-09-09T07:35:09+00:00",
+          "database_document_id": "27844c48-e6e1-477d-bee1-40ea76bae71c",
+          "index_duration_ms": 117.21,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:35:09+00:00",
+          "retrieval_checked_at": "2026-09-09T07:41:07+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "consumer-act.en.mediation",
+          "query": "What Consumer Commission structure and Section 38(7) disposal targets does the March 2025 official brief describe for the Consumer Protection Act 2019?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:41:07+00:00",
+          "latency_ms": 43563.4,
+          "expected_rank": 1,
+          "top_score": 0.9277011752128601,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Consumer Protection Act, 2019",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+              "language": "en",
+              "rerank_score": 0.9277011752128601
+            },
+            {
+              "rank": 2,
+              "title": "Consumer Protection Act, 2019",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+              "language": "en",
+              "rerank_score": 0.5123183131217957
+            },
+            {
+              "rank": 3,
+              "title": "Consumer Protection Act, 2019",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+              "language": "en",
+              "rerank_score": 0.047641146928071976
+            },
+            {
+              "rank": 4,
+              "title": "Consumer Protection Act, 2019",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+              "language": "en",
+              "rerank_score": 0.04589969292283058
+            },
+            {
+              "rank": 5,
+              "title": "Consumer Protection Act, 2019",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+              "language": "en",
+              "rerank_score": 0.04256533086299896
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.senior-citizens-act-2007",
+      "canonical_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+      "item_type": "central_act",
+      "category": "senior_citizen_welfare_law",
+      "jurisdiction": "India with state-specific commencement",
+      "geography": "IN",
+      "publisher": "Department of Social Justice and Empowerment, Government of India",
+      "current_status": "official ministry overview of the 2007 Act's identity and purpose; full sections, state commencement, and rules are not covered",
+      "status_as_of": "2026-09-09",
+      "processing_status": "retrieval_checked",
+      "discovered_at": "2026-09-08T18:00:00Z",
+      "attempt_count": 0,
+      "last_error": null,
+      "retry_eligible": true,
+      "sources": [
+        {
+          "source_id": "senior-citizens.mosje-overview.current",
+          "document_title": "About the Ageing Division: Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "document_identifier": "MoSJE-Ageing-Division-overview-47564",
+          "source_type": "official_ministry_law_overview",
+          "official_url": "https://socialjustice.gov.in/common/47564",
+          "publisher": "Department of Social Justice and Empowerment, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official division overview as checked; it is not the statutory text",
+          "coverage_scope": "The Act's name, December 2007 enactment timeframe, need-based maintenance purpose, and ministry programme context; no substantive section, commencement, state-rule, or amendment claim.",
+          "required_markers": [
+            "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+            "enacted in December 2007"
+          ],
+          "min_extracted_characters": 500,
+          "processing_status": "retrieval_checked",
+          "discovered_at": "2026-09-08T18:00:00Z",
+          "attempt_count": 1,
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "source_id": "senior-citizens.act-56-of-2007.en",
+              "official_url": "https://www.indiacode.nic.in/bitstream/123456789/18950/1/act_200756.pdf",
+              "attempted_at": "2026-09-09T06:57:37+00:00",
+              "result": "fetch_failed",
+              "reason": "Official source returned HTTP 403; the access restriction was respected.",
+              "replacement_reason": "Use the accessible ministry overview and narrow coverage to the Act's identity, date, and purpose."
+            }
+          ],
+          "last_attempt_at": "2026-09-09T07:12:49+00:00",
+          "fetch_duration_ms": 1307.42,
+          "snapshot_path": "corpus/staging/batch-001/snapshots/senior-citizens.mosje-overview.current.html",
+          "final_url": "https://socialjustice.gov.in/common/47564",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 78579,
+          "content_sha256": "431c8dc8357d3902c8974c517621f46100dcdc0b0e1dba8dfb4ff752756a04d1",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-09T07:12:50+00:00",
+          "fetched_at": "2026-09-09T07:12:50+00:00",
+          "extracted_path": "corpus/staging/batch-001/extracted/senior-citizens.mosje-overview.current.txt",
+          "extracted_title": "About the Division | Department of Social Justice and Empowerment - Government of India",
+          "extraction_version": "setu-structured-v1",
+          "extraction_duration_ms": 132.54,
+          "extracted_sha256": "099a6353b8a86cd277cb257622659683f524509d6250edf3a2ddb387d42e6a24",
+          "extracted_characters": 16005,
+          "extracted_locations": 3,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-09T07:12:50+00:00",
+          "validation_metrics": {
+            "character_count": 16005,
+            "word_count": 2410,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-09T07:12:51+00:00",
+          "deduplication_key": "099a6353b8a86cd277cb257622659683f524509d6250edf3a2ddb387d42e6a24",
+          "deduplicated_at": "2026-09-09T07:12:51+00:00",
+          "chunks_path": "corpus/staging/batch-001/chunks/senior-citizens.mosje-overview.current.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 20,
+          "chunked_at": "2026-09-09T07:35:09+00:00",
+          "embedding_path": "corpus/staging/batch-001/embeddings/senior-citizens.mosje-overview.current.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 19294.88,
+          "embedding_bytes": 82048,
+          "embedded_at": "2026-09-09T07:35:28+00:00",
+          "database_document_id": "3ab7c494-770a-4552-99b9-b830dadf4a5f",
+          "index_duration_ms": 135.47,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-09T07:35:28+00:00",
+          "retrieval_checked_at": "2026-09-09T07:41:45+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "senior-act.en.property",
+          "query": "Why was the Maintenance and Welfare of Parents and Senior Citizens Act enacted, and whose maintenance and welfare does it address?",
+          "query_language": "en",
+          "expected_rank_max": 3,
+          "status": "passed",
+          "checked_at": "2026-09-09T07:41:45+00:00",
+          "latency_ms": 38003.96,
+          "expected_rank": 1,
+          "top_score": 0.9823954701423645,
+          "results": [
+            {
+              "rank": 1,
+              "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+              "url": "https://socialjustice.gov.in/common/47564",
+              "language": "en",
+              "rerank_score": 0.9823954701423645
+            },
+            {
+              "rank": 2,
+              "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+              "url": "https://socialjustice.gov.in/common/47564",
+              "language": "en",
+              "rerank_score": 0.6540476083755493
+            },
+            {
+              "rank": 3,
+              "title": "National Food Security Act, 2013",
+              "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+              "language": "en",
+              "rerank_score": 0.4328368902206421
+            },
+            {
+              "rank": 4,
+              "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+              "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+              "language": "en",
+              "rerank_score": 0.03954467177391052
+            },
+            {
+              "rank": 5,
+              "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+              "url": "https://socialjustice.gov.in/common/47564",
+              "language": "en",
+              "rerank_score": 0.02949296496808529
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "batch_retrieval_checks": [
+    {
+      "check_id": "batch.wrong-state.kanyashree",
+      "check_type": "wrong_state",
+      "query": "Can a student who is only a resident of Maharashtra claim West Bengal Kanyashree K1?",
+      "expected_item_id": "scheme.wb.kanyashree",
+      "expected_rank_max": 3,
+      "status": "passed",
+      "checked_at": "2026-09-09T07:42:19+00:00",
+      "latency_ms": 34310.53,
+      "expected_rank": 1,
+      "top_score": 0.4780537188053131,
+      "results": [
+        {
+          "rank": 1,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.4780537188053131
+        },
+        {
+          "rank": 2,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.4780537188053131
+        },
+        {
+          "rank": 3,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.0017717520240694284
+        },
+        {
+          "rank": 4,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.0010742259910330176
+        },
+        {
+          "rank": 5,
+          "title": "Sukanya Samriddhi Account",
+          "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "language": "en",
+          "rerank_score": 0.0007553570321761072
+        }
+      ]
+    },
+    {
+      "check_id": "batch.similar-name.pmjay-vs-pmjdy",
+      "check_type": "similar_name",
+      "query": "Does PM-JAY open a zero-balance bank account, or is that benefit under PMJDY?",
+      "expected_item_id": "scheme.central.pmjdy",
+      "expected_rank_max": 3,
+      "status": "passed",
+      "checked_at": "2026-09-09T07:42:53+00:00",
+      "latency_ms": 33584.57,
+      "expected_rank": 1,
+      "top_score": 0.9134935140609741,
+      "results": [
+        {
+          "rank": 1,
+          "title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+          "url": "https://pmjdy.gov.in/scheme-detail.aspx",
+          "language": "en",
+          "rerank_score": 0.9134935140609741
+        },
+        {
+          "rank": 2,
+          "title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+          "url": "https://pmjdy.gov.in/scheme-detail.aspx",
+          "language": "en",
+          "rerank_score": 0.6624061465263367
+        },
+        {
+          "rank": 3,
+          "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "language": "en",
+          "rerank_score": 0.043628495186567307
+        },
+        {
+          "rank": 4,
+          "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "language": "en",
+          "rerank_score": 0.031208308413624763
+        },
+        {
+          "rank": 5,
+          "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "language": "en",
+          "rerank_score": 0.025284698233008385
+        }
+      ]
+    },
+    {
+      "check_id": "batch.historical.nfsa",
+      "check_type": "historical",
+      "query": "What Act number and enactment date identify the National Food Security Act 2013?",
+      "expected_item_id": "law.central.national-food-security-act-2013",
+      "expected_rank_max": 3,
+      "status": "passed",
+      "checked_at": "2026-09-09T07:43:23+00:00",
+      "latency_ms": 30293.26,
+      "expected_rank": 1,
+      "top_score": 0.9953044652938843,
+      "results": [
+        {
+          "rank": 1,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.9953044652938843
+        },
+        {
+          "rank": 2,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.8903586268424988
+        },
+        {
+          "rank": 3,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.8661080598831177
+        },
+        {
+          "rank": 4,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.816168487071991
+        },
+        {
+          "rank": 5,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.8149451613426208
+        }
+      ]
+    },
+    {
+      "check_id": "batch.unsupported.annapurna-bhandar",
+      "check_type": "unsupported",
+      "query": "What monthly benefit is guaranteed by the Annapurna Bhandar scheme?",
+      "expect_no_supported_item": true,
+      "max_top_score": 0.5,
+      "status": "passed",
+      "checked_at": "2026-09-09T07:43:53+00:00",
+      "latency_ms": 29998.35,
+      "expected_rank": null,
+      "top_score": 0.01583138108253479,
+      "results": [
+        {
+          "rank": 1,
+          "title": "Atal Pension Yojana (APY)",
+          "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+          "language": "en",
+          "rerank_score": 0.01583138108253479
+        },
+        {
+          "rank": 2,
+          "title": "National Food Security Act, 2013",
+          "url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "language": "en",
+          "rerank_score": 0.004513407591730356
+        },
+        {
+          "rank": 3,
+          "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "language": "en",
+          "rerank_score": 0.0030497205443680286
+        },
+        {
+          "rank": 4,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "language": "en",
+          "rerank_score": 0.002725389087572694
+        },
+        {
+          "rank": 5,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "language": "en",
+          "rerank_score": 0.0020682404283434153
+        }
+      ]
+    },
+    {
+      "check_id": "batch.multilingual.kanyashree.bn",
+      "check_type": "multilingual",
+      "query": "কন্যাশ্রী প্রকল্প কি পশ্চিমবঙ্গের বাসিন্দাদের জন্য?",
+      "expected_item_id": "scheme.wb.kanyashree",
+      "expected_rank_max": 5,
+      "status": "passed",
+      "checked_at": "2026-09-09T07:44:24+00:00",
+      "latency_ms": 30194.81,
+      "expected_rank": 1,
+      "top_score": 0.6999940872192383,
+      "results": [
+        {
+          "rank": 1,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.6999940872192383
+        },
+        {
+          "rank": 2,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.6999940872192383
+        },
+        {
+          "rank": 3,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.013223797082901001
+        },
+        {
+          "rank": 4,
+          "title": "Kanyashree Prakalpa",
+          "url": "https://kanyashree.wb.gov.in/faq",
+          "language": "en",
+          "rerank_score": 0.011944371275603771
+        },
+        {
+          "rank": 5,
+          "title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "url": "https://socialjustice.gov.in/common/47564",
+          "language": "en",
+          "rerank_score": 0.0023939802777022123
+        }
+      ]
+    }
+  ]
+}

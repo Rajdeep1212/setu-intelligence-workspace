@@ -80,5 +80,17 @@ async def write_document(
     return str(document_id)
 
 
-async def get_pool() -> asyncpg.Pool:
-    return await asyncpg.create_pool(DATABASE_DSN, min_size=1, max_size=5)
+async def get_pool(
+    database_dsn: str | None = None,
+    **connection_kwargs,
+) -> asyncpg.Pool:
+    """Create a bounded pool from either a DSN or explicit safe local fields."""
+    if database_dsn and connection_kwargs:
+        raise ValueError("Pass either database_dsn or connection kwargs, not both")
+    if connection_kwargs:
+        return await asyncpg.create_pool(
+            min_size=1, max_size=2, **connection_kwargs
+        )
+    return await asyncpg.create_pool(
+        database_dsn or DATABASE_DSN, min_size=1, max_size=5
+    )

@@ -195,7 +195,7 @@ class NumericalCorrectionPipelineTests(unittest.TestCase):
         stages = [call.kwargs["stage"] for call in generate.call_args_list]
         self.assertEqual(stages.count("route_decision"), 1)
         self.assertEqual(stages.count("answer_generation"), 2)
-        retrieve.assert_awaited_once_with(session, "What is supported?", "en")
+        retrieve.assert_awaited_once_with(session, "What is supported?")
         self.assertEqual(result["answer"], corrected.answer)
 
     def test_citations_remain_allowlisted_during_numeric_correction(self):

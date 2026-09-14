@@ -288,6 +288,7 @@ instructions; no image or production result has been invented as a substitute.
 - [Security model](docs/security.md)
 - [Evaluation and validated evidence](docs/evaluation.md)
 - [Generated offline evaluation report](docs/offline-evaluation-report.md)
+- [Multilingual question-flow milestone](docs/multilingual-question-milestone.md)
 - [Local demo guide](docs/local-demo.md)
 - [Citation-grounding design](docs/CITATION_GROUNDING.md)
 - [Deployment runbook](docs/DEPLOYMENT.md)

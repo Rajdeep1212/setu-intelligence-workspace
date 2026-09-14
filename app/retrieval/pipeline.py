@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -44,14 +45,50 @@ async def retrieve(
     candidate_k: int = 20,
     final_k: int = 5,
 ) -> list[dict]:
+    total_started = time.perf_counter()
     try:
+        stage_started = time.perf_counter()
         query_vector = (await asyncio.to_thread(embed_chunks, [query]))[0]
+        embedding_ms = (time.perf_counter() - stage_started) * 1000
 
+        stage_started = time.perf_counter()
         dense_results = await dense_search(session, query_vector, language, candidate_k)
+        dense_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
         keyword_results = await keyword_search(session, query, language, candidate_k)
+        keyword_ms = (time.perf_counter() - stage_started) * 1000
 
+        stage_started = time.perf_counter()
+        await session.rollback()
+        database_release_ms = (time.perf_counter() - stage_started) * 1000
+
+        stage_started = time.perf_counter()
         fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
-        return await asyncio.to_thread(rerank, query, fused, top_k=final_k)
+        fusion_ms = (time.perf_counter() - stage_started) * 1000
+        stage_started = time.perf_counter()
+        ranked = await asyncio.to_thread(rerank, query, fused, top_k=final_k)
+        rerank_ms = (time.perf_counter() - stage_started) * 1000
+        logger.info(
+            "retrieval_profile request_id=%s query_characters=%s candidate_limit=%s "
+            "dense_count=%s keyword_count=%s fused_count=%s final_count=%s "
+            "embedding_ms=%.2f dense_ms=%.2f keyword_ms=%.2f "
+            "database_release_ms=%.2f fusion_ms=%.2f rerank_ms=%.2f total_ms=%.2f",
+            get_request_id(),
+            len(query),
+            candidate_k,
+            len(dense_results),
+            len(keyword_results),
+            len(fused),
+            len(ranked),
+            embedding_ms,
+            dense_ms,
+            keyword_ms,
+            database_release_ms,
+            fusion_ms,
+            rerank_ms,
+            (time.perf_counter() - total_started) * 1000,
+        )
+        return ranked
     except SQLAlchemyError as exc:
         logger.error("retrieval_database_failure request_id=%s", get_request_id())
         raise DatabaseUnavailableError() from exc

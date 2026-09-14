@@ -6,10 +6,16 @@ from unittest.mock import patch
 
 from pydantic import ValidationError
 
-from app.agent.graph import deterministic_route_guard, generate_node, run_agent
+from app.agent.graph import (
+    deterministic_route_guard,
+    generate_node,
+    retrieval_has_relevant_evidence,
+    run_agent,
+)
 from app.agent.models import GeneratedAnswer, GeneratedClaim
-from app.grounding import abstention_message, select_citations
-from app.schemas import AnswerSection, Citation, QueryResponse
+from app.clarification import focused_clarification
+from app.grounding import abstention_message, select_citations, select_official_links
+from app.schemas import AnswerSection, Citation, OfficialLink, QueryResponse
 from eval.grounding_metrics import extract_claims, structural_replay, summarize
 
 
@@ -103,7 +109,13 @@ class CitationSelectionTests(unittest.TestCase):
         self.assertEqual([c["chunk_id"] for c in update["citations"]], ["one"])
         self.assertEqual(
             update["sections"],
-            [{"text": "Supported answer.", "citation_ids": ["one"]}],
+            [
+                {
+                    "text": "Supported answer.",
+                    "kind": "direct_answer",
+                    "citation_ids": ["one"],
+                }
+            ],
         )
         prompt = generate.call_args.kwargs["user_prompt"]
         self.assertIn("[chunk_id=one]", prompt)
@@ -130,7 +142,7 @@ class CitationSelectionTests(unittest.TestCase):
         self.assertEqual(update["confidence"], 0.0)
         self.assertEqual(update["response_status"], "abstained")
 
-    def test_claim_specific_citations_are_validated_and_unlinked_claim_stays_unbadged(self):
+    def test_claim_specific_citations_are_validated_and_unlinked_claim_is_omitted(self):
         state = {
             "query": "What is supported?",
             "language": "en",
@@ -150,14 +162,17 @@ class CitationSelectionTests(unittest.TestCase):
         with patch("app.agent.graph.generate_structured", return_value=result):
             update = asyncio.run(generate_node(state))
 
-        self.assertEqual(update["answer"], "Supported section. Unlinked section.")
         self.assertEqual(
             update["sections"],
             [
-                {"text": "Supported section.", "citation_ids": ["one"]},
-                {"text": "Unlinked section.", "citation_ids": []},
+                {
+                    "text": "Supported section.",
+                    "kind": None,
+                    "citation_ids": ["one"],
+                },
             ],
         )
+        self.assertEqual(update["answer"], "Supported section.")
 
     def test_unknown_claim_citation_fails_closed(self):
         state = {
@@ -227,6 +242,161 @@ class CitationSelectionTests(unittest.TestCase):
         generate.assert_not_called()
         self.assertEqual(update["answer"], abstention_message(state["query"], None))
         self.assertEqual(update["citations"], [])
+
+    def test_uniformly_low_scored_unknown_retrieval_abstains_without_answer_call(self):
+        state = {
+            "query": "What is Andhan Nirudhana?",
+            "language": "en",
+            "route": "retrieve_docs",
+            "retrieved_chunks": [
+                {**chunk("one", "Unrelated scheme"), "rerank_score": 0.02}
+            ],
+        }
+        with patch("app.agent.graph.generate_structured") as generate:
+            update = asyncio.run(generate_node(state))
+
+        generate.assert_not_called()
+        self.assertFalse(retrieval_has_relevant_evidence(state["retrieved_chunks"]))
+        self.assertEqual(update["response_status"], "abstained")
+
+    def test_missing_state_clarifies_without_provider_or_retrieval(self):
+        session = object()
+        query = "Where do I apply for the student credit card scheme?"
+        with (
+            patch("app.agent.graph.generate_structured") as generate,
+            patch("app.agent.graph.retrieve_docs_tool") as retrieve,
+        ):
+            update = asyncio.run(run_agent(session, query, language="en"))
+
+        generate.assert_not_called()
+        retrieve.assert_not_called()
+        self.assertEqual(update["response_status"], "clarification_needed")
+        self.assertEqual(
+            update["answer"],
+            "Which state or Union Territory's student credit card scheme do you mean?",
+        )
+        self.assertNotIn("Aadhaar", update["answer"])
+
+    def test_similarly_named_insurance_schemes_get_one_hindi_question(self):
+        message = focused_clarification(
+            "मुझे प्रधानमंत्री वाली बीमा योजना चाहिए—PMJJBY या PMSBY?",
+            "hi",
+        )
+        self.assertEqual(
+            message,
+            "क्या आपको PMJJBY का जीवन बीमा चाहिए या PMSBY का दुर्घटना बीमा?",
+        )
+
+    def test_only_cited_document_can_expose_manifest_verified_links(self):
+        chunks = [
+            {
+                **chunk("one", "Application steps"),
+                "document_metadata": {
+                    "corpus_item_id": "scheme.example.one",
+                    "official_application_url": "https://apply.example.gov.in/",
+                    "official_help_url": "javascript:alert(1)",
+                },
+            },
+            {
+                **chunk("two", "Other scheme"),
+                "document_metadata": {
+                    "corpus_item_id": "scheme.example.two",
+                    "official_application_url": "https://other.example.gov.in/",
+                },
+            },
+        ]
+        citations = select_citations(chunks, ["one"])
+
+        self.assertEqual(
+            select_official_links(chunks, citations),
+            [
+                {
+                    "kind": "application",
+                    "label": "Official application page",
+                    "url": "https://apply.example.gov.in/",
+                }
+            ],
+        )
+
+    def test_api_contract_accepts_distinct_official_application_link(self):
+        response = QueryResponse(
+            answer="Apply using the official service.",
+            official_links=[
+                OfficialLink(
+                    kind="application",
+                    label="Official application page",
+                    url="https://apply.example.gov.in/",
+                )
+            ],
+        )
+        self.assertEqual(response.official_links[0].kind, "application")
+
+    def test_complete_mocked_bengali_application_journey_uses_english_evidence(self):
+        evidence = {
+            "id": "wbscc-application",
+            "document_id": "wbscc-document",
+            "content": (
+                "Register on the official WBSCC online portal. "
+                "Upload required documents. No application deadline is stated."
+            ),
+            "language": "en",
+            "title": "West Bengal Student Credit Card Scheme",
+            "source": "Government of West Bengal",
+            "url": "https://wb.gov.in/scheme-overview",
+            "rerank_score": 0.92,
+            "document_metadata": {
+                "corpus_item_id": "scheme.wb.student-credit-card",
+                "coverage_scope": "Application stages and document categories.",
+                "official_application_url": "https://wbscc.wb.gov.in/",
+                "official_help_url": "https://sccgrievance.wb.gov.in/",
+            },
+        }
+        state = {
+            "query": "পশ্চিমবঙ্গ স্টুডেন্ট ক্রেডিট কার্ডের জন্য কীভাবে আবেদন করব?",
+            "language": "bn",
+            "route": "retrieve_docs",
+            "retrieved_chunks": [evidence],
+        }
+        result = GeneratedAnswer(
+            answer="পুরনো সমন্বিত উত্তর।",
+            confidence=0.9,
+            citation_ids=["wbscc-application"],
+            claims=[
+                GeneratedClaim(
+                    kind="how_to_apply",
+                    text="সরকারি ডব্লিউবিএসসিসি অনলাইন পোর্টালে আবেদন করুন।",
+                    citation_ids=["wbscc-application"],
+                ),
+                GeneratedClaim(
+                    kind="required_documents",
+                    text="উপলভ্য সরকারি তথ্যে প্রয়োজনীয় নথি আপলোড করতে বলা হয়েছে।",
+                    citation_ids=["wbscc-application"],
+                ),
+                GeneratedClaim(
+                    kind="limitations",
+                    text="এই প্রমাণে আবেদনের শেষ তারিখ বলা নেই।",
+                    citation_ids=["wbscc-application"],
+                ),
+            ],
+            abstained=False,
+        )
+        with patch("app.agent.graph.generate_structured", return_value=result):
+            update = asyncio.run(generate_node(state))
+
+        self.assertEqual(update["response_status"], "answered")
+        self.assertEqual(
+            [section["kind"] for section in update["sections"]],
+            ["how_to_apply", "required_documents", "limitations"],
+        )
+        self.assertEqual(
+            [citation["chunk_id"] for citation in update["citations"]],
+            ["wbscc-application"],
+        )
+        self.assertEqual(
+            [link["kind"] for link in update["official_links"]],
+            ["application", "help"],
+        )
+        self.assertNotIn("https://", update["answer"])
 
     def test_structured_output_rejects_more_than_retrieval_limit(self):
         with self.assertRaises(ValidationError):

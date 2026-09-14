@@ -1,0 +1,2167 @@
+{
+  "schema_version": 1,
+  "batch_id": "batch-002",
+  "title": "SETU corpus expansion practical benefits batch 2",
+  "created_at": "2026-09-13T00:00:00Z",
+  "application_baseline_verified_at": "2026-09-09T06:29:00Z",
+  "staging_database": "setu_corpus_staging",
+  "prerequisite_manifest": "corpus/manifests/batch-001.json",
+  "counting_unit": "distinct scheme; source documents and versions are not additional items",
+  "fetch_policy": {
+    "allowed_hosts": [
+      "eshram.gov.in",
+      "www.eshram.gov.in",
+      "rural.gov.in",
+      "www.rural.gov.in",
+      "nrega.nic.in",
+      "www.nrega.nic.in",
+      "labour.gov.in",
+      "www.labour.gov.in",
+      "financialservices.gov.in",
+      "www.financialservices.gov.in",
+      "wb.gov.in",
+      "www.wb.gov.in",
+      "socialsecurity.wb.gov.in",
+      "wcdsw.wb.gov.in",
+      "www.wcdsw.wb.gov.in"
+    ],
+    "connect_timeout_seconds": 10,
+    "read_timeout_seconds": 30,
+    "retries": 2,
+    "max_redirects": 5,
+    "max_response_bytes": 12582912,
+    "min_host_interval_seconds": 1,
+    "max_retry_after_seconds": 30,
+    "concurrency": 1
+  },
+  "items": [
+    {
+      "stable_id": "scheme.central.eshram",
+      "canonical_title": "e-Shram National Database of Unorganised Workers",
+      "item_type": "central_scheme",
+      "category": "employment_social_security_access",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Ministry of Labour and Employment, Government of India",
+      "current_status": "current official FAQ",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "limited: registration facilitates access; FAQ says registration alone currently has no cash benefit",
+        "documents": "supported",
+        "application_route": "supported",
+        "deadline": "supported: FAQ states no last date",
+        "jurisdiction": "supported: India",
+        "status_or_help": "supported"
+      },
+      "official_application_url": "https://register.eshram.gov.in/",
+      "official_status_url": null,
+      "official_help_url": "https://gms.eshram.gov.in/",
+      "sources": [
+        {
+          "source_id": "eshram.faq.current.en",
+          "document_title": "e-Shram Frequently Asked Questions",
+          "document_identifier": "official-faq",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://eshram.gov.in/faqs",
+          "publisher": "Ministry of Labour and Employment, Government of India",
+          "publication_date": null,
+          "updated_date": "2026-09-11",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official FAQ as checked",
+          "coverage_scope": "Registration eligibility, documents, route, cost, deadline, updates, and grievance channel; linked schemes retain their own eligibility rules.",
+          "required_markers": [
+            "Frequently Asked Questions",
+            "What essential documents are required"
+          ],
+          "min_extracted_characters": 3000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 2,
+          "last_attempt_at": "2026-09-13T03:00:18+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "fetch_duration_ms": 291.34,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/eshram.faq.current.en.html",
+          "final_url": "https://eshram.gov.in/faqs",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 73819,
+          "content_sha256": "7d067cee442d8459d8d4729f60137a236feb183d44193cb4584d252c54001fab",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:00:19+00:00",
+          "fetched_at": "2026-09-13T03:00:19+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/eshram.faq.current.en.txt",
+          "extracted_title": "FAQs | e-Shram",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 571.29,
+          "extracted_sha256": "59635de14a826f366cbfe793f60aad8dc48b6bc1475c9a125361448f4fd4a395",
+          "extracted_characters": 5972,
+          "extracted_locations": 49,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:00:19+00:00",
+          "validation_metrics": {
+            "character_count": 5972,
+            "word_count": 925,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:00:19+00:00",
+          "deduplication_key": "59635de14a826f366cbfe793f60aad8dc48b6bc1475c9a125361448f4fd4a395",
+          "deduplicated_at": "2026-09-13T03:00:19+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/eshram.faq.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 7,
+          "chunked_at": "2026-09-13T03:11:24+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/eshram.faq.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 13717.0,
+          "embedding_bytes": 28800,
+          "embedded_at": "2026-09-13T03:11:38+00:00",
+          "database_document_id": "754c1945-b409-4008-a56f-96ace3122edf",
+          "index_duration_ms": 447.14,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:11:38+00:00",
+          "retrieval_checked_at": "2026-09-13T03:15:55+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "eshram.hi.registration-documents",
+          "query": "ई-श्रम में पंजीकरण के लिए क्या चाहिए और कहाँ पंजीकरण करूं?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Aadhaar linked Mobile number"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:15:55+00:00",
+          "latency_ms": 117477.57,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.8463568091392517,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "aadhaar linked mobile number": true
+          },
+          "expected_passage_excerpt": "#### Question 12. What essential documents are required by the worker to register on e-Shram?\n\n- Aadhaar Number\n\n- Aadhaar linked Mobile number.",
+          "results": [
+            {
+              "rank": 1,
+              "title": "e-Shram National Database of Unorganised Workers",
+              "url": "https://eshram.gov.in/faqs",
+              "language": "en",
+              "rerank_score": 0.8463568091392517,
+              "content_excerpt": "#### Question 12. What essential documents are required by the worker to register on e-Shram?\n\n- Aadhaar Number\n\n- Aadhaar linked Mobile number."
+            },
+            {
+              "rank": 2,
+              "title": "e-Shram National Database of Unorganised Workers",
+              "url": "https://eshram.gov.in/faqs",
+              "language": "en",
+              "rerank_score": 0.02321438118815422,
+              "content_excerpt": "#### Question 19. How can a worker update his/ her personal information on e-Shram?\n\n- Login: Log in to your e-Shram account using your credentials (UAN and OTP).\n\n- Edit Information: Look for options to edit or update your personal details such as address, contact information, Banking details etc.\n"
+            },
+            {
+              "rank": 3,
+              "title": "e-Shram National Database of Unorganised Workers",
+              "url": "https://eshram.gov.in/faqs",
+              "language": "en",
+              "rerank_score": 0.021479511633515358,
+              "content_excerpt": "#### Question 7. How can I stay informed about updates and changes to e-Shram services?\n\n- Official Website: Visit the official e-Shram website regularly www.eshram.gov.in. Important announcements and updates are posted on the Portal.\n\n- Social Media: Follow e-Shram on social media platforms such as"
+            },
+            {
+              "rank": 4,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.006616389378905296,
+              "content_excerpt": "# Government of West Bengal\n\n…cts are covered\n\n- Exclusion criteria:\n\n- Units already availing subsidy under other government schemes are not eligible\n\n- Institutions like private limited companies, partnership firms (in some cases), and large enterprises are generally not eligible\n\n- Priority categ"
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+              "url": "https://www.pmuy.gov.in/about.html",
+              "language": "en",
+              "rerank_score": 0.0024265258107334375,
+              "content_excerpt": "## Documents Required\n\n- Know Your Customer(KYC)\n\n- Ration Card issued by the State from which application is being made/ other State Govt. document certifying family composition/ Self-Declaration as per Annexure I (for migrant applicants)\n\n- Aadhaar of beneficiary and adult family members appearing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.mgnrega",
+      "canonical_title": "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGS)",
+      "item_type": "central_scheme",
+      "category": "rural_employment",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Ministry of Rural Development, Government of India",
+      "current_status": "official FAQ; publication date not stated in document metadata",
+      "status_as_of": "2026-09-13",
+      "processing_status": "excluded",
+      "exclusion_reason": "Official portal snapshot contained only a 49-character dynamic app shell; no usable public-information passage was extracted.",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "supported at statutory-programme overview level",
+        "documents": "partially supported",
+        "application_route": "supported",
+        "deadline": "supported: registration throughout the year",
+        "jurisdiction": "supported: rural India subject to the Act and scheme",
+        "status_or_help": "partially supported"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "mgnrega.portal.current.en",
+          "document_title": "Mahatma Gandhi National Rural Employment Guarantee Scheme official portal",
+          "document_identifier": "official-scheme-portal",
+          "source_type": "official_scheme_portal",
+          "official_url": "https://nrega.nic.in/",
+          "publisher": "Ministry of Rural Development, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official portal; the previously selected Ministry FAQ URL returned HTTP 404",
+          "coverage_scope": "Programme identity, legal guarantee, Gram Panchayat role and public MIS links; not a complete application guide or current state wage-rate schedule.",
+          "required_markers": [
+            "MAHATMA GANDHI NATIONAL RURAL EMPLOYMENT GUARANTEE SCHEME",
+            "Gram Panchayat"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "excluded",
+          "attempt_count": 3,
+          "last_attempt_at": "2026-09-13T03:05:10+00:00",
+          "last_error": "ExtractionError: Extracted text has 49 characters; minimum is 1000",
+          "retry_eligible": false,
+          "exclusion_reason": "Unusable extraction: dynamic portal app shell contained 49 characters.",
+          "source_history": [
+            {
+              "official_url": "https://rural.gov.in/sites/default/files/MGNREGA_FAQ_ENGLISH.pdf",
+              "attempted_at": "2026-09-13T03:00:19+00:00",
+              "result": "fetch_failed",
+              "reason": "Official source returned HTTP 404",
+              "replacement_reason": "Use the current official MGNREGA portal and narrow the recorded coverage."
+            }
+          ],
+          "fetch_duration_ms": 266.7,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/mgnrega.portal.current.en.html",
+          "final_url": "https://nrega.nic.in/",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 453,
+          "content_sha256": "0bb659b4a1d6ce4024d65f4cf92b9d072a46db808f7f1c2c0125299cd29c0460",
+          "etag": "\"d3a26ffe3d22dc1:0\"",
+          "last_modified": "Wed, 10 Sep 2025 10:30:57 GMT",
+          "checked_at": "2026-09-13T03:05:10+00:00",
+          "fetched_at": "2026-09-13T03:05:10+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/mgnrega.portal.current.en.txt",
+          "extracted_title": "",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 189.01,
+          "extracted_sha256": "df5c1df7fd44572bf6419004ba630be3cab003cc32164b81ddb4d51b63e2e369",
+          "extracted_characters": 49,
+          "extracted_locations": 0,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:05:11+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "mgnrega.en.job-card-apply",
+          "query": "How can a rural household apply for an MGNREGA job card?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Gram Panchayat"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pm-sym",
+      "canonical_title": "Pradhan Mantri Shram Yogi Maan-dhan (PM-SYM)",
+      "item_type": "central_scheme",
+      "category": "pension_unorganised_workers",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Ministry of Labour and Employment, Government of India",
+      "current_status": "official scheme booklet; document date not established",
+      "status_as_of": "2026-09-13",
+      "processing_status": "excluded",
+      "exclusion_reason": "Both selected official Ministry sources returned HTTP 403 to the bounded collector; access controls were respected.",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "supported, subject to later official revisions",
+        "documents": "supported",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "partially supported"
+      },
+      "official_application_url": "https://maandhan.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pm-sym.faq.en",
+          "document_title": "Frequently Asked Questions on PM-SYM",
+          "document_identifier": "FAQ-0",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://labour.gov.in/FAQ-0",
+          "publisher": "Ministry of Labour and Employment, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_date": null,
+          "language": "en",
+          "source_status": "official FAQ last updated 12 May 2023; the booklet URL denied automated fetch with HTTP 403",
+          "coverage_scope": "Eligibility, pension design, contributions, enrolment documents, route, status and grievance channels; no explicit application deadline.",
+          "required_markers": [
+            "Pradhan Mantri Shram Yogi Maan-dhan",
+            "Frequently Asked Questions"
+          ],
+          "min_extracted_characters": 3000,
+          "processing_status": "excluded",
+          "attempt_count": 3,
+          "last_attempt_at": "2026-09-13T03:05:11+00:00",
+          "last_error": "FetchError: Official source returned non-retryable HTTP 403",
+          "retry_eligible": false,
+          "exclusion_reason": "Official source returned HTTP 403; no access-control bypass attempted.",
+          "source_history": [
+            {
+              "official_url": "https://labour.gov.in/sites/default/files/pmsym.pdf",
+              "attempted_at": "2026-09-13T03:00:20+00:00",
+              "result": "fetch_failed",
+              "reason": "Official source returned HTTP 403",
+              "replacement_reason": "Use the Ministry's official PM-SYM FAQ page."
+            }
+          ]
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pm-sym.bn.eligibility",
+          "query": "অসংগঠিত শ্রমিকদের জন্য প্রধানমন্ত্রী শ্রম যোগী মানধন প্রকল্পে কারা যোগ দিতে পারেন?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "18-40 years"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmsby",
+      "canonical_title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+      "item_type": "central_scheme",
+      "category": "accident_insurance",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+      "current_status": "current official FAQ",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "supported",
+        "documents": "partially supported through enrolment form references",
+        "application_route": "supported through participating bank or post office",
+        "deadline": "annual cover period stated; delayed enrolment allowed",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pmsby.faq.current.en",
+          "document_title": "Pradhan Mantri Suraksha Bima Yojana official FAQ",
+          "document_identifier": "pmsby",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://financialservices.gov.in/pmsby",
+          "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+          "publication_date": "2025-12-24",
+          "updated_date": "2026-02-05",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official FAQ as checked",
+          "coverage_scope": "Eligibility, premium, cover, enrolment, exclusions and claims; premium may be revised as the page itself notes.",
+          "required_markers": [
+            "Pradhan Mantri Suraksha Bima Yojana",
+            "Who will be eligible to subscribe"
+          ],
+          "min_extracted_characters": 2000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 3,
+          "last_attempt_at": "2026-09-13T03:05:11+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "official_url": "https://www.financialservices.gov.in/pmsby",
+              "attempted_at": "2026-09-13T03:00:20+00:00",
+              "result": "fetch_failed",
+              "reason": "TLS certificate hostname mismatch; verification was not bypassed",
+              "replacement_reason": "Use the same official page on the certificate-valid non-www host."
+            }
+          ],
+          "fetch_duration_ms": 378.4,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/pmsby.faq.current.en.html",
+          "final_url": "https://financialservices.gov.in/pmsby",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 87974,
+          "content_sha256": "8fdd2ececc0979b9fd45f8ba87ae7f36a50e33e4f9b6bebaa815be8161494f63",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:05:11+00:00",
+          "fetched_at": "2026-09-13T03:05:11+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/pmsby.faq.current.en.txt",
+          "extracted_title": "Pradhan Mantri Suraksha Bima Yojana(PMSBY) | Department of Financial Services | Minsitry of Finance | Government of India",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 129.85,
+          "extracted_sha256": "ef6816aded2916c060eb8a714ea8fe391de79205dd2801407b30c2d730126c62",
+          "extracted_characters": 11714,
+          "extracted_locations": 32,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:05:11+00:00",
+          "validation_metrics": {
+            "character_count": 11714,
+            "word_count": 1890,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:05:11+00:00",
+          "deduplication_key": "ef6816aded2916c060eb8a714ea8fe391de79205dd2801407b30c2d730126c62",
+          "deduplicated_at": "2026-09-13T03:05:11+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/pmsby.faq.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 31,
+          "chunked_at": "2026-09-13T03:11:38+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/pmsby.faq.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 33868.48,
+          "embedding_bytes": 127104,
+          "embedded_at": "2026-09-13T03:12:12+00:00",
+          "database_document_id": "ffc69ed6-a501-49ef-8b9b-ec7dcd906d63",
+          "index_duration_ms": 1158.1,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:12:13+00:00",
+          "retrieval_checked_at": "2026-09-13T03:29:46+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmsby.en.eligibility",
+          "query": "What age group can join PMSBY through a participating bank or Post Office account?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "18 to 70 years"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:29:46+00:00",
+          "latency_ms": 87440.68,
+          "expected_rank": 2,
+          "useful_passage_rank": 2,
+          "top_score": 0.988146960735321,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "18 to 70 years": true
+          },
+          "expected_passage_excerpt": "### Who will be eligible to subscribe?\n\nAll individual (single or joint) account holders of participating banks / Post office, in the age group of 18 to 70 years are entitled to join. In case of multiple accounts held by an individual in one or different banks/ Post offices, the person is eligible to join the scheme through one bank / Post office account only.",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.988146960735321,
+              "content_excerpt": "### Who will be eligible to subscribe?\n\nAll individual (single or joint) account holders of participating banks / Post office, in the age group of 18 to 50 years are entitled to join. In case of multiple accounts held by an individual in one or different banks / Post offices, the person is eligible "
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.9878684282302856,
+              "content_excerpt": "### Who will be eligible to subscribe?\n\nAll individual (single or joint) account holders of participating banks / Post office, in the age group of 18 to 70 years are entitled to join. In case of multiple accounts held by an individual in one or different banks/ Post offices, the person is eligible t"
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.23733662068843842,
+              "content_excerpt": "### Which Bank Accounts are eligible for subscribing to PMSBY?\n\nAll bank account holders other than institutional account holders are eligible for subscribing to PMSBY scheme."
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.12853805720806122,
+              "content_excerpt": "### Are NRIs eligible for coverage under PMSBY?\n\nAny NRI having an eligible bank account with a bank branch located in India is eligible for purchase of PMSBY cover through this account subject to fulfilment of the terms and conditions relating to the scheme. However, in case a claim arises, the cla"
+            },
+            {
+              "rank": 5,
+              "title": "Atal Pension Yojana (APY)",
+              "url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+              "language": "en",
+              "rerank_score": 0.051261451095342636,
+              "content_excerpt": "#### Eligibility & Administration\n\nAPY is available to all Indian citizens with savings bank account in banks or Department of Posts. The minimum age of joining APY is 18 years and maximum age is 40 years. Provided that from 1st October, 2022, any citizen who is or has been an income-tax payer, is n"
+            }
+          ]
+        }
+      ],
+      "last_error": "One or more retrieval checks did not pass",
+      "retry_eligible": true
+    },
+    {
+      "stable_id": "scheme.central.pmjjby",
+      "canonical_title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+      "item_type": "central_scheme",
+      "category": "life_insurance",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+      "current_status": "current official FAQ",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "supported",
+        "documents": "partially supported through enrolment and consent references",
+        "application_route": "supported through participating bank or post office",
+        "deadline": "annual cover period stated; delayed enrolment allowed",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pmjjby.faq.current.en",
+          "document_title": "Pradhan Mantri Jeevan Jyoti Bima Yojana official FAQ",
+          "document_identifier": "pmjjby",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://financialservices.gov.in/pmjjby",
+          "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+          "publication_date": "2025-12-24",
+          "updated_date": "2026-01-05",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official FAQ as checked",
+          "coverage_scope": "Eligibility, premium, life cover, enrolment, lien period and termination; premium may change as the page notes.",
+          "required_markers": [
+            "Pradhan Mantri Jeevan Jyoti Bima Yojana",
+            "What is the nature of the scheme"
+          ],
+          "min_extracted_characters": 2000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 3,
+          "last_attempt_at": "2026-09-13T03:05:11+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "source_history": [
+            {
+              "official_url": "https://www.financialservices.gov.in/pmjjby",
+              "attempted_at": "2026-09-13T03:00:25+00:00",
+              "result": "fetch_failed",
+              "reason": "TLS certificate hostname mismatch; verification was not bypassed",
+              "replacement_reason": "Use the same official page on the certificate-valid non-www host."
+            }
+          ],
+          "fetch_duration_ms": 728.32,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/pmjjby.faq.current.en.html",
+          "final_url": "https://financialservices.gov.in/pmjjby",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 87300,
+          "content_sha256": "05a72fedcf99232df84b62b8a6c84c42005c504d713c8cdad0cc7f54b5bca7b2",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:05:12+00:00",
+          "fetched_at": "2026-09-13T03:05:12+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/pmjjby.faq.current.en.txt",
+          "extracted_title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY) | Department of Financial Services | Minsitry of Finance | Government of India",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 127.77,
+          "extracted_sha256": "b85b3195ef748f44f2479713fb1aaae0b10466c0819aa78ff9a4f00628e2fd74",
+          "extracted_characters": 11561,
+          "extracted_locations": 24,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:05:12+00:00",
+          "validation_metrics": {
+            "character_count": 11561,
+            "word_count": 1887,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:05:12+00:00",
+          "deduplication_key": "b85b3195ef748f44f2479713fb1aaae0b10466c0819aa78ff9a4f00628e2fd74",
+          "deduplicated_at": "2026-09-13T03:05:12+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/pmjjby.faq.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 23,
+          "chunked_at": "2026-09-13T03:12:14+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/pmjjby.faq.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 45155.91,
+          "embedding_bytes": 94336,
+          "embedded_at": "2026-09-13T03:12:59+00:00",
+          "database_document_id": "b07f81cb-7740-4289-ae61-2019b24dfe64",
+          "index_duration_ms": 310.13,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:12:59+00:00",
+          "retrieval_checked_at": "2026-09-13T03:17:21+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmjjby.hi.cover",
+          "query": "PMJJBY में मृत्यु कवर और प्रवेश आयु क्या है?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "death due to any cause"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:17:21+00:00",
+          "latency_ms": 45105.91,
+          "expected_rank": 1,
+          "useful_passage_rank": 3,
+          "top_score": 0.8928430080413818,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "death due to any cause": true
+          },
+          "expected_passage_excerpt": "### What would be the benefits under the scheme and premium payable?\n\nRs.2 lakh is payable on a subscriber’s death due to any cause.\n\nThe premium payable is Rs.436/- per annum per subscriber.\n\nFor those getting enrolled under PMJJBY for the first time during the middle of the policy period, payment of pro-rata premium is allowed as under;\n\na) For enrolment in June, July and August – Full annual premium of Rs.436/- is payable.\n\nb) For enrolment in September, October, and November – pro rata premi",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.8928430080413818,
+              "content_excerpt": "### Contrary to other life insurance products, benefit under PMJJBY is payable only to nominee of the insured on the death of the insured. Why is there no maturity benefit or surrender value, which is available in normal life insurance policies?\n\nThe cover under PMJJBY is for death only and hence be"
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.15252773463726044,
+              "content_excerpt": "### Does the PMJJBY cover death resulting from natural calamities such as earthquake, flood and other convulsions of nature? What about coverage from suicide / murder?\n\nAll these events are covered as PMJJBY covers death due to any reason."
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.12387152016162872,
+              "content_excerpt": "### What would be the benefits under the scheme and premium payable?\n\nRs.2 lakh is payable on a subscriber’s death due to any cause.\n\nThe premium payable is Rs.436/- per annum per subscriber.\n\nFor those getting enrolled under PMJJBY for the first time during the middle of the policy period, payment "
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.0509493425488472,
+              "content_excerpt": "### Will the PMJJBY scheme which is being promoted aggressively and sold in large numbers accrue huge profits to the foreign insurance Companies who in joint venture with Indian entities have floated life insurance companies and are operating this insurance c\n\nOnly Indian Insurance Companies as defi"
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.046727802604436874,
+              "content_excerpt": "### Does the PMSBY cover death / disability resulting from natural calamities such as earthquake, flood and other convulsions of nature? What about coverage of suicide / murder?\n\nNatural calamities being in the nature of accidents, any death / disability (as defined under PMSBY) resulting from such "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.student-credit-card",
+      "canonical_title": "West Bengal Student Credit Card Scheme",
+      "item_type": "state_scheme",
+      "category": "education_credit",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state scheme page",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported",
+        "benefit": "supported",
+        "documents": "supported at category level, not an exhaustive checklist",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "separate official grievance portal verified"
+      },
+      "official_application_url": "https://wbscc.wb.gov.in/",
+      "official_status_url": null,
+      "official_help_url": "https://sccgrievance.wb.gov.in/",
+      "sources": [
+        {
+          "source_id": "wb.student-credit-card.current.en",
+          "document_title": "West Bengal Student Credit Card Scheme",
+          "document_identifier": "government-schemes-details-west-bengal-student-credit-card-scheme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official page as checked",
+          "coverage_scope": "West Bengal residence and education conditions, loan features, application stages and document categories; no application deadline stated.",
+          "required_markers": [
+            "West Bengal Student Credit Card Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 2,
+          "last_attempt_at": "2026-09-13T03:00:31+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "fetch_duration_ms": 281.86,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/wb.student-credit-card.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 58876,
+          "content_sha256": "a59d0c6b75c36ecfd2c6e7b3f8c8108dbbeb6738f863104661454d6c7777cec8",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:00:31+00:00",
+          "fetched_at": "2026-09-13T03:00:31+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/wb.student-credit-card.current.en.txt",
+          "extracted_title": "West Bengal Student Credit Card Scheme",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 383.97,
+          "extracted_sha256": "ed374302530c33b23665e03724c823cb1fc5229cc25c095d8b251c02b0eae3e6",
+          "extracted_characters": 2615,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:00:31+00:00",
+          "validation_metrics": {
+            "character_count": 2615,
+            "word_count": 376,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:00:31+00:00",
+          "deduplication_key": "ed374302530c33b23665e03724c823cb1fc5229cc25c095d8b251c02b0eae3e6",
+          "deduplicated_at": "2026-09-13T03:00:31+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/wb.student-credit-card.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 3,
+          "chunked_at": "2026-09-13T03:12:59+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/wb.student-credit-card.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 6154.96,
+          "embedding_bytes": 12416,
+          "embedded_at": "2026-09-13T03:13:06+00:00",
+          "database_document_id": "02c00483-8298-40bc-9738-9d878cca871d",
+          "index_duration_ms": 51.81,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:06+00:00",
+          "retrieval_checked_at": "2026-09-13T03:18:23+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.student-credit-card.bn.apply",
+          "query": "পশ্চিমবঙ্গ স্টুডেন্ট ক্রেডিট কার্ডের জন্য কীভাবে আবেদন করব?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Register on the official WBSCC online portal"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:18:23+00:00",
+          "latency_ms": 61736.82,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9950024485588074,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "register on the official wbscc online portal": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n- Must have secured admission in an eligible course (school, UG, PG, or professional)\n\n- Co-borrower required (usually a parent/guardian)\n\n- Applicant or Co-borrower must not be in default of any bank ",
+          "results": [
+            {
+              "rank": 1,
+              "title": "West Bengal Student Credit Card Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.9950024485588074,
+              "content_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n-"
+            },
+            {
+              "rank": 2,
+              "title": "West Bengal Student Credit Card Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.9793822765350342,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe West Bengal Student Credit Card Scheme provides students with collateral-free loans of up to 10 lakh to support education from class X to post Doctorate in India or abroad. The scheme offers "
+            },
+            {
+              "rank": 3,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.8926549553871155,
+              "content_excerpt": "# Government of West Bengal\n\n…CSCs)\n\nHow to apply / process\n\n- The applicant submits application form to the Gram Panchayat, ULB or designated office.\n\n- Required documents such as age proof, caste certificate, identity proof and bank account details are submitted.\n\n- Verification is conducted by lo"
+            },
+            {
+              "rank": 4,
+              "title": "West Bengal Medhashree Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.8827838897705078,
+              "content_excerpt": "# Government of West Bengal\n\n…re identified by school authorities (Headmaster/Headmistress).\n\n- School submits student details on the official portal.\n\n- Application form is filled (online/offline) with basic details.\n\n- Required documents are submitted, including caste certificate, income certifica"
+            },
+            {
+              "rank": 5,
+              "title": "Taposili Bandhu Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.3700609505176544,
+              "content_excerpt": "# Government of West Bengal\n\n…rtificate (SC), residence proof, and bank account details)\n\n- Submit the completed form to the concerned local authority\n\n- The application is verified by local authorities\n\n- Once approved, the beneficiary is enrolled and the pension amount is credited directly to thei"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.lakshmir-bhandar",
+      "canonical_title": "Lakshmir Bhandar",
+      "item_type": "state_scheme",
+      "category": "women_income_support",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Women and Child Development and Social Welfare Department, Government of West Bengal",
+      "current_status": "current departmental resource page; detailed current rules not captured",
+      "status_as_of": "2026-09-13",
+      "processing_status": "excluded",
+      "exclusion_reason": "Both official departmental hosts require unsafe legacy TLS renegotiation; TLS verification was not weakened.",
+      "practical_coverage": {
+        "eligibility": "not established by the captured resource page",
+        "benefit": "not established by the captured resource page",
+        "documents": "an official application form is linked but its contents are not captured",
+        "application_route": "official notification and application-form links are identified",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "wb.lakshmir-bhandar.resources.current.en",
+          "document_title": "Lakshmir Bhandar official notification and application resources",
+          "document_identifier": "duare-sarkar-campaign",
+          "source_type": "official_state_resource_page",
+          "official_url": "https://wcdsw.wb.gov.in/cw/duare-sarkar-campaign/",
+          "publisher": "Women and Child Development and Social Welfare Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-09-02",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official resource page; direct 2021 PDF fetch required unsafe legacy TLS renegotiation and was not used",
+          "coverage_scope": "Identifies official notification and Bengali application-form resources. It does not establish current eligibility, amounts, documents or deadlines.",
+          "required_markers": [
+            "Lakshmir Bhandar Prakalpa",
+            "Notification For Lakshmir Bhandar Prakalpa"
+          ],
+          "min_extracted_characters": 500,
+          "processing_status": "excluded",
+          "attempt_count": 3,
+          "last_attempt_at": "2026-09-13T03:05:12+00:00",
+          "last_error": "RetryableFetchError: Request failed after 3 attempts: HTTPSConnectionPool(host='wcdsw.wb.gov.in', port=443): Max retries exceeded with url: /cw/duare-sarkar-campaign/ (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1028)')))",
+          "retry_eligible": false,
+          "exclusion_reason": "Official host requires unsafe legacy TLS renegotiation; no bypass attempted.",
+          "source_history": [
+            {
+              "official_url": "https://socialsecurity.wb.gov.in/lokkhiBhandar/storage/app/public_doc/Guidelines%20of%20Lakshmir%20Bhandar%2030.07.2021.pdf",
+              "attempted_at": "2026-09-13T03:00:31+00:00",
+              "result": "fetch_failed",
+              "reason": "Unsafe legacy TLS renegotiation was required; verification was not weakened",
+              "replacement_reason": "Use the current departmental resource page and narrow coverage."
+            }
+          ]
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.lakshmir-bhandar.en.official-resources",
+          "query": "Where can I find the official Lakshmir Bhandar notification and application form?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Notification For Lakshmir Bhandar Prakalpa"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.jai-johar",
+      "canonical_title": "Jai Johar Scheme",
+      "item_type": "state_scheme",
+      "category": "old_age_pension_st",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state overview",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level; wording says generally include and applicable guidelines govern",
+        "benefit": "monthly pension described without a current amount",
+        "documents": "supported at category level",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "local offices listed"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "wb.jai-johar.current.en",
+          "document_title": "Jai Johar Scheme (Old Age Pension for ST Communities)",
+          "document_identifier": "government-schemes-details-jai-johar",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; not the underlying detailed guidelines",
+          "coverage_scope": "Purpose, general eligibility, application offices, document categories and process; no current amount or deadline.",
+          "required_markers": [
+            "Jai Johar Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 2,
+          "last_attempt_at": "2026-09-13T03:00:36+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "fetch_duration_ms": 75.3,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/wb.jai-johar.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 60123,
+          "content_sha256": "673ad0326b2b683a8b091b5c59d51ad4eee0f9fe96a71c488b13edc1548c0c88",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:00:37+00:00",
+          "fetched_at": "2026-09-13T03:00:37+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/wb.jai-johar.current.en.txt",
+          "extracted_title": "Jai Johar Scheme (Old Age Pension for ST Communities)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 367.44,
+          "extracted_sha256": "938598b792aba06871d294f1b628e81d2aceca05ce757421e7686da4628a3f23",
+          "extracted_characters": 3126,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:00:37+00:00",
+          "validation_metrics": {
+            "character_count": 3126,
+            "word_count": 407,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:00:37+00:00",
+          "deduplication_key": "938598b792aba06871d294f1b628e81d2aceca05ce757421e7686da4628a3f23",
+          "deduplicated_at": "2026-09-13T03:00:37+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/wb.jai-johar.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 3,
+          "chunked_at": "2026-09-13T03:13:06+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/wb.jai-johar.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 4616.09,
+          "embedding_bytes": 12416,
+          "embedded_at": "2026-09-13T03:13:10+00:00",
+          "database_document_id": "42a938da-2636-4ee9-a471-44b4e1950fd4",
+          "index_duration_ms": 43.75,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:10+00:00",
+          "retrieval_checked_at": "2026-09-13T03:19:33+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.jai-johar.hi.where-apply",
+          "query": "जय जोहार वृद्धावस्था पेंशन के लिए पश्चिम बंगाल में कहाँ आवेदन करें?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Gram Panchayat offices"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:19:33+00:00",
+          "latency_ms": 69964.41,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9271999597549438,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "gram panchayat offices": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…with dignity and independence.\n\n- Direct benefit transfer: Pension is credited directly to beneficiaries' bank accounts.\n\n- Reduction in financial dependency: Helps reduce dependency on family members or informal sources.\n\n- Improved social welfare: Strengthens social security coverage among marginalized sections.\n\nEligibility\n\n- The scheme is targeted at elderly persons belonging to Scheduled Tribe communities. Eligible beneficiaries generally include:\n\n- Individua",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.9271999597549438,
+              "content_excerpt": "# Government of West Bengal\n\n…with dignity and independence.\n\n- Direct benefit transfer: Pension is credited directly to beneficiaries' bank accounts.\n\n- Reduction in financial dependency: Helps reduce dependency on family members or informal sources.\n\n- Improved social welfare: Strengthens social s"
+            },
+            {
+              "rank": 2,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.8561910390853882,
+              "content_excerpt": "# Government of West Bengal\n\n…CSCs)\n\nHow to apply / process\n\n- The applicant submits application form to the Gram Panchayat, ULB or designated office.\n\n- Required documents such as age proof, caste certificate, identity proof and bank account details are submitted.\n\n- Verification is conducted by lo"
+            },
+            {
+              "rank": 3,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.7798911929130554,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nJai Johar Scheme is a social security initiative launched by the Government of West Bengal to provide monthly financial assistance to elderly persons belonging to Scheduled Tribe (ST) communities"
+            },
+            {
+              "rank": 4,
+              "title": "Taposili Bandhu Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.550637423992157,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Taposili Bandhu Scheme provides financial assistance in the from of a monthly pension to elderly individuals belonging to Scheduled Caste (SC) community who are economically disadvantaged. lt"
+            },
+            {
+              "rank": 5,
+              "title": "Taposili Bandhu Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.3174873888492584,
+              "content_excerpt": "# Government of West Bengal\n\n…rtificate (SC), residence proof, and bank account details)\n\n- Submit the completed form to the concerned local authority\n\n- The application is verified by local authorities\n\n- Once approved, the beneficiary is enrolled and the pension amount is credited directly to thei"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.taposili-bandhu",
+      "canonical_title": "Taposili Bandhu Scheme",
+      "item_type": "state_scheme",
+      "category": "old_age_pension_sc",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state overview",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "supported at category level",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "local authority route stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "wb.taposili-bandhu.current.en",
+          "document_title": "Taposili Bandhu Scheme",
+          "document_identifier": "government-schemes-details-taposili-bandhu",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; not the underlying detailed guidelines",
+          "coverage_scope": "Benefit, overview eligibility, documents and local application process; no application deadline.",
+          "required_markers": [
+            "Taposili Bandhu Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 900,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 2,
+          "last_attempt_at": "2026-09-13T03:00:37+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "fetch_duration_ms": 583.62,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/wb.taposili-bandhu.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57170,
+          "content_sha256": "9418b1814d451101d211f53dc0c8ffe7146446028991ba8b58de6e56fddee7a5",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:00:38+00:00",
+          "fetched_at": "2026-09-13T03:00:38+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/wb.taposili-bandhu.current.en.txt",
+          "extracted_title": "Taposili Bandhu Scheme",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 575.24,
+          "extracted_sha256": "b508b5f620fc04b6be73a90326828e10f581f46ad3ad451fe195e58f88395fb2",
+          "extracted_characters": 1827,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:00:38+00:00",
+          "validation_metrics": {
+            "character_count": 1827,
+            "word_count": 254,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:00:38+00:00",
+          "deduplication_key": "b508b5f620fc04b6be73a90326828e10f581f46ad3ad451fe195e58f88395fb2",
+          "deduplicated_at": "2026-09-13T03:00:38+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/wb.taposili-bandhu.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-13T03:13:10+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/wb.taposili-bandhu.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 3800.77,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-13T03:13:14+00:00",
+          "database_document_id": "82f538ca-1310-49aa-b4f0-28fd4405fec0",
+          "index_duration_ms": 74.79,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:14+00:00",
+          "retrieval_checked_at": "2026-09-13T03:20:14+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.taposili-bandhu.bn.eligibility",
+          "query": "তপশিলি বন্ধু পেনশনের জন্য কারা যোগ্য?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Scheduled Caste"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:20:14+00:00",
+          "latency_ms": 40930.51,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9725329279899597,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "scheduled caste": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Taposili Bandhu Scheme provides financial assistance in the from of a monthly pension to elderly individuals belonging to Scheduled Caste (SC) community who are economically disadvantaged. lts objective is to ensure basic social security and improve the quality of life for marginalized senior citizens in the state.\n\nBenefits Offer Under the Scheme\n\n- Provides a monthly pension of Rs 1 ,00",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Taposili Bandhu Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-taposili-bandhu-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.9725329279899597,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Taposili Bandhu Scheme provides financial assistance in the from of a monthly pension to elderly individuals belonging to Scheduled Caste (SC) community who are economically disadvantaged. lt"
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.03166995197534561,
+              "content_excerpt": "### Important Note:\n\n…he following categories of beneificiaries of higher economic status shall not be elligible for benefit under the scheme.\n\n- All Institutional Land holders.\n\n- Farmer families which belong to one or more of the following categories:.\n\n- Former and present holders of constitution"
+            },
+            {
+              "rank": 3,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.01654072292149067,
+              "content_excerpt": "# Government of West Bengal\n\n…with dignity and independence.\n\n- Direct benefit transfer: Pension is credited directly to beneficiaries' bank accounts.\n\n- Reduction in financial dependency: Helps reduce dependency on family members or informal sources.\n\n- Improved social welfare: Strengthens social s"
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.0023685835767537355,
+              "content_excerpt": "### Who will be eligible to subscribe?\n\nAll individual (single or joint) account holders of participating banks / Post office, in the age group of 18 to 70 years are entitled to join. In case of multiple accounts held by an individual in one or different banks/ Post offices, the person is eligible t"
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+              "url": "https://financialservices.gov.in/pmjjby",
+              "language": "en",
+              "rerank_score": 0.0020601381547749043,
+              "content_excerpt": "### Who will be eligible to subscribe?\n\nAll individual (single or joint) account holders of participating banks / Post office, in the age group of 18 to 50 years are entitled to join. In case of multiple accounts held by an individual in one or different banks / Post offices, the person is eligible "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.medhashree",
+      "canonical_title": "West Bengal Medhashree Scheme",
+      "item_type": "state_scheme",
+      "category": "school_scholarship_obc",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state overview",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "supported at category level",
+        "application_route": "supported through school authorities",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "wb.medhashree.current.en",
+          "document_title": "West Bengal Medhashree Scheme",
+          "document_identifier": "government-schemes-details-west-bengal-medhashree",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; no linked detailed guideline captured",
+          "coverage_scope": "OBC school-student eligibility, benefit, documents and school-led application route; no deadline or status channel.",
+          "required_markers": [
+            "Medhashree Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 900,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 2,
+          "last_attempt_at": "2026-09-13T03:00:38+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "fetch_duration_ms": 378.53,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/wb.medhashree.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57575,
+          "content_sha256": "5be902fbeb85f968b298cfbe1c3e9cf371657f67bbb08de35c5248076ea8b545",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:00:39+00:00",
+          "fetched_at": "2026-09-13T03:00:39+00:00",
+          "extracted_path": "corpus/staging/batch-002/extracted/wb.medhashree.current.en.txt",
+          "extracted_title": "West Bengal Medhashree Scheme",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 541.98,
+          "extracted_sha256": "47a5c2fe0c871c575d3041db4eb758956abdf069eda359bb8c7b9cc7b7cc061f",
+          "extracted_characters": 2034,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:00:39+00:00",
+          "validation_metrics": {
+            "character_count": 2034,
+            "word_count": 274,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:00:39+00:00",
+          "deduplication_key": "47a5c2fe0c871c575d3041db4eb758956abdf069eda359bb8c7b9cc7b7cc061f",
+          "deduplicated_at": "2026-09-13T03:00:39+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/wb.medhashree.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 2,
+          "chunked_at": "2026-09-13T03:13:14+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/wb.medhashree.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 2920.15,
+          "embedding_bytes": 8320,
+          "embedded_at": "2026-09-13T03:13:17+00:00",
+          "database_document_id": "784f5aa4-243a-433f-aac2-b946edfbdbcd",
+          "index_duration_ms": 34.98,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:17+00:00",
+          "retrieval_checked_at": "2026-09-13T03:20:59+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.medhashree.en.application",
+          "query": "How does a Class VII OBC student in West Bengal apply for Medhashree?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "school authorities"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:20:59+00:00",
+          "latency_ms": 45149.16,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9935159683227539,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "school authorities": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Medhashree Scheme provides financial assistance to meritorious students from Other Backward Communities (OBC) to support their higher education. It aims to reduce dropout rates by offering scholarships and incentives to help talented students continue their studies without financial hardship.\n\nBenefits Offer Under the Scheme\n\n- Annual financial assistance of Rs 800 per student.\n\n- Renewab",
+          "results": [
+            {
+              "rank": 1,
+              "title": "West Bengal Medhashree Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.9935159683227539,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Medhashree Scheme provides financial assistance to meritorious students from Other Backward Communities (OBC) to support their higher education. It aims to reduce dropout rates by offering sc"
+            },
+            {
+              "rank": 2,
+              "title": "West Bengal Medhashree Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.09808742254972458,
+              "content_excerpt": "# Government of West Bengal\n\n…re identified by school authorities (Headmaster/Headmistress).\n\n- School submits student details on the official portal.\n\n- Application form is filled (online/offline) with basic details.\n\n- Required documents are submitted, including caste certificate, income certifica"
+            },
+            {
+              "rank": 3,
+              "title": "West Bengal Student Credit Card Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.04996535927057266,
+              "content_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n-"
+            },
+            {
+              "rank": 4,
+              "title": "Jai Johar Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-jai-johar-old-age-pensionfor-st-communities.aspx",
+              "language": "en",
+              "rerank_score": 0.021812986582517624,
+              "content_excerpt": "# Government of West Bengal\n\n…CSCs)\n\nHow to apply / process\n\n- The applicant submits application form to the Gram Panchayat, ULB or designated office.\n\n- Required documents such as age proof, caste certificate, identity proof and bank account details are submitted.\n\n- Verification is conducted by lo"
+            },
+            {
+              "rank": 5,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.01924440823495388,
+              "content_excerpt": "# Government of West Bengal\n\n…cts are covered\n\n- Exclusion criteria:\n\n- Units already availing subsidy under other government schemes are not eligible\n\n- Institutions like private limited companies, partnership firms (in some cases), and large enterprises are generally not eligible\n\n- Priority categ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pm-svanidhi",
+      "canonical_title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+      "item_type": "central_scheme",
+      "category": "street_vendor_credit",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "identity and vending-status verification described; no exhaustive checklist",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India, implemented through urban local bodies",
+        "status_or_help": "local offices and CSC route stated"
+      },
+      "official_application_url": "https://pmsvanidhi.mohua.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pm-svanidhi.wb-overview.current.en",
+          "document_title": "PM SVANidhi scheme information",
+          "document_identifier": "government-schemes-details-pm-svanidhi",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; not a substitute for Ministry lending circulars",
+          "coverage_scope": "Street-vendor eligibility, loan and incentive overview, application channels and processing; no application deadline or exhaustive document list.",
+          "required_markers": [
+            "PM SVANidhi",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1200,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:08:20+00:00",
+          "fetch_duration_ms": 330.17,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/pm-svanidhi.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 60887,
+          "content_sha256": "53b011c4cbd90ea61347fe14de859e5ae0c21549e46da53bc5fbe7a4acb9defb",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:08:20+00:00",
+          "fetched_at": "2026-09-13T03:08:20+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-002/extracted/pm-svanidhi.wb-overview.current.en.txt",
+          "extracted_title": "PM Svanidhi (Pradhan Mantri Street Vendors Atmanirbhar Nidhi)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 639.02,
+          "extracted_sha256": "63b07c16f8b303f5b854fa9f66fa37ceacc7825e269669cfe50cdf5619774ebd",
+          "extracted_characters": 3661,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:08:21+00:00",
+          "validation_metrics": {
+            "character_count": 3661,
+            "word_count": 486,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:08:21+00:00",
+          "deduplication_key": "63b07c16f8b303f5b854fa9f66fa37ceacc7825e269669cfe50cdf5619774ebd",
+          "deduplicated_at": "2026-09-13T03:08:21+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/pm-svanidhi.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 4,
+          "chunked_at": "2026-09-13T03:13:17+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/pm-svanidhi.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 5336.14,
+          "embedding_bytes": 16512,
+          "embedded_at": "2026-09-13T03:13:23+00:00",
+          "database_document_id": "399d7788-5e7a-4251-a183-81397190319d",
+          "index_duration_ms": 55.0,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:23+00:00",
+          "retrieval_checked_at": "2026-09-13T03:21:38+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pm-svanidhi.en.how-to-apply",
+          "query": "Where can a street vendor apply for PM SVANidhi and what happens next?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Urban Local Body offices"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:21:38+00:00",
+          "latency_ms": 38257.92,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.9504843354225159,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "urban local body offices": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…recommended by ULBS or Town Vending Committees.\n\n- Vendors in peri-urban or rural areas vending within urban boundaries.\n\n- Street vendors belonging to economically weaker sections including hawkers, fruit sellers, vegetable vendors, artisans and service providers.\n\nApplication Details: Where and How to Apply, Process and Link\n\nWhere to Apply\n\n- Beneficiaries may approach:\n\n- Urban Local Body offices or Town Vending Committees\n\n- Banks, Microfinance Institutions, NB",
+          "results": [
+            {
+              "rank": 1,
+              "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+              "url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+              "language": "en",
+              "rerank_score": 0.9504843354225159,
+              "content_excerpt": "# Government of West Bengal\n\n…recommended by ULBS or Town Vending Committees.\n\n- Vendors in peri-urban or rural areas vending within urban boundaries.\n\n- Street vendors belonging to economically weaker sections including hawkers, fruit sellers, vegetable vendors, artisans and service providers.\n\nApp"
+            },
+            {
+              "rank": 2,
+              "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+              "url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+              "language": "en",
+              "rerank_score": 0.7032960653305054,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nPM SVANidhi is a Central Sector Scheme launched in 2020 to support street vendors affected by the COVID-19 pandemic by providing affordable working capital loans to resume their businesses. The s"
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Vishwakarma",
+              "url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.016603520140051842,
+              "content_excerpt": "# Government of West Bengal\n\n…Overall support: End-to-end assistance including skill upgradation, modern technology access, and improved market access\n\nEligibility:\n\n- Artisan/Craftsperson requirement: Applicant must be an artisan or craftsperson working with hands and tools in one of the notified t"
+            },
+            {
+              "rank": 4,
+              "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+              "url": "https://wb.gov.in/government-schemes-details-pm-svanidhi-pradhan-mantri-street-vendors-atmanirbhar-nidhi.aspx",
+              "language": "en",
+              "rerank_score": 0.004941742867231369,
+              "content_excerpt": "# Government of West Bengal\n\n…00 in successive tranches).\n\n- Interest subsidy: Interest subsidy of 7% per annum provided on timely repayment of loans.\n\n- Cashback incentives: Incentives for digital transactions are provided to encourage cashless payments.\n\n- Financial inclusion: Facilitates inclusio"
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.0008699938771314919,
+              "content_excerpt": "### Important Note:\n\n…d Release of PM-Kisan Samman Nidhi by Hon'ble Prime Ministry of India Shri Narendra Modi on 9th August 2021 12:30 PM IST\n\n- Interaction with Farmers and Release of PM-Kisan Samman Nidhi by Hon'ble Prime Minister of India Shri Narendra Modi on 14th May 2021 11:00 AM IST\n\n- Webca"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pm-vishwakarma",
+      "canonical_title": "Pradhan Mantri Vishwakarma",
+      "item_type": "central_scheme",
+      "category": "artisan_skills_credit",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "not stated",
+        "application_route": "official central portal linked; steps not stated",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": "https://pmvishwakarma.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pm-vishwakarma.wb-overview.current.en",
+          "document_title": "Pradhan Mantri Vishwakarma Yojana",
+          "document_identifier": "government-schemes-details-pradhan-mantri-vishwakarma",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; detailed central guidelines are not captured",
+          "coverage_scope": "Artisan eligibility, notified trades and benefit components; links the central portal but does not state documents, application steps or deadline.",
+          "required_markers": [
+            "Pradhan Mantri Vishwakarma Yojana",
+            "Eligibility"
+          ],
+          "min_extracted_characters": 1000,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:08:21+00:00",
+          "fetch_duration_ms": 108.91,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/pm-vishwakarma.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 58350,
+          "content_sha256": "651d311c2f1c9b60b98a849d0b63247bcb7315a89eca6242f83c7271d42120ad",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:08:21+00:00",
+          "fetched_at": "2026-09-13T03:08:21+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-002/extracted/pm-vishwakarma.wb-overview.current.en.txt",
+          "extracted_title": "Pradhan Mantri Vishwakarma Yojana",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 409.38,
+          "extracted_sha256": "400cb3aa92081a0bb5b1e9a03aa74f8557361cb991027bcc88a53d1fa068e073",
+          "extracted_characters": 2745,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:08:21+00:00",
+          "validation_metrics": {
+            "character_count": 2745,
+            "word_count": 380,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:08:21+00:00",
+          "deduplication_key": "400cb3aa92081a0bb5b1e9a03aa74f8557361cb991027bcc88a53d1fa068e073",
+          "deduplicated_at": "2026-09-13T03:08:21+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/pm-vishwakarma.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 3,
+          "chunked_at": "2026-09-13T03:13:23+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/pm-vishwakarma.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 5867.74,
+          "embedding_bytes": 12416,
+          "embedded_at": "2026-09-13T03:13:29+00:00",
+          "database_document_id": "1d05814d-6e4b-4538-93e7-522a7235d419",
+          "index_duration_ms": 100.55,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:29+00:00",
+          "retrieval_checked_at": "2026-09-13T03:22:19+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pm-vishwakarma.bn.eligibility",
+          "query": "পিএম বিশ্বকর্মা প্রকল্পে কোন কারিগররা যোগ্য?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "18 specified"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:22:19+00:00",
+          "latency_ms": 41223.68,
+          "expected_rank": 1,
+          "useful_passage_rank": 3,
+          "top_score": 0.5164501070976257,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "18 specified": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…Overall support: End-to-end assistance including skill upgradation, modern technology access, and improved market access\n\nEligibility:\n\n- Artisan/Craftsperson requirement: Applicant must be an artisan or craftsperson working with hands and tools in one of the notified traditional trades\n\n- Age criteria: Must be 18 years or above at the time of registration\n\n- Type of work: Should be self-employed in the unorganised sector\n\n- Trade condition: Must be actively engaged",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Pradhan Mantri Vishwakarma",
+              "url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.5164501070976257,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nPradhan Mantri Vishwakarma Yojana is a Government of India scheme aimed at supporting traditional artisans and craftspeople by enhancing their skills, providing financial assistance, and promotin"
+            },
+            {
+              "rank": 2,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+              "language": "en",
+              "rerank_score": 0.015282454900443554,
+              "content_excerpt": "[Page 3]\n\n…cluding Multi Tasking Staff / Class IV / Group D employees)\n\nv) All Persons who paid Income Tax in last assessment year.\n\nvi) Professionals like Doctors, Engineers, Lawyers, Chartered Accountants, and\nArchitects registered with Professional bodies and carrying out profession by\nundertakin"
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Vishwakarma",
+              "url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.008947390131652355,
+              "content_excerpt": "# Government of West Bengal\n\n…Overall support: End-to-end assistance including skill upgradation, modern technology access, and improved market access\n\nEligibility:\n\n- Artisan/Craftsperson requirement: Applicant must be an artisan or craftsperson working with hands and tools in one of the notified t"
+            },
+            {
+              "rank": 4,
+              "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+              "url": "https://pmkisan.gov.in/",
+              "language": "en",
+              "rerank_score": 0.0041350009851157665,
+              "content_excerpt": "### Important Note:\n\n…he following categories of beneificiaries of higher economic status shall not be elligible for benefit under the scheme.\n\n- All Institutional Land holders.\n\n- Farmer families which belong to one or more of the following categories:.\n\n- Former and present holders of constitution"
+            },
+            {
+              "rank": 5,
+              "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+              "url": "https://financialservices.gov.in/pmsby",
+              "language": "en",
+              "rerank_score": 0.00305100972764194,
+              "content_excerpt": "### Are NRIs eligible for coverage under PMSBY?\n\nAny NRI having an eligible bank account with a bank branch located in India is eligible for purchase of PMSBY cover through this account subject to fulfilment of the terms and conditions relating to the scheme. However, in case a claim arises, the cla"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.sishu-sathi",
+      "canonical_title": "Sishu Sathi",
+      "item_type": "state_scheme",
+      "category": "child_health",
+      "jurisdiction": "West Bengal, India",
+      "geography": "IN-WB",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "official overview last updated 2 May 2022",
+      "status_as_of": "2026-09-13",
+      "processing_status": "excluded",
+      "exclusion_reason": "The official page fetched successfully but exposed only navigation and footer text; substantive scheme content was absent from the snapshot.",
+      "practical_coverage": {
+        "eligibility": "limited: children needing paediatric cardiac surgery are described; detailed clinical criteria absent",
+        "benefit": "supported at overview level",
+        "documents": "not stated",
+        "application_route": "not stated",
+        "deadline": "not stated",
+        "jurisdiction": "supported: West Bengal",
+        "status_or_help": "not stated"
+      },
+      "official_application_url": null,
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "wb.sishu-sathi.overview.2022.en",
+          "document_title": "Sishu Sathi",
+          "document_identifier": "government-schemes-details-sishusaathi",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-sishusaathi.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2022-05-02",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "dated official overview; current hospital access and clinical criteria require a newer operational source",
+          "coverage_scope": "Scheme purpose and free paediatric cardiac surgery overview only; application, documents, deadline and detailed eligibility are missing.",
+          "required_markers": [
+            "SishuSaathi",
+            "free paediatric cardiac surgery"
+          ],
+          "min_extracted_characters": 500,
+          "processing_status": "excluded",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:08:21+00:00",
+          "fetch_duration_ms": 526.84,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/wb.sishu-sathi.overview.2022.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-sishusaathi.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 57299,
+          "content_sha256": "1cb377369bded86a9857951b0a71622ff14a525db1609ced73a8839fc1a32e22",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:08:22+00:00",
+          "fetched_at": "2026-09-13T03:08:22+00:00",
+          "last_error": "ExtractionError: Required source markers are missing: ['SishuSaathi', 'free paediatric cardiac surgery']",
+          "retry_eligible": false,
+          "exclusion_reason": "Unusable extraction: substantive scheme content was not present in the fetched HTML.",
+          "extracted_path": "corpus/staging/batch-002/extracted/wb.sishu-sathi.overview.2022.en.txt",
+          "extracted_title": "Sishusaathi",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 495.95,
+          "extracted_sha256": "2e2ab9d41030c7c2cc54467e3afc5d74f18004f4c19245bbeb98991f53f4ec62",
+          "extracted_characters": 571,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:08:22+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "wb.sishu-sathi.en.scope",
+          "query": "What does the West Bengal Sishu Sathi source actually say is provided?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "free paediatric cardiac surgery"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmegp",
+      "canonical_title": "Prime Minister Employment Generation Programme (PMEGP)",
+      "item_type": "central_scheme",
+      "category": "self_employment_microenterprise",
+      "jurisdiction": "India",
+      "geography": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "processing_status": "retrieval_checked",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date; lending decisions remain with participating institutions",
+        "documents": "supported at category level",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "implementing agencies named; no status channel stated"
+      },
+      "official_application_url": "https://pmegp.msme.gov.in/",
+      "official_status_url": null,
+      "official_help_url": null,
+      "sources": [
+        {
+          "source_id": "pmegp.wb-overview.current.en",
+          "document_title": "Prime Minister Employment Generation Programme (PMEGP)",
+          "document_identifier": "government-schemes-details-prime-minster-employment-generation-programme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_date": null,
+          "language": "en",
+          "source_status": "current official overview; detailed KVIC guidelines and bank appraisal rules are not captured",
+          "coverage_scope": "Applicant types, new-enterprise condition, benefit overview, documents, online application and implementing agencies; no deadline or status channel.",
+          "required_markers": [
+            "Prime Minister Employment Generation Programme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1500,
+          "processing_status": "retrieval_checked",
+          "attempt_count": 1,
+          "last_attempt_at": "2026-09-13T03:10:19+00:00",
+          "fetch_duration_ms": 362.62,
+          "snapshot_path": "corpus/staging/batch-002/snapshots/pmegp.wb-overview.current.en.html",
+          "final_url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+          "http_status": 200,
+          "content_type": "text/html",
+          "content_bytes": 61344,
+          "content_sha256": "a8f42b159ee4a656c461e5ff4aae5f8c3d8dba32cc647d512a66a2325f50acff",
+          "etag": null,
+          "last_modified": null,
+          "checked_at": "2026-09-13T03:10:20+00:00",
+          "fetched_at": "2026-09-13T03:10:20+00:00",
+          "last_error": null,
+          "retry_eligible": false,
+          "extracted_path": "corpus/staging/batch-002/extracted/pmegp.wb-overview.current.en.txt",
+          "extracted_title": "Prime Minister Employment Generation Programme (PMEGP)",
+          "extraction_version": "setu-structured-v2",
+          "extraction_duration_ms": 641.57,
+          "extracted_sha256": "2f94020d78e3209455bdec7e4860b5d8b81b969c469a2b1d6c999713649607fa",
+          "extracted_characters": 3734,
+          "extracted_locations": 1,
+          "pdf_pages": null,
+          "extracted_at": "2026-09-13T03:10:20+00:00",
+          "validation_metrics": {
+            "character_count": 3734,
+            "word_count": 490,
+            "location_count": 0,
+            "page_count": 0,
+            "replacement_ratio": 0.0,
+            "control_ratio": 0.0
+          },
+          "validated_at": "2026-09-13T03:10:21+00:00",
+          "deduplication_key": "2f94020d78e3209455bdec7e4860b5d8b81b969c469a2b1d6c999713649607fa",
+          "deduplicated_at": "2026-09-13T03:10:21+00:00",
+          "chunks_path": "corpus/staging/batch-002/chunks/pmegp.wb-overview.current.en.json",
+          "chunking_version": "setu-structure-aware-v1",
+          "chunk_count": 4,
+          "chunked_at": "2026-09-13T03:13:29+00:00",
+          "embedding_path": "corpus/staging/batch-002/embeddings/pmegp.wb-overview.current.en.npy",
+          "embedding_model": "BAAI/bge-m3 OpenVINO FP32",
+          "embedding_dimension": 1024,
+          "embedding_duration_ms": 6712.2,
+          "embedding_bytes": 16512,
+          "embedded_at": "2026-09-13T03:13:36+00:00",
+          "database_document_id": "4f26d2f7-fc78-4336-9de9-1428233aed47",
+          "index_duration_ms": 54.67,
+          "staging_database": "setu_corpus_staging",
+          "indexed_at": "2026-09-13T03:13:36+00:00",
+          "retrieval_checked_at": "2026-09-13T03:23:14+00:00"
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmegp.en.application-documents",
+          "query": "What should a new entrepreneur upload when applying online for PMEGP?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Upload a detailed project report"
+          ],
+          "status": "passed",
+          "checked_at": "2026-09-13T03:23:14+00:00",
+          "latency_ms": 54688.7,
+          "expected_rank": 1,
+          "useful_passage_rank": 1,
+          "top_score": 0.8869036436080933,
+          "passage_passed": true,
+          "passage_marker_matches": {
+            "upload a detailed project report": true
+          },
+          "expected_passage_excerpt": "# Government of West Bengal\n\n…cts are covered\n\n- Exclusion criteria:\n\n- Units already availing subsidy under other government schemes are not eligible\n\n- Institutions like private limited companies, partnership firms (in some cases), and large enterprises are generally not eligible\n\n- Priority categories: Special preference is given to SC/ST/OBC, minorities, women, ex- servicemen, differently-abled persons, and candidates from rural/hilly areas\n\nApplication Details:\n\n- Online registration: Visit",
+          "results": [
+            {
+              "rank": 1,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.8869036436080933,
+              "content_excerpt": "# Government of West Bengal\n\n…cts are covered\n\n- Exclusion criteria:\n\n- Units already availing subsidy under other government schemes are not eligible\n\n- Institutions like private limited companies, partnership firms (in some cases), and large enterprises are generally not eligible\n\n- Priority categ"
+            },
+            {
+              "rank": 2,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.07457301765680313,
+              "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Prime Minister Employment Generation Programme (PMEGP) is aimed at generating self-employment opportunities by supporting the establishment of micro-enterprises in rural and urban areas. It p"
+            },
+            {
+              "rank": 3,
+              "title": "Pradhan Mantri Vishwakarma",
+              "url": "https://wb.gov.in/government-schemes-details-pradhan-mantri-vishwakarma-yojana.aspx",
+              "language": "en",
+              "rerank_score": 0.017608506605029106,
+              "content_excerpt": "# Government of West Bengal\n\n…Overall support: End-to-end assistance including skill upgradation, modern technology access, and improved market access\n\nEligibility:\n\n- Artisan/Craftsperson requirement: Applicant must be an artisan or craftsperson working with hands and tools in one of the notified t"
+            },
+            {
+              "rank": 4,
+              "title": "West Bengal Student Credit Card Scheme",
+              "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+              "language": "en",
+              "rerank_score": 0.006153245456516743,
+              "content_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n-"
+            },
+            {
+              "rank": 5,
+              "title": "Prime Minister Employment Generation Programme (PMEGP)",
+              "url": "https://wb.gov.in/government-schemes-details-prime-minster-employment-generation-programme.aspx",
+              "language": "en",
+              "rerank_score": 0.0013120438670739532,
+              "content_excerpt": "# Government of West Bengal\n\n…project cost for special category beneficiaries\n\n- 10% for general category beneficiaries\n\nMaximum project cost limits:\n\n- Up to 50 lakh for manufacturing units\n\n- Up to 20 lakh for service/trading units\n\nEntrepreneurship development training:\n\n- Mandatory training (EDP"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "batch_retrieval_checks": [
+    {
+      "check_id": "batch-002.pmjjby-vs-pmsby.en",
+      "query": "Which scheme covers death due to any cause rather than only accidental death?",
+      "query_language": "en",
+      "expected_item_id": "scheme.central.pmjjby",
+      "expected_rank_max": 3,
+      "expected_passage_markers": [
+        "death due to any cause"
+      ],
+      "status": "passed",
+      "checked_at": "2026-09-13T03:40:58+00:00",
+      "latency_ms": 81378.26,
+      "expected_rank": 1,
+      "useful_passage_rank": 2,
+      "top_score": 0.9250075817108154,
+      "passage_passed": true,
+      "passage_marker_matches": {
+        "death due to any cause": true
+      },
+      "expected_passage_excerpt": "### What is the nature of the scheme?\n\nThe scheme is a one-year cover term life insurance scheme, renewable from year to year, offering life insurance cover for death due to any cause.",
+      "results": [
+        {
+          "rank": 1,
+          "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+          "url": "https://financialservices.gov.in/pmjjby",
+          "language": "en",
+          "rerank_score": 0.9250075817108154,
+          "content_excerpt": "### Does the PMJJBY cover death resulting from natural calamities such as earthquake, flood and other convulsions of nature? What about coverage from suicide / murder?\n\nAll these events are covered as PMJJBY covers death due to any reason."
+        },
+        {
+          "rank": 2,
+          "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+          "url": "https://financialservices.gov.in/pmjjby",
+          "language": "en",
+          "rerank_score": 0.9224078059196472,
+          "content_excerpt": "### What is the nature of the scheme?\n\nThe scheme is a one-year cover term life insurance scheme, renewable from year to year, offering life insurance cover for death due to any cause."
+        },
+        {
+          "rank": 3,
+          "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+          "url": "https://financialservices.gov.in/pmjjby",
+          "language": "en",
+          "rerank_score": 0.6079330444335938,
+          "content_excerpt": "### Can eligible individuals who fail to join the scheme in the initial year join in subsequent years?\n\nYes, new eligible entrants can also join in future years on payment of premium through auto-debit. However, for such subscribers, insurance benefit shall not be available for death (due to any cau"
+        },
+        {
+          "rank": 4,
+          "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+          "url": "https://financialservices.gov.in/pmjjby",
+          "language": "en",
+          "rerank_score": 0.4914505183696747,
+          "content_excerpt": "### Can individuals who leave the scheme re-join?\n\nIndividuals who exit the scheme at any point may re-join the scheme in future years by paying the appropriate premium as described in Q.2 above. However, for such subscribers, insurance benefit shall not be available for death (due to any cause othe"
+        },
+        {
+          "rank": 5,
+          "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+          "url": "https://financialservices.gov.in/pmsby",
+          "language": "en",
+          "rerank_score": 0.46334633231163025,
+          "content_excerpt": "### What is the nature of the scheme?\n\nThe scheme is a one year cover Personal Accident Insurance Scheme, renewable from year to year, offering protection against death or disability due to accident."
+        }
+      ]
+    },
+    {
+      "check_id": "batch-002.student-credit.missing-state.bn",
+      "query": "আমি স্টুডেন্ট ক্রেডিট কার্ডের জন্য আবেদন করতে চাই। কোন রাজ্যের বাসিন্দা হতে হবে?",
+      "query_language": "bn",
+      "expected_item_id": "scheme.wb.student-credit-card",
+      "expected_rank_max": 5,
+      "expected_passage_markers": [
+        "resident of West Bengal"
+      ],
+      "status": "passed",
+      "checked_at": "2026-09-13T03:41:37+00:00",
+      "latency_ms": 38998.29,
+      "expected_rank": 1,
+      "useful_passage_rank": 1,
+      "top_score": 0.5038870573043823,
+      "passage_passed": true,
+      "passage_marker_matches": {
+        "resident of west bengal": true
+      },
+      "expected_passage_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n- Must have secured admission in an eligible course (school, UG, PG, or professional)\n\n- Co-borrower required (usually a parent/guardian)\n\n- Applicant or Co-borrower must not be in default of any bank ",
+      "results": [
+        {
+          "rank": 1,
+          "title": "West Bengal Student Credit Card Scheme",
+          "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+          "language": "en",
+          "rerank_score": 0.5038870573043823,
+          "content_excerpt": "# Government of West Bengal\n\n…ility\n\n- Must be a resident of West Bengal for ten years or more\n\n- Must be 40 years or below at the time of application\n\n- Must be enrolled in a recognized educational institution (India or abroad)\n\n- Should have completed at least Class IX (Madhyamik or equivalent)\n\n-"
+        },
+        {
+          "rank": 2,
+          "title": "Sukanya Samriddhi Account",
+          "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "language": "en",
+          "rerank_score": 0.031329113990068436,
+          "content_excerpt": "[Page 5]\n\n…f the Post office/Bank in the country.\nI further declare that I and the depositor both are Resident citizen of India and\n\nundertake to inform the\naccount office of any change in our residency/citizenship status in future.\nI hereby undertake to abide by the scheme p rovisions and Governmen"
+        },
+        {
+          "rank": 3,
+          "title": "West Bengal Student Credit Card Scheme",
+          "url": "https://wb.gov.in/government-schemes-details-west-bengal-student-credit-card-scheme.aspx",
+          "language": "en",
+          "rerank_score": 0.018806003034114838,
+          "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe West Bengal Student Credit Card Scheme provides students with collateral-free loans of up to 10 lakh to support education from class X to post Doctorate in India or abroad. The scheme offers "
+        },
+        {
+          "rank": 4,
+          "title": "West Bengal Medhashree Scheme",
+          "url": "https://wb.gov.in/government-schemes-details-west-bengal-medhashree-scheme.aspx",
+          "language": "en",
+          "rerank_score": 0.004580080043524504,
+          "content_excerpt": "# Government of West Bengal\n\n- Schemes\n\n- Circulars & Notification\n\n- Acts\n\n- Forms\n\n- Tenders\n\n- FAQ's\n\nThe Medhashree Scheme provides financial assistance to meritorious students from Other Backward Communities (OBC) to support their higher education. It aims to reduce dropout rates by offering sc"
+        },
+        {
+          "rank": 5,
+          "title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+          "url": "https://www.pmuy.gov.in/about.html",
+          "language": "en",
+          "rerank_score": 0.0031488125678151846,
+          "content_excerpt": "## Documents Required\n\n- Know Your Customer(KYC)\n\n- Ration Card issued by the State from which application is being made/ other State Govt. document certifying family composition/ Self-Declaration as per Annexure I (for migrant applicants)\n\n- Aadhaar of beneficiary and adult family members appearing"
+        }
+      ]
+    },
+    {
+      "check_id": "batch-002.eshram.unsupported-cash-amount.hi",
+      "query": "ई-श्रम कार्ड बनते ही कितनी नकद राशि मिलती है?",
+      "query_language": "hi",
+      "expect_no_supported_item": true,
+      "max_top_score": 0.05,
+      "expected_behavior": "Do not invent a cash amount; report that no supported item was retrieved and explain corpus coverage limitations.",
+      "expected_passage_markers": [],
+      "status": "passed",
+      "checked_at": "2026-09-13T03:42:15+00:00",
+      "latency_ms": 37906.45,
+      "expected_rank": null,
+      "useful_passage_rank": null,
+      "top_score": 0.002664942294359207,
+      "passage_passed": true,
+      "passage_marker_matches": {},
+      "expected_passage_excerpt": "",
+      "results": [
+        {
+          "rank": 1,
+          "title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+          "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "language": "en",
+          "rerank_score": 0.002664942294359207,
+          "content_excerpt": "[Page 3]\n\n…of up to ₹5 lakh per family, regardless of income, benefiting around 6\ncrore senior citizens across 4.5 crore families.\n\nUnder this expansion, all senior citizens in this age group will receive a new distinct card under\nAB PM-JA Y to access the scheme's benefits. For senior citizens aged "
+        },
+        {
+          "rank": 2,
+          "title": "Sukanya Samriddhi Account",
+          "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "language": "en",
+          "rerank_score": 0.0011157422559335828,
+          "content_excerpt": "[Page 9]\n\n¹Hkkx IIµ[k.M 3(i)] Hkkjr dk jkti=k % vlk/kj.k 19\n2. Please Credit the amount of eligible balance in my matured account to my SB Account\nno.________________________ standing at______________________(Name of Account office).\nor\nPlease issue a Demand Draft/account payee cheque\nor\nPlease pay "
+        },
+        {
+          "rank": 3,
+          "title": "Sukanya Samriddhi Account",
+          "url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "language": "en",
+          "rerank_score": 0.000576971797272563,
+          "content_excerpt": "[Page 8]\n\n18 THE GAZETTE OF INDIA : EXTRAORDINARY [P ART II—S EC . 3(i)]\nAccount Number:........................................................................................\nAmount of withdrawal applied...........................................................\n*Certified, that the amount sought "
+        },
+        {
+          "rank": 4,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "language": "en",
+          "rerank_score": 0.0005745479720644653,
+          "content_excerpt": "[Page 10]\n\n…in three installments of Rs.2000/- each every 4-month / trimester, i.e. April-July,\nAugust-November and December-March.\n\n10.2 The Scheme is being implemented through an Aadhaar linked electronic data\nbase containing details of all members of the families of the farmers whose names\nappear"
+        },
+        {
+          "rank": 5,
+          "title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "url": "https://pmkisan.gov.in/",
+          "language": "en",
+          "rerank_score": 0.0005413626204244792,
+          "content_excerpt": "### Important Note:\n\n…d Release of PM-Kisan Samman Nidhi by Hon'ble Prime Ministry of India Shri Narendra Modi on 9th August 2021 12:30 PM IST\n\n- Interaction with Farmers and Release of PM-Kisan Samman Nidhi by Hon'ble Prime Minister of India Shri Narendra Modi on 14th May 2021 11:00 AM IST\n\n- Webca"
+        }
+      ]
+    }
+  ],
+  "updated_at": "2026-09-13T03:42:15+00:00"
+}

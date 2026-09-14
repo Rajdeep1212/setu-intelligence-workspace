@@ -212,6 +212,28 @@ class OperationalEndpointTests(unittest.TestCase):
         self.assertIn("application_startup backend=", logs)
         self.assertIn("request_complete request_id=", logs)
 
+    def test_request_timing_logs_are_safe_and_stage_aware(self):
+        main.app.dependency_overrides[main.get_session] = healthy_session
+        with (
+            self.assertLogs("app", level="INFO") as captured,
+            patch.object(main, "run_agent", AsyncMock(return_value={"answer": "safe answer", "citations": [], "sections": [], "route": "retrieve_docs", "confidence": 0.5, "response_status": "answered"})),
+            TestClient(main.app) as client,
+        ):
+            response = client.post(
+                "/query",
+                json={"query": "This query contains a secret token like sk-abc123 and should not be logged.", "language": "en"},
+                headers=AUTH_HEADERS,
+            )
+        logs = "\n".join(captured.output)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("stage=request_total", logs)
+        self.assertIn("stage=agent_pipeline", logs)
+        self.assertIn("duration_ms=", logs)
+        self.assertNotIn("sk-abc123", logs)
+        self.assertNotIn("safe answer", logs)
+        self.assertNotIn("This query contains a secret token", logs)
+        self.assertNotIn("response_status=answered", logs)
+
 
 class FailureClassificationTests(unittest.IsolatedAsyncioTestCase):
     async def test_retrieval_classifies_model_and_database_failures(self):

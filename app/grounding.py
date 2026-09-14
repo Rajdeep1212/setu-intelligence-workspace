@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from collections.abc import Iterable
+from urllib.parse import urlparse
 
 
 ABSTENTION_MESSAGES = {
@@ -66,3 +67,38 @@ def select_citations(
         )
 
     return citations
+
+
+OFFICIAL_LINK_FIELDS = (
+    ("official_application_url", "application", "Official application page"),
+    ("official_status_url", "status", "Official status page"),
+    ("official_help_url", "help", "Official help page"),
+)
+
+
+def select_official_links(
+    retrieved_chunks: Iterable[dict], citations: Iterable[dict]
+) -> list[dict]:
+    """Expose only manifest-verified links attached to cited documents."""
+    cited_document_ids = {str(citation["document_id"]) for citation in citations}
+    seen: set[tuple[str, str]] = set()
+    links: list[dict] = []
+
+    for chunk in retrieved_chunks:
+        if str(chunk.get("document_id")) not in cited_document_ids:
+            continue
+        metadata = chunk.get("document_metadata")
+        if not isinstance(metadata, dict) or not metadata.get("corpus_item_id"):
+            continue
+        for field, kind, label in OFFICIAL_LINK_FIELDS:
+            url = metadata.get(field)
+            if not isinstance(url, str):
+                continue
+            parsed = urlparse(url)
+            key = (kind, url)
+            if parsed.scheme not in {"http", "https"} or not parsed.netloc or key in seen:
+                continue
+            seen.add(key)
+            links.append({"kind": kind, "label": label, "url": url})
+
+    return links[:6]

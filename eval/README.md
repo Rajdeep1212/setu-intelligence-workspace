@@ -3,6 +3,12 @@
 SETU keeps three deliberately different evaluation surfaces. Their results
 must not be combined into one accuracy claim:
 
+- `everyday_use_cases.jsonl` has 12 reviewed practical scenarios (4 per
+  language). `python -m eval.everyday_use_evaluation` audits their expected
+  behavior, captured source passages, and completed staging-retrieval
+  checkpoints without making provider or network calls. It is reported
+  separately from the legacy 60-case metric.
+
 - `eval_set.jsonl` has 15 corpus-linked retrieval labels (5 per language).
 - `grounding_set.jsonl` has 15 reviewed answerability/support labels (5 per
   language; 12 answerable and 3 unanswerable).

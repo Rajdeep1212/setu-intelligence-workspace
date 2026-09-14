@@ -33,6 +33,23 @@ class GeneratedClaim(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     text: str = Field(min_length=1)
+    kind: Optional[
+        Literal[
+            "direct_answer",
+            "benefit",
+            "conditions",
+            "how_to_apply",
+            "next_steps",
+            "required_documents",
+            "limitations",
+        ]
+    ] = Field(
+        default=None,
+        description=(
+            "The user-task role of this section. Omit when no role applies. "
+            "Do not emit empty or irrelevant sections."
+        ),
+    )
     citation_ids: list[str] = Field(default_factory=list, max_length=5)
 
     @field_validator("citation_ids")

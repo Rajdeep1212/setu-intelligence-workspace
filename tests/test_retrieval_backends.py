@@ -1,7 +1,8 @@
+import asyncio
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import numpy as np
 
@@ -132,6 +133,49 @@ class OpenVINOAdapterTests(unittest.TestCase):
 
 
 class BackendSelectionTests(unittest.TestCase):
+    def test_retrieval_releases_database_before_cpu_reranking(self):
+        from app.retrieval import pipeline
+
+        session = Mock()
+        session.rollback = AsyncMock()
+        candidates = [{"id": "one", "content": "supported passage"}]
+
+        def rerank_after_release(*_args, **_kwargs):
+            session.rollback.assert_awaited_once_with()
+            return candidates
+
+        with (
+            patch.object(pipeline, "embed_chunks", return_value=[[0.0]]),
+            patch.object(
+                pipeline, "dense_search", AsyncMock(return_value=candidates)
+            ),
+            patch.object(pipeline, "keyword_search", AsyncMock(return_value=[])),
+            patch.object(
+                pipeline, "rerank", side_effect=rerank_after_release
+            ) as reranker,
+        ):
+            result = asyncio.run(pipeline.retrieve(session, "query"))
+
+        self.assertEqual(result, candidates)
+        session.rollback.assert_awaited_once_with()
+        reranker.assert_called_once()
+
+    def test_dense_and_keyword_rows_include_reviewed_document_metadata(self):
+        session = Mock()
+        session.execute = AsyncMock(return_value=[])
+
+        from app.retrieval.dense import dense_search
+        from app.retrieval.keyword import keyword_search
+
+        asyncio.run(dense_search(session, [0.0, 1.0], None, 5))
+        asyncio.run(keyword_search(session, "scheme", None, 5))
+
+        statements = [str(call.args[0]) for call in session.execute.await_args_list]
+        self.assertEqual(len(statements), 2)
+        self.assertTrue(
+            all("d.metadata AS document_metadata" in statement for statement in statements)
+        )
+
     def test_pytorch_selection_preserves_contract(self):
         from app.retrieval import embeddings
 

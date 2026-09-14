@@ -10,6 +10,7 @@ from app.language import (
     supported_script_counts,
     target_language_instruction,
 )
+from app.schemas import QueryRequest
 
 
 def _chunk() -> dict:
@@ -32,6 +33,12 @@ def _state(language: str = "en") -> dict:
 
 
 class DominantScriptContractTests(unittest.TestCase):
+    def test_query_validation_preserves_the_exact_nonblank_text(self):
+        query = "  What is PM-KISAN?  "
+        self.assertEqual(QueryRequest(query=query, language="bn").query, query)
+        with self.assertRaises(ValueError):
+            QueryRequest(query=" \n ")
+
     def test_query_language_infers_supported_scripts_and_respects_explicit_language(self):
         self.assertEqual(query_language("What is Aadhaar used for?", None), "en")
         self.assertEqual(query_language("आधार का उपयोग क्या है?", None), "hi")
@@ -179,16 +186,50 @@ class BoundedCorrectionTests(unittest.TestCase):
         stages = [item.kwargs["stage"] for item in generate.call_args_list]
         self.assertEqual(stages.count("route_decision"), 1)
         self.assertEqual(stages.count("answer_generation"), 2)
-        retrieve.assert_awaited_once_with(session, _state()["query"], "en")
+        retrieve.assert_awaited_once_with(session, _state()["query"])
         self.assertEqual(result["answer"], corrected.answer)
 
-    def test_inferred_answer_language_does_not_create_a_retrieval_filter(self):
+    def test_selected_answer_language_does_not_create_a_retrieval_filter(self):
         retrieve = AsyncMock(return_value=[])
-        state = {"query": "भारत में आधार का क्या उपयोग है?", "route": "retrieve_docs"}
+        state = {
+            "query": "What does PM-KISAN provide?",
+            "language": "bn",
+            "route": "retrieve_docs",
+        }
         session = object()
         with patch.object(graph, "retrieve_docs_tool", retrieve):
             asyncio.run(graph.retrieve_docs_node(state, session))
-        retrieve.assert_awaited_once_with(session, state["query"], None)
+        retrieve.assert_awaited_once_with(session, state["query"])
+
+    def test_empty_retrieval_performs_at_most_one_entity_correction(self):
+        retrieve = AsyncMock(side_effect=[[], []])
+        state = {
+            "query": "Tell me about that farmer benefit",
+            "scheme_name_hint": "PM-KISAN",
+            "route": "retrieve_docs",
+        }
+        session = object()
+        with patch.object(graph, "retrieve_docs_tool", retrieve):
+            update = asyncio.run(graph.retrieve_docs_node(state, session))
+
+        self.assertEqual(retrieve.await_count, 2)
+        self.assertEqual(update["retrieval_retry_count"], 1)
+        self.assertEqual(update["retrieval_query"], "PM-KISAN")
+
+    def test_unmatched_scheme_name_requests_clarification_in_selected_language(self):
+        state = {
+            "query": "What is Andhan Nirudhana?",
+            "language": "hi",
+            "route": "retrieve_docs",
+            "scheme_name_hint": "Andhan Nirudhana",
+            "retrieved_chunks": [],
+        }
+
+        update = asyncio.run(graph.generate_node(state))
+
+        self.assertEqual(update["response_status"], "clarification_needed")
+        self.assertRegex(update["answer"], r"[\u0900-\u097f]")
+        self.assertEqual(update["citations"], [])
 
 
 if __name__ == "__main__":

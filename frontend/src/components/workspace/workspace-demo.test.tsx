@@ -1,17 +1,129 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { Providers } from "@/components/providers";
 import { WorkspaceDemo } from "@/components/workspace/workspace-demo";
-import { queryRequestSchema } from "@/lib/contracts";
-import { demoResponse, demoResponseForQuery } from "@/lib/fixtures";
+import { demoResponse } from "@/lib/fixtures";
+
+function renderWorkspace() {
+  return render(<Providers><WorkspaceDemo /></Providers>);
+}
+
+async function chooseLanguage(user: ReturnType<typeof userEvent.setup>, label: "English" | "हिन्दी" | "বাংলা") {
+  await user.click(screen.getByRole("button", { name: /Response language:/ }));
+  const menu = screen.getByRole("menu", { name: "Response language" });
+  await user.click(within(menu).getByRole("menuitemradio", { name: label }));
+}
 
 describe("WorkspaceDemo", () => {
-  afterEach(() => vi.restoreAllMocks());
-  it("links claim citations to retrieved evidence and opens the keyboard command menu", async () => { const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); expect(screen.getByText("2/2 sections evidence linked")).toBeInTheDocument(); await user.click(screen.getByLabelText("Focus retrieved citation 2 for claim 2")); expect(screen.getAllByRole("button", { pressed: true }).some((button) => button.textContent?.includes("E02"))).toBe(true); expect(screen.getByText("1", { selector: "dd" })).toBeInTheDocument(); await user.keyboard("{Control>}k{/Control}"); expect(screen.getByRole("dialog", { name: "Navigate SETU" })).toBeInTheDocument(); });
-  it("exposes multilingual prompts and renders Hindi and Bengali demo fixtures", () => { render(<Providers><WorkspaceDemo /></Providers>); expect(screen.getByText("Ask in English, हिन्दी, or বাংলা")).toBeInTheDocument(); expect(demoResponseForQuery({ query: "भारत में आधार का क्या उपयोग है?" }).sections[0].text).toMatch(/[\u0900-\u097f]/); expect(demoResponseForQuery({ query: "ভারতে আধারের ব্যবহার কী?" }).sections[0].text).toMatch(/[\u0980-\u09ff]/); });
-  it("submits a Hindi query without forcing an English language filter", async () => { const expectedHindiQuery = "भारत में आधार का क्या उपयोग है?"; const network = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(demoResponse), { status: 200 })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const query = screen.getByLabelText("Ask SETU a question"); const submit = screen.getByRole("button", { name: "Run corpus investigation" }); fireEvent.change(query, { target: { value: expectedHindiQuery } }); expect(query).toHaveValue(expectedHindiQuery); expect(submit).toBeEnabled(); expect(queryRequestSchema.safeParse({ query: expectedHindiQuery }).success).toBe(true); await user.click(submit); await waitFor(() => expect(network).toHaveBeenCalledTimes(1)); const requestInit = network.mock.calls[0]?.[1]; expect(requestInit).toBeDefined(); const payload = JSON.parse(String(requestInit?.body)); expect(payload).toEqual({ query: expectedHindiQuery }); expect(payload).not.toHaveProperty("language"); });
-  it("quarantines eligibility and never submits profile data", async () => { const network = vi.spyOn(globalThis, "fetch"); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); await user.click(screen.getByRole("button", { name: /Eligibility mode/ })); expect(screen.getByText("Illustrative eligibility experience")).toBeInTheDocument(); expect(screen.getByRole("heading", { name: "Choose an illustrative criteria set" })).toBeInTheDocument(); await user.click(screen.getByRole("button", { name: /Continue/ })); expect(screen.getByLabelText(/Demonstration annual family income/)).toBeInTheDocument(); await user.click(screen.getByRole("button", { name: /Review inputs/ })); await user.click(screen.getByRole("button", { name: "Show safe preview" })); expect(screen.getByRole("heading", { name: "No eligibility determination is made" })).toBeInTheDocument(); expect(screen.queryByText(/appears to meet|not eligible|eligible result/i)).not.toBeInTheDocument(); expect(network).not.toHaveBeenCalled(); });
-  it("keeps the completed research query for edit and resubmit", async () => { vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(demoResponse), { status: 200 })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const query = screen.getByLabelText("Ask SETU a question"); const before = (query as HTMLTextAreaElement).value; await user.click(screen.getByRole("button", { name: "Run corpus investigation" })); await screen.findByText("2/2 sections evidence linked"); expect(query).toHaveValue(before); });
-  it("prevents duplicate query submissions while one request is pending", async () => { let resolve!: (value: Response) => void; const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => new Promise((done) => { resolve = done; })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const submit = screen.getByRole("button", { name: "Run corpus investigation" }); await user.click(submit); await user.click(submit); expect(network).toHaveBeenCalledTimes(1); expect(submit).toBeDisabled(); resolve(new Response(JSON.stringify({ answer: "No evidence.", citations: [], route: "retrieve_docs", confidence: 0 }), { status: 200 })); });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    window.localStorage.clear();
+  });
+
+  it("defaults to English, supports keyboard menu navigation, and has no attachment control", async () => {
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    const trigger = screen.getByRole("button", { name: "Response language: English" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByLabelText("Selected response language: English")).not.toBeInTheDocument();
+    expect(screen.queryByText("Response language applies to your next request.")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /attach|upload/i })).not.toBeInTheDocument();
+
+    trigger.focus();
+    await user.keyboard("{ArrowDown}");
+    const menu = screen.getByRole("menu", { name: "Response language" });
+    await waitFor(() => expect(within(menu).getByRole("menuitemradio", { name: "English" })).toHaveFocus());
+    await user.keyboard("{ArrowDown}{ArrowDown}{Enter}");
+    expect(screen.getByRole("button", { name: "Response language: বাংলা" })).toHaveFocus();
+  });
+
+  it("persists the response-language selection without storing the question", async () => {
+    const user = userEvent.setup();
+    const first = renderWorkspace();
+    await chooseLanguage(user, "हिन्दी");
+    expect(window.localStorage.getItem("setu-response-language-v1")).toBe("hi");
+    expect(JSON.stringify(window.localStorage)).not.toContain("What are the core components");
+
+    first.unmount();
+    renderWorkspace();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Response language: हिन्दी" })).toBeInTheDocument());
+  });
+
+  it("captures the exact question and selected language for each request", async () => {
+    let resolveRequest!: (value: Response) => void;
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => new Promise((resolve) => { resolveRequest = resolve; }));
+    const user = userEvent.setup();
+    renderWorkspace();
+    const query = screen.getByLabelText("Ask SETU a question");
+    const exactQuestion = "  What does PM-KISAN provide?  ";
+
+    fireEvent.change(query, { target: { value: exactQuestion } });
+    await chooseLanguage(user, "বাংলা");
+    await user.click(screen.getByRole("button", { name: "Ask SETU" }));
+    expect(screen.getByText("Request in progress")).toBeInTheDocument();
+
+    await chooseLanguage(user, "हिन्दी");
+    const payload = JSON.parse(String(network.mock.calls[0]?.[1]?.body));
+    expect(payload).toEqual({ query: exactQuestion, language: "bn" });
+    expect(query).toHaveValue(exactQuestion);
+
+    resolveRequest(new Response(JSON.stringify(demoResponse), { status: 200 }));
+    await waitFor(() => expect(screen.queryByText("Request in progress")).not.toBeInTheDocument());
+    expect(screen.getByRole("button", { name: "Response language: हिन्दी" })).toBeInTheDocument();
+  });
+
+  it("shows official source and application links as distinct actions", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+      ...demoResponse,
+      official_links: [{ kind: "application", label: "Official application page", url: "https://apply.example.gov.in/" }],
+    }), { status: 200 }));
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    await user.click(screen.getByRole("button", { name: "Ask SETU" }));
+
+    const links = await screen.findByRole("navigation", { name: "Official source and service links" });
+    expect(within(links).getByRole("link", { name: /Official source: India's Digital Public Infrastructure/ })).toHaveAttribute("href", "https://www.pib.gov.in/");
+    expect(within(links).getByRole("link", { name: "Official application page" })).toHaveAttribute("data-link-kind", "application");
+  });
+
+  it("preserves input and the prior answer when a request fails", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+      error: { code: "BACKEND_UNAVAILABLE", message: "unsafe upstream detail", request_id: "request-1" },
+    }), { status: 503 }));
+    const user = userEvent.setup();
+    renderWorkspace();
+    const query = screen.getByLabelText("Ask SETU a question");
+    const exactQuestion = "A question that should remain editable";
+    fireEvent.change(query, { target: { value: exactQuestion } });
+
+    await user.click(screen.getByRole("button", { name: "Ask SETU" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("SETU is temporarily unavailable.");
+    expect(query).toHaveValue(exactQuestion);
+    expect(screen.getByText(/India's digital approach connects digital identity/)).toBeInTheDocument();
+  });
+
+  it("expands and focuses source passages from claim citations", async () => {
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: vi.fn() });
+    const user = userEvent.setup();
+    renderWorkspace();
+
+    await user.click(screen.getByRole("button", { name: "Open source 2 for claim 2" }));
+    const sources = screen.getByRole("region", { name: "Retrieved sources" });
+    expect(within(sources).getByRole("heading", { name: "The rise of India's DPI stack" })).toBeVisible();
+    await waitFor(() => expect(document.querySelector("#source-1")).toHaveFocus());
+    expect(within(sources).getAllByRole("link", { name: "View source" })[0]).toHaveAttribute("target", "_blank");
+  });
+
+  it("keeps eligibility quarantined and opens navigation from the keyboard", async () => {
+    const user = userEvent.setup();
+    renderWorkspace();
+    await user.keyboard("{Control>}k{/Control}");
+    const dialog = screen.getByRole("dialog", { name: "Navigate SETU" });
+    await user.click(within(dialog).getByRole("button", { name: /Eligibility preview/ }));
+    expect(screen.getByText("Illustrative eligibility experience")).toBeInTheDocument();
+  });
 });

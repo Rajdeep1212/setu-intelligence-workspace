@@ -10,10 +10,9 @@ from app.errors import DatabaseUnavailableError
 from app.retrieval.pipeline import retrieve
 
 
-async def retrieve_docs_tool(
-    session: AsyncSession, query: str, language: str | None
-) -> list[dict]:
-    return await retrieve(session, query, language=language)
+async def retrieve_docs_tool(session: AsyncSession, query: str) -> list[dict]:
+    """Retrieve across every source language; answer language is a generation choice."""
+    return await retrieve(session, query, language=None)
 
 
 async def check_eligibility_tool(session: AsyncSession, scheme_name_hint: str) -> list[dict]:

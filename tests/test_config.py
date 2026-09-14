@@ -30,7 +30,8 @@ class SettingsTests(unittest.TestCase):
         self.assertNotIn(secret, str(raised.exception))
 
     def test_local_database_url_preserves_tcp_defaults(self):
-        settings = Settings(_env_file=None)
+        with patch.dict(os.environ, {}, clear=True):
+            settings = Settings(_env_file=None)
         url = settings.database_engine_url
 
         self.assertEqual(url.drivername, "postgresql+asyncpg")
@@ -73,7 +74,8 @@ class SettingsTests(unittest.TestCase):
             Settings(_env_file=None, database_unix_socket="relative/socket")
 
     def test_llm_provider_precedence_and_missing_configuration(self):
-        missing = Settings(_env_file=None)
+        with patch.dict(os.environ, {}, clear=True):
+            missing = Settings(_env_file=None)
         self.assertIsNone(missing.llm_provider)
         self.assertIn("llm_not_configured", missing.operational_issues())
 
@@ -106,7 +108,8 @@ class SettingsTests(unittest.TestCase):
             self.assertEqual(settings.operational_issues(), [])
 
     def test_api_key_is_secret_and_required_for_readiness(self):
-        missing = Settings(_env_file=None, groq_api_key="test")
+        with patch.dict(os.environ, {}, clear=True):
+            missing = Settings(_env_file=None, groq_api_key="test")
         self.assertIn("api_auth_not_configured", missing.operational_issues())
 
         value = "unit-test-placeholder"

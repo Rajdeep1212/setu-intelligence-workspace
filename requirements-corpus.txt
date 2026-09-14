@@ -1,0 +1,17 @@
+# Lean local-only corpus pipeline. This intentionally avoids torch and model
+# downloads; it executes the already-exported OpenVINO artifacts in models/.
+# 0.30.0 is the first project-supported pin here with a CPython 3.13 wheel;
+# the API's Python 3.11 environment retains its existing 0.29.0 pin.
+asyncpg==0.30.0
+sqlalchemy==2.0.35
+greenlet>=3.1,<4
+pydantic==2.9.2
+pydantic-settings==2.5.2
+python-dotenv==1.0.1
+requests==2.32.3
+beautifulsoup4==4.12.3
+lxml==5.3.0
+numpy>=2.0,<3
+transformers>=4.45,<5
+openvino==2026.3.1
+pypdf>=5,<7
