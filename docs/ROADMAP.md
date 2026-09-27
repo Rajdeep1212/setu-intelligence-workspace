@@ -1,5 +1,11 @@
 # Setu Build Roadmap
 
+> **Current plan:** the 12-week roadmap from 28 Sep 2026, with an exit gate
+> per phase, is in [FINDINGS.md, section 5](FINDINGS.md#5-updated-12-week-roadmap).
+> The same document grades the research claims behind it and audits the code
+> for each problem. The weekly plan below is the original scaffold plan and is
+> kept for history.
+
 This maps the original project plan onto the starter scaffold, one week at a
 time. Each week assumes the previous one's tests/checks pass before moving on.
 
