@@ -1,0 +1,123 @@
+{
+  "schema": "setu.traffic-offences/v1",
+  "jurisdiction": "IN-DL",
+  "authority": "Transport Department, Government of NCT of Delhi",
+  "coverage": "Statewide.",
+  "review_note": "No official notification found on 27 Sep 2026; the Delhi Transport Department notifications page lists none on compounding. Lead only: news of a Sep 2024 decision to allow compounding at 50 percent of the challan amount (Deccan Herald).",
+  "offences": [
+    {
+      "offence_id": "no_helmet",
+      "offence": "Riding without protective headgear",
+      "sections": [
+        "129",
+        "194D"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "handheld_device_use",
+      "offence": "Using a handheld communications device while driving",
+      "sections": [
+        "184"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "earphone_use",
+      "offence": "Using earphones or headphones while driving",
+      "sections": [
+        "184"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "dangerous_driving",
+      "offence": "Driving dangerously",
+      "sections": [
+        "184"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "no_driving_licence",
+      "offence": "Driving without a valid driving licence",
+      "sections": [
+        "3",
+        "181"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "no_insurance",
+      "offence": "Driving an uninsured vehicle",
+      "sections": [
+        "146",
+        "196"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "signal_violation",
+      "offence": "Violating a mandatory traffic signal",
+      "sections": [
+        "119",
+        "177"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "overspeeding",
+      "offence": "Driving above the speed limit",
+      "sections": [
+        "112",
+        "183"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    },
+    {
+      "offence_id": "triple_riding",
+      "offence": "Carrying more than one pillion rider on a two-wheeler",
+      "sections": [
+        "128",
+        "194C"
+      ],
+      "first_offence": null,
+      "subsequent_offence": null,
+      "status": "UNVERIFIED",
+      "source": null,
+      "notes": "Needs the current Section 200 compounding notification from the official gazette."
+    }
+  ]
+}
