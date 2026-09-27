@@ -27,6 +27,23 @@ The command exits nonzero if the manifest, fingerprint, case pass rate, or a
 required fixture-replay threshold differs. It performs no live retrieval and
 does not measure provider answer quality or semantic entailment.
 
+## Temporal and false-premise expected failures
+
+`temporal_cases.jsonl` holds 15 cases (5 each in English, Hindi and Bengali)
+for behaviour SETU does not have yet: retrieval filtered by state and as-of
+date, asking for a missing state, and checking a claimed fine against
+`data/traffic_offences/`. They are kept out of the 60-case gate, which
+requires every case to pass.
+
+```bash
+python -m eval.temporal_evaluation
+```
+
+Every case is a strict expected failure. The run exits zero while each probe
+fails, and nonzero if a probe starts passing before its `expected_status` is
+changed from `xfail`, or if a false-premise case stops matching a verified
+table row. See [FINDINGS](../docs/FINDINGS.md) (P1 and P2).
+
 ## Corpus-linked retrieval labels
 
 `eval_set.jsonl` stores one short authored query and its reviewed relevant

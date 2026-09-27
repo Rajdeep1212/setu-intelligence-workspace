@@ -1,0 +1,229 @@
+{
+  "schema_version": "setu.traffic-offences/v1",
+  "jurisdiction": "IN-WB",
+  "jurisdiction_name": "West Bengal",
+  "retrieved_at": "2026-09-27",
+  "notes": [
+    "State amounts come only from Transport Department notification 208-WT dated 24 Jan 2022, read from the department's signed copy. Its page 5 orders publication in the Official Gazette; the gazette issue itself was not located on 27 Sep 2026.",
+    "The Kolkata Traffic Police schedule is recorded under observations only. It is a police fine list, not a s.200 notification, and in places it differs from 208-WT."
+  ],
+  "sources": {
+    "IN-ACT-32-2019": {
+      "title": "The Motor Vehicles (Amendment) Act, 2019 (No. 32 of 2019)",
+      "issuer": "Ministry of Law and Justice (Legislative Department)",
+      "kind": "central_act",
+      "notification_reference": "Gazette of India, Extraordinary, Part II Section 1, No. 51, 9 Aug 2019",
+      "notification_date": "2019-08-09",
+      "url": "https://egazette.gov.in/WriteReadData/2019/210413.pdf",
+      "sha256": "488b7fc7b2051f4583501e6c06de8afb75a65a1de4f003cd8979f93c066b2b8d",
+      "retrieved_at": "2026-09-27"
+    },
+    "IN-SO-3110E-2019": {
+      "title": "Sections of the MV (Amendment) Act 2019 applicable from 1 Sep 2019",
+      "issuer": "Ministry of Road Transport and Highways",
+      "kind": "central_notification",
+      "notification_reference": "S.O. 3110(E) dated 28 Aug 2019, as published with PIB release 1583331",
+      "notification_date": "2019-08-28",
+      "effective_from": "2019-09-01",
+      "url": "https://static.pib.gov.in/WriteReadData/userfiles/MVA.pdf",
+      "sha256": "bfde83e7fa9e4ea6f6f614c05ffd15a3906474dba2ec0ec490ab1f5d2edb33a5",
+      "retrieved_at": "2026-09-27",
+      "provenance_note": "PIB table attached to release 1583331 (https://www.pib.gov.in/PressReleasePage.aspx?PRID=1583331). The S.O. itself was not fetched from egazette.gov.in."
+    },
+    "WB-208-WT-2022": {
+      "title": "Compounding of offences under s.200(1), Schedules I and II",
+      "issuer": "Government of West Bengal, Transport Department",
+      "kind": "state_s200_notification",
+      "notification_reference": "No. 208-WT/3M-128/97 (Pt.III)(D) dated 24 Jan 2022",
+      "notification_date": "2022-01-24",
+      "effective_from": "2022-01-24",
+      "url": "https://transport.wb.gov.in/wp-content/uploads/2022/02/208-WT-DATE-24-01-2022.pdf",
+      "sha256": "3180d64e3d41111433fc67d35d14bd88d6557afacaa4bedd8373eda5025a7eae",
+      "retrieved_at": "2026-09-27",
+      "provenance_note": "Scanned, signed department copy (5 pages). States 'This shall take immediate effect' and supersedes earlier notifications except 2023-WT/3M-128/1997 (Part IIID) dated 30.07.2021 (overloading)."
+    },
+    "KP-OFFENCES-2024": {
+      "title": "Kolkata Traffic Police: Offences and Penalties",
+      "issuer": "Kolkata Traffic Police",
+      "kind": "police_schedule",
+      "notification_reference": "Schedule marked 'Updated on 28.10.2024' (not a s.200 notification)",
+      "url": "https://www.kolkatatrafficpolice.gov.in/offences.pdf",
+      "sha256": "f9f17c8dbb73767687b60dea374fb90ea89c7ba888a84c05241a60c3748dc838",
+      "retrieved_at": "2026-09-27",
+      "provenance_note": "Applies to the Kolkata Police area only."
+    }
+  },
+  "offences": [
+    {
+      "offence_id": "helmet",
+      "label": "Riding a motor cycle without protective headgear",
+      "central_law": {
+        "provision": "MV Act 1988 s.129 read with s.194D (inserted by Act 32 of 2019, s.79)",
+        "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [{"occurrence": "first", "vehicle_class": "any", "inr": 1000}],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 22",
+        "effective_from": "2022-01-24",
+        "additional_consequence": "Offender disqualified from holding a driving licence for three months",
+        "note": "The 2nd-and-subsequent column is blank in the notification."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "27", "summary": "129MVA/194(D)MVA, not wearing protective headgear: Rs 1000 first and subsequent."},
+        {"source_id": "KP-OFFENCES-2024", "row": "89", "summary": "297 WBMVR/177MVA, two-wheeler helmet without ISI mark: Rs 500 first, Rs 1500 subsequent."}
+      ]
+    },
+    {
+      "offence_id": "phone_device",
+      "label": "Using a handheld communication device while driving",
+      "central_law": {
+        "provision": "MV Act 1988 s.184, Explanation (c) (inserted by Act 32 of 2019, s.67); compounding under s.200(1) limited to this use (Act 32 of 2019, s.86)",
+        "penalty_text": "First offence: imprisonment of six months to one year, or fine of Rs 1,000 to Rs 5,000, or both. Second or subsequent offence within three years: imprisonment up to two years, or fine of ten thousand rupees, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "Earphones or headphones for music are not named in s.184, the Motor Vehicles (Driving) Regulations 2017, or 208-WT. See docs/FINDINGS.md, claim C2."
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {"occurrence": "first", "vehicle_class": "any", "inr": 5000},
+          {"occurrence": "subsequent", "vehicle_class": "any", "inr": 10000}
+        ],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 11",
+        "effective_from": "2022-01-24",
+        "note": "The row reads 'Driving dangerously, s.184'; the subsequent amount applies if committed within three years of a previous similar offence. Because s.200(1) allows s.184 to be compounded only for handheld-device use, this row is mapped to that offence here."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "50", "summary": "184MVA/184MVA, 'Driving Vehicle Dangerously. No Person Shall Use Earphone While Driving Any Motor Vehicles': Rs 5000 first, Rs 10000 subsequent."},
+        {"source_id": "KP-OFFENCES-2024", "row": "63", "summary": "218(3) WBMVR/177MVA, playing radio or mobile phone in a motor vehicle in a city or municipality: Rs 500 first, Rs 1500 subsequent."}
+      ]
+    },
+    {
+      "offence_id": "no_licence",
+      "label": "Driving without a valid driving licence",
+      "central_law": {
+        "provision": "MV Act 1988 s.3 read with s.181 (fine substituted by Act 32 of 2019, s.63)",
+        "penalty_text": "Fine of five thousand rupees",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [{"occurrence": "first", "vehicle_class": "any", "inr": 5000}],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 5",
+        "effective_from": "2022-01-24",
+        "note": "Row covers ss.3, 4 and 5 under ss.180 and 181; the 2nd-and-subsequent column is blank."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "93", "summary": "3(I)MVA/181MVA, driving without driving licence: Rs 5000 first and subsequent."}
+      ]
+    },
+    {
+      "offence_id": "no_insurance",
+      "label": "Driving an uninsured vehicle",
+      "central_law": {
+        "provision": "MV Act 1988 s.146 read with s.196 (amended by Act 32 of 2019, s.81)",
+        "penalty_text": "First offence: fine of two thousand rupees; the PIB summary adds imprisonment up to three months as an alternative or in addition. Subsequent offence: imprisonment up to three months, or fine of four thousand rupees, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {"occurrence": "first", "vehicle_class": "any", "inr": 2000},
+          {"occurrence": "subsequent", "vehicle_class": "any", "inr": 4000}
+        ],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 25",
+        "effective_from": "2022-01-24"
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "34", "summary": "146MVA/196MVA, uninsured vehicle: Rs 2000 first, Rs 4000 subsequent."}
+      ]
+    },
+    {
+      "offence_id": "overspeeding",
+      "label": "Driving at excessive speed",
+      "central_law": {
+        "provision": "MV Act 1988 s.112 read with s.183(1) (amended by Act 32 of 2019, s.66)",
+        "penalty_text": "Light motor vehicle: fine of Rs 1,000 to Rs 2,000. Medium or heavy goods or passenger vehicle: fine of Rs 2,000 to Rs 4,000. Second or subsequent offence: driving licence impounded under s.206(4).",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {"occurrence": "first", "vehicle_class": "light_motor_vehicle", "inr": 1000},
+          {"occurrence": "first", "vehicle_class": "medium_heavy", "inr": 2000},
+          {"occurrence": "subsequent", "vehicle_class": "light_motor_vehicle", "inr": 2000},
+          {"occurrence": "subsequent", "vehicle_class": "medium_heavy", "inr": 4000}
+        ],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 10",
+        "effective_from": "2022-01-24",
+        "additional_consequence": "Second or subsequent offence: driving licence impounded under s.206(4)",
+        "note": "Medium/heavy means MGV, MPV, HGV and HPV as written in the notification."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "10", "summary": "112/183(1)MVA, private car, two wheeler and auto: Rs 1000 first, Rs 2000 subsequent."},
+        {"source_id": "KP-OFFENCES-2024", "row": "11", "summary": "112/183(1)MVA, bus, HGV and MGV: Rs 2000 first, Rs 4000 subsequent."}
+      ]
+    },
+    {
+      "offence_id": "red_light",
+      "label": "Jumping a red light",
+      "central_law": {
+        "provision": "MV Act 1988 s.184, Explanation (a) (inserted by Act 32 of 2019, s.67)",
+        "penalty_text": "Listed as driving dangerously: first offence imprisonment of six months to one year, or fine of Rs 1,000 to Rs 5,000, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "s.200(1) as amended allows s.184 to be compounded only for handheld-device use, so a spot amount for red-light jumping needs a different legal basis."
+      },
+      "state_compounding": {
+        "status": "UNVERIFIED",
+        "amounts": [],
+        "settle_with": "208-WT has no row that names signal violations. A legal review must settle which penal section applies to red-light jumping after Act 32 of 2019 (s.184 Explanation (a) versus s.177 or s.177A with the Driving Regulations 2017), and then which 208-WT row, if any, sets the amount."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "67", "summary": "Rule 12 MV (Driving) Regulation 2017/177MVA, jumping signal: Rs 500 first, Rs 1500 subsequent."},
+        {"source_id": "KP-OFFENCES-2024", "row": "17", "summary": "119MVA/177MVA, violation of mandatory traffic signals: Rs 500 first, Rs 1500 subsequent."}
+      ]
+    },
+    {
+      "offence_id": "triple_riding",
+      "label": "Carrying more than one pillion rider on a motor cycle",
+      "central_law": {
+        "provision": "MV Act 1988 s.128(1) read with s.194C (inserted by Act 32 of 2019, s.79)",
+        "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "s.128(1) allows the driver of a two-wheeled motor cycle to carry at most one other person."
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [{"occurrence": "first", "vehicle_class": "any", "inr": 1000}],
+        "source_id": "WB-208-WT-2022",
+        "schedule_row": "Schedule II Sl. No. 21",
+        "effective_from": "2022-01-24",
+        "additional_consequence": "Offender disqualified from holding a driving licence for three months",
+        "note": "Row reads 'Violation of safety measures for two wheeler riders, s.128, s.194C'; the 2nd-and-subsequent column is blank."
+      },
+      "observations": [
+        {"source_id": "KP-OFFENCES-2024", "row": "26", "summary": "128MVA/194(C)MVA, violation of safety measures for motor cycle drivers and pillion riders: Rs 1000 first and subsequent."}
+      ]
+    }
+  ]
+}

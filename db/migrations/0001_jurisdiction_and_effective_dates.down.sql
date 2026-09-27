@@ -1,22 +1,30 @@
--- Rollback for migration 0001. Removes only what 0001 added.
--- Data in these columns is lost on rollback; take a backup first.
+-- Rollback for migration 0001. Drops the provenance columns and any values
+-- written to them. Take a verified backup first; this is destructive for
+-- data stored in these columns only.
 
 BEGIN;
 
 DROP INDEX IF EXISTS chunks_jurisdiction_effective_idx;
-DROP INDEX IF EXISTS documents_jurisdiction_idx;
+DROP INDEX IF EXISTS documents_jurisdiction_effective_idx;
 
-ALTER TABLE chunks DROP CONSTRAINT IF EXISTS chunks_effective_range_chk;
-ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_effective_range_chk;
+ALTER TABLE chunks
+    DROP CONSTRAINT IF EXISTS chunks_source_hash_format,
+    DROP CONSTRAINT IF EXISTS chunks_effective_range,
+    DROP CONSTRAINT IF EXISTS chunks_jurisdiction_format,
+    DROP COLUMN IF EXISTS retrieved_at,
+    DROP COLUMN IF EXISTS source_hash,
+    DROP COLUMN IF EXISTS effective_to,
+    DROP COLUMN IF EXISTS effective_from,
+    DROP COLUMN IF EXISTS jurisdiction;
 
-ALTER TABLE chunks DROP COLUMN IF EXISTS effective_to;
-ALTER TABLE chunks DROP COLUMN IF EXISTS effective_from;
-ALTER TABLE chunks DROP COLUMN IF EXISTS jurisdiction;
-
-ALTER TABLE documents DROP COLUMN IF EXISTS retrieved_at;
-ALTER TABLE documents DROP COLUMN IF EXISTS source_hash;
-ALTER TABLE documents DROP COLUMN IF EXISTS effective_to;
-ALTER TABLE documents DROP COLUMN IF EXISTS effective_from;
-ALTER TABLE documents DROP COLUMN IF EXISTS jurisdiction;
+ALTER TABLE documents
+    DROP CONSTRAINT IF EXISTS documents_source_hash_format,
+    DROP CONSTRAINT IF EXISTS documents_effective_range,
+    DROP CONSTRAINT IF EXISTS documents_jurisdiction_format,
+    DROP COLUMN IF EXISTS retrieved_at,
+    DROP COLUMN IF EXISTS source_hash,
+    DROP COLUMN IF EXISTS effective_to,
+    DROP COLUMN IF EXISTS effective_from,
+    DROP COLUMN IF EXISTS jurisdiction;
 
 COMMIT;
