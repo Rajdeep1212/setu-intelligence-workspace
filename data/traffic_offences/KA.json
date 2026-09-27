@@ -1,0 +1,270 @@
+{
+  "schema_version": "setu.traffic-offences/v1",
+  "jurisdiction": "IN-KA",
+  "jurisdiction_name": "Karnataka",
+  "retrieved_at": "2026-09-27",
+  "notes": [
+    "State amounts come from Notification No. TD 250 TDO 2019 dated 21 Sep 2019 (Karnataka Gazette Extraordinary, Part IVA, No. 781), read from the copy hosted by the Transport Department. It came into force on publication in the Official Gazette.",
+    "No superseding s.200 notification was found on the Transport Department notifications page on 27 Sep 2026. That is not proof none exists; the gazette index is the settling source.",
+    "Several amounts are below the fixed fines in the central Act. They are recorded as the notification states them, with the legal question flagged."
+  ],
+  "sources": {
+    "IN-ACT-32-2019": {
+      "title": "The Motor Vehicles (Amendment) Act, 2019 (No. 32 of 2019)",
+      "issuer": "Ministry of Law and Justice (Legislative Department)",
+      "kind": "central_act",
+      "notification_reference": "Gazette of India, Extraordinary, Part II Section 1, No. 51, 9 Aug 2019",
+      "notification_date": "2019-08-09",
+      "url": "https://egazette.gov.in/WriteReadData/2019/210413.pdf",
+      "sha256": "488b7fc7b2051f4583501e6c06de8afb75a65a1de4f003cd8979f93c066b2b8d",
+      "retrieved_at": "2026-09-27"
+    },
+    "IN-SO-3110E-2019": {
+      "title": "Sections of the MV (Amendment) Act 2019 applicable from 1 Sep 2019",
+      "issuer": "Ministry of Road Transport and Highways",
+      "kind": "central_notification",
+      "notification_reference": "S.O. 3110(E) dated 28 Aug 2019, as published with PIB release 1583331",
+      "notification_date": "2019-08-28",
+      "effective_from": "2019-09-01",
+      "url": "https://static.pib.gov.in/WriteReadData/userfiles/MVA.pdf",
+      "sha256": "bfde83e7fa9e4ea6f6f614c05ffd15a3906474dba2ec0ec490ab1f5d2edb33a5",
+      "retrieved_at": "2026-09-27",
+      "provenance_note": "PIB table attached to release 1583331 (https://www.pib.gov.in/PressReleasePage.aspx?PRID=1583331). The S.O. itself was not fetched from egazette.gov.in."
+    },
+    "KA-TD-250-TDO-2019": {
+      "title": "Authorisation of officers and penalties under s.200 of the MV Act 1988",
+      "issuer": "Government of Karnataka, Transport Secretariat",
+      "kind": "state_s200_notification",
+      "notification_reference": "No. TD 250 TDO 2019 dated 21 Sep 2019; Karnataka Gazette Extraordinary, Part IVA, No. 781",
+      "notification_date": "2019-09-21",
+      "effective_from": "2019-09-21",
+      "url": "https://transport.karnataka.gov.in/storage/pdf-files/section%20200.pdf",
+      "sha256": "0e4324fce68b4f0edafee2b7012452bbc0881920655cc0ad9684416ea76e89cf",
+      "retrieved_at": "2026-09-27",
+      "provenance_note": "Scanned gazette pages. Supersedes the earlier Notification No. TD 250 TDO 2019 dated 03-09-2019."
+    }
+  },
+  "offences": [
+    {
+      "offence_id": "helmet",
+      "label": "Riding a motor cycle without protective headgear",
+      "central_law": {
+        "provision": "MV Act 1988 s.129 read with s.194D (inserted by Act 32 of 2019, s.79)",
+        "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "any",
+            "vehicle_class": "any",
+            "inr": 500
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 19 (s.194-D)",
+        "effective_from": "2019-09-21",
+        "note": "This amount is below the fixed fine in the central Act (Rs 1,000). Whether a state may compound below the statutory fine is an open legal question; see docs/FINDINGS.md, claim C3."
+      },
+      "observations": []
+    },
+    {
+      "offence_id": "phone_device",
+      "label": "Using a handheld communication device while driving",
+      "central_law": {
+        "provision": "MV Act 1988 s.184, Explanation (c) (inserted by Act 32 of 2019, s.67); compounding under s.200(1) limited to this use (Act 32 of 2019, s.86)",
+        "penalty_text": "First offence: imprisonment of six months to one year, or fine of Rs 1,000 to Rs 5,000, or both. Second or subsequent offence within three years: imprisonment up to two years, or fine of ten thousand rupees, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "Earphones or headphones for music are not named in s.184 or the Motor Vehicles (Driving) Regulations 2017. See docs/FINDINGS.md, claim C2."
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "first",
+            "vehicle_class": "two_three_wheeler",
+            "inr": 1500
+          },
+          {
+            "occurrence": "first",
+            "vehicle_class": "light_motor_vehicle",
+            "inr": 3000
+          },
+          {
+            "occurrence": "first",
+            "vehicle_class": "others",
+            "inr": 5000
+          },
+          {
+            "occurrence": "subsequent",
+            "vehicle_class": "any",
+            "inr": 10000
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 9 (s.184(c), only to the extent of use of hand held communication devices)",
+        "effective_from": "2019-09-21"
+      },
+      "observations": []
+    },
+    {
+      "offence_id": "no_licence",
+      "label": "Driving without a valid driving licence",
+      "central_law": {
+        "provision": "MV Act 1988 s.3 read with s.181 (fine substituted by Act 32 of 2019, s.63)",
+        "penalty_text": "Fine of five thousand rupees",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "any",
+            "vehicle_class": "two_three_wheeler",
+            "inr": 1000
+          },
+          {
+            "occurrence": "any",
+            "vehicle_class": "light_motor_vehicle",
+            "inr": 2000
+          },
+          {
+            "occurrence": "any",
+            "vehicle_class": "others",
+            "inr": 5000
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 4 (ss.3 and 4 read with s.181)",
+        "effective_from": "2019-09-21",
+        "note": "The central Act sets a fine of Rs 5,000; the notification sets lower amounts for two/three-wheelers and LMVs. Same open legal question as the helmet row."
+      },
+      "observations": []
+    },
+    {
+      "offence_id": "no_insurance",
+      "label": "Driving an uninsured vehicle",
+      "central_law": {
+        "provision": "MV Act 1988 s.146 read with s.196 (amended by Act 32 of 2019, s.81)",
+        "penalty_text": "First offence: fine of two thousand rupees; the PIB summary adds imprisonment up to three months as an alternative or in addition. Subsequent offence: imprisonment up to three months, or fine of four thousand rupees, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "any",
+            "vehicle_class": "two_three_wheeler",
+            "inr": 1000
+          },
+          {
+            "occurrence": "any",
+            "vehicle_class": "light_motor_vehicle",
+            "inr": 2000
+          },
+          {
+            "occurrence": "any",
+            "vehicle_class": "heavy_and_others",
+            "inr": 4000
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 22 (s.146 read with s.196)",
+        "effective_from": "2019-09-21",
+        "note": "One amount per vehicle class; no separate subsequent-offence amount is listed."
+      },
+      "observations": []
+    },
+    {
+      "offence_id": "overspeeding",
+      "label": "Driving at excessive speed",
+      "central_law": {
+        "provision": "MV Act 1988 s.112 read with s.183(1) (amended by Act 32 of 2019, s.66)",
+        "penalty_text": "Light motor vehicle: fine of Rs 1,000 to Rs 2,000. Medium or heavy goods or passenger vehicle: fine of Rs 2,000 to Rs 4,000. Second or subsequent offence: driving licence impounded under s.206(4).",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01"
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "any",
+            "vehicle_class": "two_three_wheeler_and_lmv",
+            "inr": 1000
+          },
+          {
+            "occurrence": "any",
+            "vehicle_class": "medium_heavy",
+            "inr": 2000
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 8 (s.112 read with s.183(1)(i) and (ii))",
+        "effective_from": "2019-09-21",
+        "note": "Medium/heavy covers MGV, MPV, HGV, HPV and others as written in the notification."
+      },
+      "observations": []
+    },
+    {
+      "offence_id": "red_light",
+      "label": "Jumping a red light",
+      "central_law": {
+        "provision": "MV Act 1988 s.184, Explanation (a) (inserted by Act 32 of 2019, s.67)",
+        "penalty_text": "Listed as driving dangerously: first offence imprisonment of six months to one year, or fine of Rs 1,000 to Rs 5,000, or both.",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "s.200(1) as amended allows s.184 to be compounded only for handheld-device use, so a spot amount for red-light jumping needs a different legal basis."
+      },
+      "state_compounding": {
+        "status": "UNVERIFIED",
+        "amounts": [],
+        "settle_with": "The notification has no row naming signal violations. A legal review must settle the penal section for red-light jumping after Act 32 of 2019 (s.184 Explanation (a), which s.200(1) does not allow to be compounded, versus s.177 or s.177A), then whether Table Sl. No. 24 applies."
+      },
+      "observations": [
+        {
+          "source_id": "KA-TD-250-TDO-2019",
+          "row": "Table Sl. No. 24",
+          "summary": "s.177 general provision for offences not otherwise specified: Rs 500 first, Rs 1000 subsequent. Whether red-light jumping is compounded under this row is not stated."
+        }
+      ]
+    },
+    {
+      "offence_id": "triple_riding",
+      "label": "Carrying more than one pillion rider on a motor cycle",
+      "central_law": {
+        "provision": "MV Act 1988 s.128(1) read with s.194C (inserted by Act 32 of 2019, s.79)",
+        "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "source_id": "IN-ACT-32-2019",
+        "commencement_source_id": "IN-SO-3110E-2019",
+        "effective_from": "2019-09-01",
+        "note": "s.128(1) allows the driver of a two-wheeled motor cycle to carry at most one other person."
+      },
+      "state_compounding": {
+        "status": "VERIFIED",
+        "amounts": [
+          {
+            "occurrence": "any",
+            "vehicle_class": "any",
+            "inr": 500
+          }
+        ],
+        "source_id": "KA-TD-250-TDO-2019",
+        "schedule_row": "Table Sl. No. 18 (s.194-C)",
+        "effective_from": "2019-09-21",
+        "note": "This amount is below the fixed fine in the central Act (Rs 1,000). Whether a state may compound below the statutory fine is an open legal question; see docs/FINDINGS.md, claim C3."
+      },
+      "observations": []
+    }
+  ]
+}
