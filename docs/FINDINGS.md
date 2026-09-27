@@ -133,9 +133,12 @@ repository. None needs a paid service.
   `ingestion/db_writer.py` line 47 uses `ON CONFLICT (url) DO UPDATE`, so
   re-ingesting a source overwrites the older version. History is lost, which
   makes date-applicable answers impossible.
-- **Fix:** keep one row per source version (the migration relaxes the unique
-  key to `url, source_hash`), and add a scheduled GitHub Actions job that
-  hashes official sources and opens an issue when one changes.
+- **Fix:** keep one row per source version. This needs a later migration that
+  replaces the `UNIQUE (url)` key with `UNIQUE (url, source_hash)` together with
+  a matching change to the upsert in `ingestion/db_writer.py`; changing only the
+  key would break ingestion. Migration 0001 on this branch already adds the
+  `source_hash` and `retrieved_at` columns it needs. Also add a scheduled GitHub
+  Actions job that hashes official sources and opens an issue when one changes.
 - **Acceptance test:** a changed source produces a new version row and a stale
   flag in one run.
 - **Effort:** 2–3 days. **Risk:** some government sites block automated
