@@ -78,7 +78,7 @@ repository. None needs a paid service.
 - **Evidence:** C1, C2, C3, C13.
 - **Current state:** `documents` and `chunks` have no jurisdiction or
   effective-date columns (`db/init.sql` lines 4–23). Both retrieval legs filter
-  only by language (`app/retrieval/dense.py` line 36,
+  only by language (`app/retrieval/dense.py` line 39,
   `app/retrieval/keyword.py` lines 37–38), and `retrieve()` accepts no state or
   date (`app/retrieval/pipeline.py` lines 40–46).
 - **Gap and risk:** SETU can cite a real but inapplicable rule with full
