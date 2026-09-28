@@ -48,3 +48,34 @@ test("workspace supports keyboard, theme, modes, and evidence inspection", async
   const results = await new AxeBuilder({ page }).exclude(".resize-handle").analyze();
   expect(results.violations.filter((item) => item.impact === "critical" || item.impact === "serious")).toEqual([]);
 });
+
+test("eligibility notice shows official next steps, accessible in both themes", async ({ page }) => {
+  test.slow();
+  const notice = "Live eligibility evaluation is intentionally unavailable. Verify eligibility with the applicable official source.";
+  const body = {
+    answer: notice,
+    citations: [],
+    sections: [{ text: notice, citation_ids: [] }],
+    route: "check_eligibility",
+    response_status: "eligibility_unverified",
+    next_steps: [
+      { id: "pmkisan_status", label: "Check PM-KISAN registration and payment status on the official portal", url: "https://pmkisan.gov.in/BeneficiaryStatus_New.aspx", operator: "Department of Agriculture & Farmers Welfare" },
+      { id: "myscheme", label: "Find government schemes you may qualify for on myScheme", url: "https://www.myscheme.gov.in/", operator: "Digital India Corporation (MeitY)" },
+    ],
+  };
+  await page.route("**/api/query", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) }));
+  await page.goto("/workspace");
+  await page.getByLabel("Ask SETU a question").fill("Am I eligible for PM-KISAN?");
+  await page.getByRole("button", { name: "Run corpus investigation" }).click();
+  await expect(page.getByRole("article", { name: "Eligibility not assessed" })).toBeVisible();
+  const steps = page.getByRole("navigation", { name: "Official next steps" });
+  await expect(steps.getByRole("link")).toHaveCount(2);
+  for (const theme of ["light", "dark"]) {
+    if (theme === "dark") await page.getByRole("button", { name: /Switch to dark theme/ }).first().click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    const results = await new AxeBuilder({ page }).include(".next-steps").include(".notice-answer").analyze();
+    expect(results.violations.filter((item) => item.impact === "critical" || item.impact === "serious")).toEqual([]);
+  }
+});

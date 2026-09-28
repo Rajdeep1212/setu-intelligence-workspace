@@ -6,6 +6,9 @@ export const answerSectionSchema = z.object({
   text: z.string().trim().min(1),
   citation_ids: z.array(z.string().min(1)).max(5).refine((ids) => new Set(ids).size === ids.length, "Section citation IDs must be unique."),
 });
+// P6: official services to act on. Only https links on .gov.in or .nic.in are accepted.
+export const isOfficialUrl = (value: string) => { try { const url = new URL(value); return url.protocol === "https:" && /\.(gov|nic)\.in$/.test(url.hostname); } catch { return false; } };
+export const nextStepSchema = z.object({ id: z.string().min(1), label: z.string().min(1), url: z.url().refine(isOfficialUrl, "Next steps must link to an https .gov.in or .nic.in page."), operator: z.string().min(1) });
 export const queryResponseSchema = z.object({
   answer: z.string(),
   citations: z.array(citationSchema).max(5),
@@ -13,6 +16,7 @@ export const queryResponseSchema = z.object({
   route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(),
   confidence: z.number().min(0).max(1).nullable().optional(),
   response_status: z.enum(["answered", "abstained", "eligibility_unverified"]).default("answered"),
+  next_steps: z.array(nextStepSchema).max(3).default([]),
   data_mode: z.enum(["demo", "local", "cloud"]).optional(),
 }).superRefine((response, context) => {
   const citationIds = response.citations.map((citation) => citation.chunk_id);
