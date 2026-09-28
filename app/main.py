@@ -267,7 +267,14 @@ async def source_detail(
     responses={422: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
 async def query(payload: QueryRequest, session: AsyncSession = Depends(get_session)):
-    final_state = await run_agent(session, payload.query, language=payload.language)
+    filters = {
+        key: value
+        for key, value in (("jurisdiction", payload.jurisdiction), ("as_of", payload.as_of))
+        if value is not None
+    }
+    final_state = await run_agent(
+        session, payload.query, language=payload.language, **filters
+    )
     citations = [Citation(**citation) for citation in final_state.get("citations", [])]
     return QueryResponse(
         answer=final_state.get("answer", "No answer generated."),

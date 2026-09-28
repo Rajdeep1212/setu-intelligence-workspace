@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -6,6 +7,9 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 class QueryRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
     language: Optional[Literal["en", "hi", "bn"]] = None
+    # Phase 1: optional retrieval filters. 'IN' is central law; 'IN-WB' a state.
+    jurisdiction: Optional[str] = Field(default=None, pattern=r"^IN(-[A-Z]{2})?$")
+    as_of: Optional[date] = None
 
 
 class Citation(BaseModel):

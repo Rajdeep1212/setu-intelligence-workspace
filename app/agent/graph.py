@@ -16,6 +16,7 @@ import asyncio
 import functools
 import logging
 import re
+from datetime import date
 
 from langgraph.graph import END, StateGraph
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -148,7 +149,14 @@ async def route_node(state: AgentState) -> dict:
 
 
 async def retrieve_docs_node(state: AgentState, session: AsyncSession) -> dict:
-    chunks = await retrieve_docs_tool(session, state["query"], state.get("language"))
+    filters = {
+        key: state[key]
+        for key in ("jurisdiction", "as_of")
+        if state.get(key) is not None
+    }
+    chunks = await retrieve_docs_tool(
+        session, state["query"], state.get("language"), **filters
+    )
     return {"retrieved_chunks": chunks}
 
 
@@ -350,7 +358,18 @@ def build_graph(session: AsyncSession):
     return graph.compile()
 
 
-async def run_agent(session: AsyncSession, query: str, language: str | None = None) -> AgentState:
+async def run_agent(
+    session: AsyncSession,
+    query: str,
+    language: str | None = None,
+    *,
+    jurisdiction: str | None = None,
+    as_of: date | None = None,
+) -> AgentState:
     compiled_graph = build_graph(session)
     initial_state: AgentState = {"query": query, "language": language}
+    if jurisdiction is not None:
+        initial_state["jurisdiction"] = jurisdiction
+    if as_of is not None:
+        initial_state["as_of"] = as_of
     return await compiled_graph.ainvoke(initial_state)
