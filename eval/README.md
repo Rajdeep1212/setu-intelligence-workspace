@@ -27,22 +27,30 @@ The command exits nonzero if the manifest, fingerprint, case pass rate, or a
 required fixture-replay threshold differs. It performs no live retrieval and
 does not measure provider answer quality or semantic entailment.
 
-## Temporal and false-premise expected failures
+## Temporal and false-premise cases
 
 `temporal_cases.jsonl` holds 15 cases (5 each in English, Hindi and Bengali)
-for behaviour SETU does not have yet: retrieval filtered by state and as-of
-date, asking for a missing state, and checking a claimed fine against
+for behaviour SETU is adding phase by phase: retrieval filtered by state and
+as-of date, asking for a missing state, and checking a claimed fine against
 `data/traffic_offences/`. They are kept out of the 60-case gate, which
 requires every case to pass.
+
+| Category | Cases | Status |
+|---|---|---|
+| `temporal_retrieval` | 6 | `pass` since Phase 1 (state and date filters in both retrieval legs) |
+| `missing_facts` | 3 | `xfail` until Phase 3 |
+| `false_premise` | 6 | `xfail` until Phase 3 |
 
 ```bash
 python -m eval.temporal_evaluation
 ```
 
-Every case is a strict expected failure. The run exits zero while each probe
-fails, and nonzero if a probe starts passing before its `expected_status` is
-changed from `xfail`, or if a false-premise case stops matching a verified
-table row. See [FINDINGS](../docs/FINDINGS.md) (P1 and P2).
+The run is strict in both directions. It exits zero only when every `pass`
+case passes and every `xfail` case still fails. It exits nonzero if a `pass`
+case regresses, if an `xfail` case starts passing before its `expected_status`
+is changed, or if a false-premise case stops matching a verified table row.
+Expected result today: 6 pass, 9 xfail, 0 unexpected. See
+[FINDINGS](../docs/FINDINGS.md) (P1 and P2).
 
 ## Corpus-linked retrieval labels
 

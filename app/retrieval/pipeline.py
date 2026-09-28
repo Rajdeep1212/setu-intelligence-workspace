@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from datetime import date
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,6 +29,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.errors import DatabaseUnavailableError, RetrievalUnavailableError
 from app.observability import get_request_id
 from app.retrieval.dense import dense_search
+from app.retrieval.filters import RetrievalFilters
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.retrieval.keyword import keyword_search
 from app.retrieval.rerank import rerank
@@ -43,12 +45,21 @@ async def retrieve(
     language: str | None = None,
     candidate_k: int = 20,
     final_k: int = 5,
+    *,
+    jurisdiction: str | None = None,
+    as_of: date | None = None,
 ) -> list[dict]:
+    # Validate before any model or database work; forward only filters that are set.
+    filter_kwargs = RetrievalFilters(jurisdiction=jurisdiction, as_of=as_of).as_kwargs()
     try:
         query_vector = (await asyncio.to_thread(embed_chunks, [query]))[0]
 
-        dense_results = await dense_search(session, query_vector, language, candidate_k)
-        keyword_results = await keyword_search(session, query, language, candidate_k)
+        dense_results = await dense_search(
+            session, query_vector, language, candidate_k, **filter_kwargs
+        )
+        keyword_results = await keyword_search(
+            session, query, language, candidate_k, **filter_kwargs
+        )
 
         fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
         return await asyncio.to_thread(rerank, query, fused, top_k=final_k)

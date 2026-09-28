@@ -1,10 +1,13 @@
-"""Expected-failure suite for date-, state- and premise-aware answering.
+"""Strict suite for date-, state- and premise-aware answering.
 
-These 15 cases (5 each in English, Hindi and Bengali) describe behaviour SETU
-does not have yet. Every case is a strict expected failure: the run succeeds
-while each capability probe fails, and fails if a probe starts passing before
-its case is re-marked. It is deliberately separate from the frozen 60-case
-gate in eval/offline_evaluation.py, which requires a 100% pass rate.
+These 15 cases (5 each in English, Hindi and Bengali) track behaviour SETU is
+gaining phase by phase. Each case is marked either "pass" or "xfail" (with a
+reason). The run succeeds only when every "pass" case passes and every
+"xfail" case still fails, so a capability that starts working must be
+re-marked in the same change. Phase 1 made the 6 temporal_retrieval cases
+pass; the missing_facts and false_premise cases stay xfail until Phase 3. It
+is deliberately separate from the frozen 60-case gate in
+eval/offline_evaluation.py, which requires a 100% pass rate.
 
 Probes are offline. The retrieval probe passes a recording stand-in for the
 database session, so no SQL reaches a database.
@@ -62,6 +65,11 @@ def _manifest_errors(cases: list[dict[str, Any]]) -> list[str]:
         errors.append("cases are not 5 per language")
     if {case["category"] for case in cases} - set(CATEGORIES):
         errors.append("unsupported category present")
+    for case in cases:
+        if case.get("expected_status") not in ("pass", "xfail"):
+            errors.append(f"{case['id']}: expected_status must be 'pass' or 'xfail'")
+        elif case["expected_status"] == "xfail" and not case.get("xfail_reason"):
+            errors.append(f"{case['id']}: an xfail case needs an xfail_reason")
     return errors
 
 
