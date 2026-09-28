@@ -1,5 +1,8 @@
 # Setu Build Roadmap
 
+> **Current status:** [PROGRESS.md](PROGRESS.md) lists what is done, in
+> progress and waiting for the owner.
+>
 > **Current plan:** the 12-week roadmap from 28 Sep 2026, with an exit gate
 > per phase, is in [FINDINGS.md, section 5](FINDINGS.md#5-updated-12-week-roadmap).
 > The same document grades the research claims behind it and audits the code
