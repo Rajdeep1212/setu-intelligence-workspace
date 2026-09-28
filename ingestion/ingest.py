@@ -24,7 +24,7 @@ import asyncio
 import logging
 
 from ingestion.chunking import chunk_text
-from ingestion.db_writer import get_pool, write_document
+from ingestion.db_writer import get_pool, has_provenance_columns, write_document
 from ingestion.embeddings import embed_chunks
 from ingestion.scraper import load_documents
 
@@ -39,6 +39,12 @@ async def run(prids: list[str], languages: tuple[str, ...]) -> None:
 
     pool = await get_pool()
     try:
+        # Provenance columns come from migration 0001. Without it, ingest as before.
+        record_provenance = await has_provenance_columns(pool)
+        if not record_provenance:
+            logger.warning(
+                "Migration 0001 is not applied: source_hash and retrieved_at will not be stored"
+            )
         for doc in raw_documents:
             try:
                 chunks = chunk_text(doc.raw_text, language=doc.language)
@@ -58,6 +64,11 @@ async def run(prids: list[str], languages: tuple[str, ...]) -> None:
                     metadata={"prid": doc.prid, "posted_on": doc.posted_on},
                     chunk_texts=chunks,
                     chunk_embeddings=vectors,
+                    **(
+                        {"source_hash": doc.source_hash, "retrieved_at": doc.retrieved_at}
+                        if record_provenance
+                        else {}
+                    ),
                 )
                 logger.info(
                     "Wrote PRID=%s lang=%s -> document_id=%s (%d chunks)",

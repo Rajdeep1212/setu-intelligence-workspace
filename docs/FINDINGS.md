@@ -104,12 +104,14 @@ sources. None needs a paid service.
   filters on `COALESCE(chunk, document)` values before RRF and rerank. Add
   optional `jurisdiction` and `as_of` to `QueryRequest`. Tag the 8 existing
   PIB documents `IN` (central).
-- **Status (28 Sep 2026):** retrieval filters landed on branch
-  `phase1/temporal-retrieval` (`app/retrieval/filters.py`). An unknown
-  `effective_from` is treated as unknown, so undated sources are excluded from
-  date-specific searches; an empty filtered result makes the agent abstain.
-  Not yet done: ingestion hashes (`source_hash`, `retrieved_at`) and the `IN`
-  backfill of existing PIB documents.
+- **Status (28 Sep 2026):** done. Retrieval filters merged in PR #2
+  (`app/retrieval/filters.py`); an unknown `effective_from` stays unknown, so
+  undated sources are excluded from date-specific searches, and an empty
+  filtered result makes the agent abstain. Ingestion now records `source_hash`
+  and `retrieved_at` when migration 0001 is present
+  (`ingestion/provenance.py`), and `db/backfills/0001_tag_pib_central.sql`
+  tags existing PIB documents `IN` (operator-run). Live status is in
+  [PROGRESS.md](PROGRESS.md).
 - **Acceptance test:** the 6 `temporal_retrieval` cases in
   `eval/temporal_cases.jsonl` flip from xfail to pass (remove their markers).
   A new unit test shows a chunk outside `[effective_from, effective_to)` is

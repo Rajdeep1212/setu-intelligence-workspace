@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from datetime import date
+from datetime import date, datetime
 
 import asyncpg
 
@@ -21,20 +21,45 @@ DATABASE_DSN = os.environ.get(
     "postgresql://setu:setu@localhost:5432/setu",  # local Docker Compose default
 )
 
-# Mirrors the check constraint in db/migrations/0001_jurisdiction_and_effective_dates.up.sql.
+# Mirror the check constraints in db/migrations/0001_jurisdiction_and_effective_dates.up.sql.
 _JURISDICTION_PATTERN = re.compile(r"^IN(-[A-Z]{2})?$")
+_SOURCE_HASH_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+PROVENANCE_COLUMNS = ("jurisdiction", "effective_from", "effective_to", "source_hash", "retrieved_at")
 
 
 def _validate_provenance(
-    jurisdiction: str | None, effective_from: date | None, effective_to: date | None
+    jurisdiction: str | None,
+    effective_from: date | None,
+    effective_to: date | None,
+    source_hash: str | None = None,
+    retrieved_at: datetime | None = None,
 ) -> None:
     if jurisdiction is not None and not _JURISDICTION_PATTERN.fullmatch(jurisdiction):
         raise ValueError("jurisdiction must be 'IN' or 'IN-' followed by two capital letters")
     for name, value in (("effective_from", effective_from), ("effective_to", effective_to)):
-        if value is not None and not isinstance(value, date):
+        if value is not None and (not isinstance(value, date) or isinstance(value, datetime)):
             raise ValueError(f"{name} must be a date")
     if effective_from is not None and effective_to is not None and effective_to <= effective_from:
         raise ValueError("effective_to must be after effective_from (the range is half-open)")
+    if source_hash is not None and not _SOURCE_HASH_PATTERN.fullmatch(source_hash):
+        raise ValueError("source_hash must be 64 lowercase hexadecimal characters (SHA-256)")
+    if retrieved_at is not None and (not isinstance(retrieved_at, datetime) or retrieved_at.tzinfo is None):
+        raise ValueError("retrieved_at must be a timezone-aware datetime")
+
+
+async def has_provenance_columns(pool: asyncpg.Pool) -> bool:
+    """True when migration 0001 has been applied to both tables."""
+    async with pool.acquire() as conn:
+        count = await conn.fetchval(
+            """
+            SELECT count(*) FROM information_schema.columns
+            WHERE table_schema = current_schema()
+              AND table_name IN ('documents', 'chunks')
+              AND column_name = ANY($1::text[])
+            """,
+            list(PROVENANCE_COLUMNS),
+        )
+    return count == 2 * len(PROVENANCE_COLUMNS)
 
 
 async def write_document(
@@ -51,21 +76,23 @@ async def write_document(
     jurisdiction: str | None = None,
     effective_from: date | None = None,
     effective_to: date | None = None,
+    source_hash: str | None = None,
+    retrieved_at: datetime | None = None,
 ) -> str:
     """
     Insert one document row, then one row per chunk (with its embedding).
     Returns the new document's id.
 
-    ``jurisdiction``, ``effective_from`` and ``effective_to`` (Phase 1) are
-    written to the document and copied to each chunk. They need migration
-    0001. When all three are None the statements are unchanged, so ingestion
-    still works on a database where that migration has not been applied.
+    Provenance values (Phase 1: ``jurisdiction``, ``effective_from``,
+    ``effective_to``, ``source_hash``, ``retrieved_at``) are written to the
+    document and copied to each chunk. They need migration 0001. When all of
+    them are None the statements are unchanged, so ingestion still works on a
+    database where that migration has not been applied.
     """
     assert len(chunk_texts) == len(chunk_embeddings), "chunk/embedding count mismatch"
-    _validate_provenance(jurisdiction, effective_from, effective_to)
-    with_provenance = any(
-        value is not None for value in (jurisdiction, effective_from, effective_to)
-    )
+    _validate_provenance(jurisdiction, effective_from, effective_to, source_hash, retrieved_at)
+    provenance = (jurisdiction, effective_from, effective_to, source_hash, retrieved_at)
+    with_provenance = any(value is not None for value in provenance)
 
     async with pool.acquire() as conn:
         async with conn.transaction():
@@ -74,9 +101,9 @@ async def write_document(
                     """
                     INSERT INTO documents (
                         source, title, language, url, raw_text, metadata,
-                        jurisdiction, effective_from, effective_to
+                        jurisdiction, effective_from, effective_to, source_hash, retrieved_at
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9)
+                    VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $11)
                     ON CONFLICT (url) DO UPDATE SET
                         title = EXCLUDED.title,
                         raw_text = EXCLUDED.raw_text,
@@ -84,6 +111,8 @@ async def write_document(
                         jurisdiction = EXCLUDED.jurisdiction,
                         effective_from = EXCLUDED.effective_from,
                         effective_to = EXCLUDED.effective_to,
+                        source_hash = EXCLUDED.source_hash,
+                        retrieved_at = EXCLUDED.retrieved_at,
                         created_at = now()
                     RETURNING id
                     """,
@@ -93,9 +122,7 @@ async def write_document(
                     url,
                     raw_text,
                     json.dumps(metadata),
-                    jurisdiction,
-                    effective_from,
-                    effective_to,
+                    *provenance,
                 )
             else:
                 document_id = await conn.fetchval(
@@ -128,18 +155,16 @@ async def write_document(
                         """
                         INSERT INTO chunks (
                             document_id, chunk_index, language, content, embedding,
-                            jurisdiction, effective_from, effective_to
+                            jurisdiction, effective_from, effective_to, source_hash, retrieved_at
                         )
-                        VALUES ($1, $2, $3, $4, $5::vector, $6, $7, $8)
+                        VALUES ($1, $2, $3, $4, $5::vector, $6, $7, $8, $9, $10)
                         """,
                         document_id,
                         idx,
                         language,
                         chunk,
                         embedding_literal,
-                        jurisdiction,
-                        effective_from,
-                        effective_to,
+                        *provenance,
                     )
                 else:
                     await conn.execute(
