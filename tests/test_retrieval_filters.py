@@ -207,13 +207,13 @@ class EmptyFilteredRetrievalTests(unittest.TestCase):
         ):
             result = asyncio.run(
                 graph.run_agent(
-                    session, "Helmet fine in 2019?", language="en",
+                    session, "What did the 2019 transport notification say?", language="en",
                     jurisdiction="IN-WB", as_of=date(2019, 8, 31),
                 )
             )
 
         retrieve.assert_awaited_once_with(
-            session, "Helmet fine in 2019?", "en", jurisdiction="IN-WB", as_of=date(2019, 8, 31)
+            session, "What did the 2019 transport notification say?", "en", jurisdiction="IN-WB", as_of=date(2019, 8, 31)
         )
         self.assertEqual(retrieve.await_count, 1)
         self.assertEqual([call.kwargs["stage"] for call in generate.call_args_list], ["route_decision"])

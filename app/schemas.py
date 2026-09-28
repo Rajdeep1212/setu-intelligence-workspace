@@ -35,15 +35,30 @@ class AnswerSection(BaseModel):
         return value
 
 
+class PremiseCheck(BaseModel):
+    """Structured result of a traffic-fine premise check (app/agent/premise.py)."""
+
+    verdict: str
+    offence_id: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    occurrence: Optional[str] = None
+    claimed_inr: Optional[int] = None
+    verified_amounts: list[dict] = Field(default_factory=list)
+    source: Optional[dict[str, str]] = None
+    schedule_row: Optional[str] = None
+    missing: list[str] = Field(default_factory=list)
+
+
 class QueryResponse(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list, max_length=5)
     sections: list[AnswerSection] = Field(default_factory=list, max_length=12)
     route: Optional[str] = None
     confidence: Optional[float] = None
-    response_status: Literal["answered", "abstained", "eligibility_unverified"] = (
-        "answered"
-    )
+    response_status: Literal[
+        "answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup"
+    ] = "answered"
+    premise_check: Optional[PremiseCheck] = None
 
     @field_validator("citations")
     @classmethod
