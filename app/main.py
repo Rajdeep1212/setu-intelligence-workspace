@@ -19,6 +19,8 @@ from app.agent.graph import run_agent
 from app.config import settings
 from app.db import engine, get_session
 from app.errors import DatabaseUnavailableError, ServiceError
+from app.grounding import query_language
+from app.next_steps import select as select_next_steps
 from app.observability import (
     configure_logging,
     get_request_id,
@@ -276,6 +278,7 @@ async def query(payload: QueryRequest, session: AsyncSession = Depends(get_sessi
         session, payload.query, language=payload.language, **filters
     )
     citations = [Citation(**citation) for citation in final_state.get("citations", [])]
+    response_status = final_state.get("response_status", "answered")
     return QueryResponse(
         answer=final_state.get("answer", "No answer generated."),
         citations=citations,
@@ -284,5 +287,10 @@ async def query(payload: QueryRequest, session: AsyncSession = Depends(get_sessi
         ],
         route=final_state.get("route"),
         confidence=final_state.get("confidence"),
-        response_status=final_state.get("response_status", "answered"),
+        response_status=response_status,
+        next_steps=select_next_steps(
+            response_status,
+            payload.query,
+            query_language(payload.query, payload.language),
+        ),
     )

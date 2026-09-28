@@ -35,6 +35,15 @@ class AnswerSection(BaseModel):
         return value
 
 
+class NextStep(BaseModel):
+    """An official service to act on, from data/next_steps/services.json."""
+
+    id: str
+    label: str
+    url: str
+    operator: str
+
+
 class QueryResponse(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list, max_length=5)
@@ -44,6 +53,7 @@ class QueryResponse(BaseModel):
     response_status: Literal["answered", "abstained", "eligibility_unverified"] = (
         "answered"
     )
+    next_steps: list[NextStep] = Field(default_factory=list, max_length=3)
 
     @field_validator("citations")
     @classmethod

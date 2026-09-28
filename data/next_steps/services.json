@@ -1,0 +1,85 @@
+{
+  "schema_version": "setu.next-steps/v1",
+  "reviewed_at": "2026-09-28",
+  "notes": [
+    "Official services SETU may point people to after an answer. A link is shown only if it is listed here, is on .gov.in or .nic.in, and was opened and checked on the date given.",
+    "Each entry says who runs the service, as stated on the page itself, and how it was checked.",
+    "Not included yet: the myScheme eligibility engine (rules.myscheme.gov.in; its page title was found by search but the page could not be read on 28 Sep 2026), Tele-Law, and Nyaya Setu (launch details only in press reports, FINDINGS C10)."
+  ],
+  "services": {
+    "myscheme": {
+      "url": "https://www.myscheme.gov.in/",
+      "operator": "Digital India Corporation (MeitY)",
+      "verified_on": "2026-09-28",
+      "verified_by": "Page opened; footer names Digital India Corporation.",
+      "label": {
+        "en": "Find government schemes you may qualify for on myScheme",
+        "hi": "myScheme पर वे सरकारी योजनाएँ खोजें जिनके लिए आप पात्र हो सकते हैं",
+        "bn": "myScheme-এ খুঁজুন কোন সরকারি প্রকল্পের জন্য আপনি যোগ্য হতে পারেন"
+      }
+    },
+    "pmkisan_status": {
+      "url": "https://pmkisan.gov.in/BeneficiaryStatus_New.aspx",
+      "operator": "Department of Agriculture & Farmers Welfare",
+      "verified_on": "2026-09-28",
+      "verified_by": "Page opened; title 'Know Your Status :: PMKisan Samman Nidhi'; footer names the Department.",
+      "label": {
+        "en": "Check PM-KISAN registration and payment status on the official portal",
+        "hi": "आधिकारिक पोर्टल पर पीएम-किसान पंजीकरण और भुगतान की स्थिति देखें",
+        "bn": "সরকারি পোর্টালে পিএম-কিষাণ নিবন্ধন ও পেমেন্টের অবস্থা দেখুন"
+      }
+    },
+    "echallan": {
+      "url": "https://echallan.parivahan.gov.in/",
+      "operator": "Ministry of Road Transport and Highways (Parivahan)",
+      "verified_on": "2026-09-27",
+      "verified_by": "HTTP 200 on 27 Sep 2026; named by transport departments as the official e-challan portal (FINDINGS C6).",
+      "label": {
+        "en": "Check or pay a traffic challan only on the official e-Challan portal",
+        "hi": "ट्रैफ़िक चालान केवल आधिकारिक ई-चालान पोर्टल पर देखें या भरें",
+        "bn": "ট্রাফিক চালান শুধু সরকারি ই-চালান পোর্টালে দেখুন বা জমা দিন"
+      }
+    },
+    "digilocker": {
+      "url": "https://www.digilocker.gov.in/",
+      "operator": "Ministry of Electronics & IT (MeitY)",
+      "verified_on": "2026-09-28",
+      "verified_by": "Page opened; states it is a MeitY initiative under Digital India. Licence and RC in DigiLocker or mParivahan are accepted at checks (FINDINGS C4).",
+      "label": {
+        "en": "Keep your licence and RC in DigiLocker to show at a check",
+        "hi": "जाँच के समय दिखाने के लिए अपना लाइसेंस और आरसी डिजीलॉकर में रखें",
+        "bn": "চেকিংয়ে দেখানোর জন্য লাইসেন্স ও আরসি ডিজিলকারে রাখুন"
+      }
+    },
+    "cybercrime": {
+      "url": "https://cybercrime.gov.in/",
+      "operator": "Ministry of Home Affairs (National Cyber Crime Reporting Portal)",
+      "verified_on": "2026-09-28",
+      "verified_by": "Named with helpline 1930 in the PIB Fact Check warning on fake challan links, reported by Business Standard, 10 Jul 2026 (data/scam_shield/sources.json).",
+      "label": {
+        "en": "If you lost money, call 1930 or report on the National Cyber Crime Reporting Portal",
+        "hi": "पैसे गए हों तो 1930 पर कॉल करें या राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल पर शिकायत करें",
+        "bn": "টাকা খোয়া গেলে 1930-এ ফোন করুন বা জাতীয় সাইবার অপরাধ রিপোর্টিং পোর্টালে অভিযোগ করুন"
+      }
+    },
+    "cpgrams": {
+      "url": "https://pgportal.gov.in/",
+      "operator": "Department of Administrative Reforms & Public Grievances",
+      "verified_on": "2026-09-28",
+      "verified_by": "Page opened; title 'CPGRAMS-Home'; content owned by DARPG.",
+      "label": {
+        "en": "Raise a grievance about a central government service on CPGRAMS",
+        "hi": "केंद्र सरकार की किसी सेवा के बारे में CPGRAMS पर शिकायत दर्ज करें",
+        "bn": "কেন্দ্রীয় সরকারের কোনো পরিষেবা নিয়ে CPGRAMS-এ অভিযোগ জানান"
+      }
+    }
+  },
+  "rules": [
+    {"when": {"response_status": "eligibility_unverified", "mentions": "pm_kisan"}, "steps": ["pmkisan_status", "myscheme"]},
+    {"when": {"response_status": "eligibility_unverified"}, "steps": ["myscheme"]},
+    {"when": {"response_status": "rule_lookup"}, "steps": ["echallan", "digilocker"]},
+    {"when": {"response_status": "needs_clarification"}, "steps": ["echallan"]},
+    {"when": {"response_status": "scam_check", "mentions": "challan"}, "steps": ["cybercrime", "echallan"]},
+    {"when": {"response_status": "scam_check"}, "steps": ["cybercrime"]}
+  ]
+}
