@@ -30,9 +30,12 @@ import logging
 import re
 import time
 from dataclasses import dataclass, field
+from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
+
+from ingestion.provenance import retrieved_now, source_fingerprint
 
 BASE_URL = "https://www.pib.gov.in/PressReleasePage.aspx"
 HEADERS = {
@@ -110,6 +113,10 @@ class RawDocument:
     posted_on: str | None
     raw_text: str
     related_prids: dict[str, str] = field(default_factory=dict)  # lang -> prid
+    # Provenance (Phase 1): SHA-256 of the exact response bytes, and when they
+    # were fetched (UTC). Lets a later run detect that a source changed.
+    source_hash: str | None = None
+    retrieved_at: datetime | None = None
 
 
 def _extract_content_div(soup: BeautifulSoup):
@@ -158,6 +165,7 @@ def fetch_release(prid: str, lang: int = 1, reg: int = 3, retries: int = 3) -> R
         try:
             resp = requests.get(url, headers=HEADERS, timeout=15)
             resp.raise_for_status()
+            retrieved_at = retrieved_now()
             break
         except requests.RequestException as exc:  # noqa: PERF203
             last_error = exc
@@ -204,6 +212,8 @@ def fetch_release(prid: str, lang: int = 1, reg: int = 3, retries: int = 3) -> R
         posted_on=posted_on,
         raw_text=raw_text,
         related_prids=_extract_related_prids(soup),
+        source_hash=source_fingerprint(resp.content),
+        retrieved_at=retrieved_at,
     )
 
 
