@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import date
+
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,9 +13,19 @@ from app.retrieval.pipeline import retrieve
 
 
 async def retrieve_docs_tool(
-    session: AsyncSession, query: str, language: str | None
+    session: AsyncSession,
+    query: str,
+    language: str | None,
+    *,
+    jurisdiction: str | None = None,
+    as_of: date | None = None,
 ) -> list[dict]:
-    return await retrieve(session, query, language=language)
+    filters = {
+        key: value
+        for key, value in (("jurisdiction", jurisdiction), ("as_of", as_of))
+        if value is not None
+    }
+    return await retrieve(session, query, language=language, **filters)
 
 
 async def check_eligibility_tool(session: AsyncSession, scheme_name_hint: str) -> list[dict]:
