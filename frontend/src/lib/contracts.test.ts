@@ -41,3 +41,23 @@ describe("traffic-rule answers (Phase 3)", () => {
     expect(() => queryResponseSchema.parse({ ...base, response_status: "rule_lookup", premise_check: { verdict: "supported", source: { title: "x", reference: "y", url: "not a url" } } })).toThrow();
   });
 });
+
+describe("message checks (Phase 4a)", () => {
+  const base = { answer: "This message shows strong signs of a scam.", citations: [], sections: [{ text: "This message shows strong signs of a scam.", citation_ids: [] }], route: "scam_check", response_status: "scam_check" };
+
+  it("accepts a message check with links and a cited warning", () => {
+    const parsed = queryResponseSchema.parse({
+      ...base,
+      scam_check: {
+        verdict: "likely_scam", signals: ["apk"],
+        links: [{ url: "bit.ly/x", host: "bit.ly", official: false, kinds: ["shortened_link"] }],
+        debunks: [{ id: "d", kind: "channel_warning", topic: "t", summary: "s", date: "2026-07-10", issuer: "PIB Fact Check", source: "https://example.org/warning" }],
+      },
+    });
+    expect(parsed.scam_check?.verdict).toBe("likely_scam");
+  });
+
+  it("has no verdict that calls a message safe", () => {
+    expect(() => queryResponseSchema.parse({ ...base, scam_check: { verdict: "safe" } })).toThrow();
+  });
+});

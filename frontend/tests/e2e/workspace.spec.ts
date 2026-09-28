@@ -48,3 +48,39 @@ test("workspace supports keyboard, theme, modes, and evidence inspection", async
   const results = await new AxeBuilder({ page }).exclude(".resize-handle").analyze();
   expect(results.violations.filter((item) => item.impact === "critical" || item.impact === "serious")).toEqual([]);
 });
+
+test("message check card is accessible in both themes and keeps pasted links as text", async ({ page }) => {
+  test.slow();
+  const scamAnswer = {
+    answer: "This message shows strong signs of a scam. The link uses a shortened address. Check challans only on https://echallan.parivahan.gov.in/.",
+    citations: [],
+    sections: [
+      { text: "This message shows strong signs of a scam.", citation_ids: [] },
+      { text: "The link uses a shortened address.", citation_ids: [] },
+      { text: "Check challans only on https://echallan.parivahan.gov.in/.", citation_ids: [] },
+    ],
+    route: "scam_check",
+    response_status: "scam_check",
+    scam_check: {
+      verdict: "likely_scam",
+      signals: ["shortened_link", "payment_link_not_official"],
+      links: [{ url: "https://echallan-parivahan-gov-in-pay-now.online/very/long/path/that/must/wrap", host: "echallan-parivahan-gov-in-pay-now.online", official: false, kinds: ["impersonating_domain"] }],
+      debunks: [{ id: "fake-echallan-links-2026", kind: "channel_warning", topic: "Fake traffic e-challan messages", summary: "Scammers send fake challan links.", date: "2026-07-10", issuer: "PIB Fact Check", source: "https://www.business-standard.com/india-news/fake-traffic-challan-scam-pib-warning-whatsapp-sms-links-126071000400_1.html" }],
+    },
+  };
+  await page.route("**/api/query", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(scamAnswer) }));
+  for (const theme of ["light", "dark"]) {
+    await page.addInitScript((value) => window.localStorage.setItem("setu-theme", value), theme);
+    await page.goto("/workspace");
+    await page.getByLabel("Ask SETU a question").fill("Your e-challan is pending, pay now bit.ly/3xYzAb");
+    await page.getByRole("button", { name: "Run corpus investigation" }).click();
+    const card = page.getByRole("article", { name: "Message check" });
+    await expect(card).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
+    await expect(card.getByRole("link")).toHaveCount(1);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    const results = await new AxeBuilder({ page }).include(".scam-answer").include(".scam-pill").analyze();
+    expect(results.violations.filter((item) => item.impact === "critical" || item.impact === "serious")).toEqual([]);
+  }
+});
