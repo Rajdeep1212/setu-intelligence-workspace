@@ -19,7 +19,8 @@ Last updated: 28 Sep 2026.
 | C. Phase 3: False-premise guard | In review, waiting for the owner | [#5](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/5) | 15 of 15 temporal cases; held-out 10 of 12 before fix |
 | D1. Phase 4a: Scam Shield | In review, waiting for the owner | [#6](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/6) | 0 missed scams, 0 false alarms (44 cases); held-out 10 of 12 before fix |
 | D2. Phase 4b: document version history | In review | this PR | Migration 0002 archives superseded versions; retrieval unchanged; CI now runs migrations on real PostgreSQL. See [research/version-history.md](research/version-history.md) |
-| D3. Phase 4c: freshness watch | Next | | Weekly GitHub Actions check of pinned source hashes |
+| D3. Phase 4c: freshness watch | In review | this PR | Weekly check of 6 pinned sources; fails on a changed hash or when nothing is reachable. See [data/traffic_offences/README.md](../data/traffic_offences/README.md) |
+| E0. Next: Phase 5 | Next | | |
 | E. Phase 5: Answer to action (rules-as-code, next steps) | Planned | | Eligibility stays quarantined |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 
