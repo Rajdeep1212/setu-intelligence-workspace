@@ -18,7 +18,8 @@ Last updated: 28 Sep 2026.
 | B. Phase 2: Roadside Mode (offline) | Next | | |
 | C. Phase 3: False-premise guard | Planned | | Target: 15 of 15 temporal cases |
 | D. Phase 4: Scam Shield and freshness watch | Planned | | |
-| E. Phase 5: Answer to action (rules-as-code, next steps) | Planned | | Eligibility stays quarantined |
+| E1. Phase 5 (P6): official next steps | In review | this PR | Reviewed table of 6 official services; eligibility answers now link the official portal instead of showing "abstained". See [research/next-steps.md](research/next-steps.md) |
+| E2. Phase 5 (P5): rules-as-code for 3 schemes | Blocked, needs the owner | | Official guideline PDFs could not be read from this session; an official myScheme eligibility engine exists. Owner decides the scope (see "Waiting for the owner") |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 
 ## Waiting for the owner
@@ -39,6 +40,19 @@ These need a person. Work continues on everything else.
    can leave UNVERIFIED.
 5. **Name:** "Nyaya Setu" is already used twice; choose a distinct public name
    before launch.
+6. **Eligibility scope (P5).** The PM-KISAN operational guidelines on
+   pmkisan.gov.in could not be read from this session (the fetch needs your
+   approval), so no scheme rule was encoded; SETU does not invent criteria.
+   The government already runs an eligibility engine at
+   `rules.myscheme.gov.in`. Choose one:
+   (a) hand off to myScheme and keep eligibility quarantined (cheapest; P6
+   already links myScheme);
+   (b) rules-as-code for 3 schemes from the official guideline PDFs, each
+   with a named reviewer's sign-off before its quarantine lifts (about 8
+   days).
+   For (b), approve fetching pmkisan.gov.in or attach the guideline PDFs.
+7. **Merge order:** #4, #5, then #6 (stacked on #5; retarget to `master`),
+   #7, then #8 (contains #7), then this item.
 
 ## Rules every item follows
 
