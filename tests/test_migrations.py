@@ -1,6 +1,7 @@
 """Offline structural checks for numbered schema migrations.
 
-These tests read SQL as text. They do not connect to a database.
+These tests read SQL as text. They do not connect to a database;
+tests/test_migrations_postgres.py runs the same files against PostgreSQL.
 """
 
 import hashlib
@@ -66,6 +67,31 @@ class MigrationStructureTests(unittest.TestCase):
             for column in PROVENANCE_COLUMNS:
                 with self.subTest(table=table, column=column):
                     self.assertIn(f"DROP COLUMN IF EXISTS {column}", block)
+
+    def test_0002_only_adds_objects_and_never_alters_existing_tables(self):
+        sql = _read(MIGRATIONS / "0002_document_version_history.up.sql")
+        code = "\n".join(line for line in sql.splitlines() if not line.lstrip().startswith("--"))
+        self.assertNotRegex(code, r"(?i)\bALTER\s+TABLE\b")
+        self.assertNotRegex(code, r"(?i)\bDROP\b")
+        self.assertIn("CREATE TABLE document_versions", code)
+        self.assertIn("BEFORE UPDATE ON documents", code)
+        # It must refuse to run before 0001.
+        self.assertIn("requires migration 0001", code)
+
+    def test_0002_rollback_removes_trigger_function_and_table(self):
+        sql = _read(MIGRATIONS / "0002_document_version_history.down.sql")
+        for statement in (
+            "DROP TRIGGER IF EXISTS documents_archive_version ON documents;",
+            "DROP FUNCTION IF EXISTS documents_archive_version();",
+            "DROP TABLE IF EXISTS document_versions;",
+        ):
+            self.assertIn(statement, sql)
+        self.assertNotIn("ALTER TABLE", sql)
+
+    def test_every_migration_is_listed_in_the_readme(self):
+        readme = _read(MIGRATIONS / "README.md")
+        for up in MIGRATIONS.glob("*.up.sql"):
+            self.assertIn(f"`{up.name.removesuffix('.up.sql')}`", readme)
 
     def test_bootstrap_schema_does_not_contain_migrated_columns(self):
         init_sql = _read(ROOT / "db" / "init.sql")
