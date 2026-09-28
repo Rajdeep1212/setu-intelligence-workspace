@@ -15,8 +15,8 @@ Last updated: 28 Sep 2026.
 | Phase 0: verify research, findings report | Done | [#1](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/1) | 19 claims graded: 11 verified, 8 partly, 0 wrong |
 | Phase 1: jurisdiction- and date-aware retrieval | Done | [#2](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/2) | 6 of 15 temporal cases pass; unfiltered SQL byte-identical |
 | A. Phase 1 leftovers: source hash, retrieval time, PIB backfill | In review | this PR | Ingestion stores SHA-256 and UTC fetch time; backfill tags PIB as `IN` |
-| B. Phase 2: Roadside Mode (offline) | Next | | |
-| C. Phase 3: False-premise guard | Planned | | Target: 15 of 15 temporal cases |
+| B. Phase 2: Roadside Mode (offline) | In review, waiting for the owner | [#4](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/4) | `/roadside` works offline; 12 of 21 rows show a verified amount; 0 accessibility violations |
+| C. Phase 3: False-premise guard | In review | this PR | 15 of 15 temporal cases; 0 false premises accepted; 0 over-asks; held-out 10 of 12 before fix. See [research/premise-guard.md](research/premise-guard.md) |
 | D. Phase 4: Scam Shield and freshness watch | Planned | | |
 | E. Phase 5: Answer to action (rules-as-code, next steps) | Planned | | Eligibility stays quarantined |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
