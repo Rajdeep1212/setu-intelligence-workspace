@@ -185,6 +185,14 @@ sources. None needs a paid service.
   fails with a step summary listing changed sources. Store hashes and
   metadata in Git, not source bodies, in line with the README's
   no-source-bodies rule. No cloud bucket.
+- **Status (28 Sep 2026):** hashes and retrieval times are written on ingest
+  (PR #3). Version history is built on branch `phase4/version-history`:
+  migration 0002 archives the previous row in `document_versions` when a
+  re-ingest changes the source content. It does not close the old row with
+  `effective_to`, because that column means legal validity; a re-scanned PDF
+  does not end a law. See
+  [research/version-history.md](research/version-history.md). The freshness
+  watch is next.
 - **Acceptance test:** a test source whose pinned hash is altered makes the
   watch fail in one run; unchanged sources pass.
 - **Effort:** 4 days.
