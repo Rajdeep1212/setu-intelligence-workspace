@@ -3,8 +3,8 @@
 :root {
   color-scheme: light;
   --ink-950:#071a24;--ink-900:#0d2633;--ink-800:#173746;--mineral-50:#f7f5ee;--mineral-100:#efede4;--mineral-200:#dfddd2;--paper:#fcfbf7;--surface:#fff;
-  --saffron:#d86b27;--saffron-deep:#ad4d18;--teal:#087f78;--teal-soft:#dff3ed;--violet:#7567a7;--green:#287a52;--amber:#9a6715;--red:#b0443e;
-  --line:#d8d9d2;--line-strong:#bdc2bc;--text:#14272e;--muted:#66757a;--shadow:0 18px 45px rgba(10,30,40,.08);
+  --saffron:#b34f14;--saffron-deep:#ad4d18;--teal:#076e68;--teal-soft:#dff3ed;--violet:#7567a7;--green:#226a47;--amber:#9a6715;--red:#b0443e;
+  --line:#d8d9d2;--line-strong:#bdc2bc;--text:#14272e;--muted:#59686d;--shadow:0 18px 45px rgba(10,30,40,.08);
   --radius-sm:7px;--radius-md:12px;--radius-lg:18px;--font-sans:"Aptos","Segoe UI",Inter,system-ui,sans-serif;--font-display:"Aptos Display","Segoe UI",system-ui,sans-serif;--font-mono:"Cascadia Code","SFMono-Regular",Consolas,monospace;
 }
 [data-theme="dark"] {color-scheme:dark;--mineral-50:#0b171d;--mineral-100:#10232c;--mineral-200:#19313a;--paper:#0b1c24;--surface:#102630;--line:#29424b;--line-strong:#3b5962;--text:#edf2ed;--muted:#aebdc0;--teal:#67d5cb;--teal-soft:#123c3b;--saffron-deep:#ffad73;--green:#77d6a4;--ink-950:#050e13;--ink-900:#071921;--ink-800:#0e2a35;--shadow:0 22px 55px rgba(0,0,0,.25)}

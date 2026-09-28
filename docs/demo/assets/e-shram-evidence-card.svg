@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Recorded e-Shram evidence card</title>
+  <desc id="desc">The recorded English answer is mapped to an official e-Shram FAQ passage, with distinct official source, application, and help destinations.</desc>
+  <defs><style>
+    .bg{fill:#f7f3eb}.ink{fill:#092b3a}.muted{fill:#52646b}.orange{fill:#bd4b0b}.teal{fill:#087f7a}.card{fill:#fff;stroke:#d8d3c8;stroke-width:2}
+    .title{font:700 52px 'Segoe UI',Arial,sans-serif}.eyebrow{font:700 19px 'Segoe UI',Arial,sans-serif;letter-spacing:3px}.h{font:700 28px 'Segoe UI',Arial,sans-serif}.body{font:400 23px 'Segoe UI',Arial,sans-serif}.small{font:600 18px 'Segoe UI',Arial,sans-serif}.mono{font:600 17px Consolas,'Courier New',monospace}
+  </style></defs>
+  <rect class="bg" width="1920" height="1080"/>
+  <text x="90" y="88" class="eyebrow orange">RECORDED CONNECTED EVIDENCE · NOT A LIVE QUERY</text>
+  <text x="90" y="156" class="title ink">e-Shram registration evidence</text>
+  <rect x="90" y="230" width="1740" height="154" rx="22" class="card"/>
+  <text x="130" y="279" class="eyebrow teal">QUESTION</text>
+  <text x="130" y="337" class="h ink">How do I register for e-Shram and what do I need?</text>
+
+  <rect x="90" y="422" width="810" height="424" rx="22" class="card"/>
+  <text x="130" y="476" class="eyebrow teal">GROUNDED ANSWER</text>
+  <text x="130" y="535" class="body ink">Have your Aadhaar number and</text>
+  <text x="130" y="572" class="body ink">Aadhaar-linked mobile number ready.</text>
+  <line x1="130" y1="620" x2="860" y2="620" stroke="#d8d3c8" stroke-width="2"/>
+  <text x="130" y="666" class="small muted">Citation chunk</text>
+  <text x="130" y="705" class="mono ink">15a9cf41-9e5b-4918-9b25-33c4b5d3f9b4</text>
+  <text x="130" y="758" class="small muted">Source</text>
+  <text x="130" y="798" class="body ink">Ministry of Labour and Employment</text>
+
+  <rect x="940" y="422" width="890" height="424" rx="22" class="card"/>
+  <text x="980" y="476" class="eyebrow orange">OFFICIAL FAQ PASSAGE</text>
+  <text x="980" y="532" class="body ink">“What essential documents are required</text>
+  <text x="980" y="569" class="body ink">by the worker to register on e-Shram?”</text>
+  <text x="1012" y="625" class="h ink">• Aadhaar Number</text>
+  <text x="1012" y="672" class="h ink">• Aadhaar linked Mobile number</text>
+  <text x="980" y="731" class="small teal">INFORMATION SOURCE</text>
+  <text x="980" y="767" class="mono ink">https://eshram.gov.in/faqs</text>
+
+  <rect x="90" y="884" width="540" height="116" rx="18" fill="#eef8f5" stroke="#78b7ae" stroke-width="2"/>
+  <text x="120" y="929" class="small teal">APPLICATION</text><text x="120" y="968" class="mono ink">https://register.eshram.gov.in/</text>
+  <rect x="660" y="884" width="540" height="116" rx="18" fill="#eef8f5" stroke="#78b7ae" stroke-width="2"/>
+  <text x="690" y="929" class="small teal">HELP / GRIEVANCE</text><text x="690" y="968" class="mono ink">https://gms.eshram.gov.in/</text>
+  <rect x="1230" y="884" width="600" height="116" rx="18" fill="#092b3a"/>
+  <text x="1262" y="929" class="small" fill="#9ee0d6">RECORD BOUNDARY</text><text x="1262" y="968" class="body" fill="#fff">Verify URL freshness before recording.</text>
+</svg>

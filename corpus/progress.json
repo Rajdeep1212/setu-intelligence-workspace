@@ -1,5 +1,185 @@
 {
-  "updated_at": "2026-09-13T20:08:01Z",
+  "updated_at": "2026-09-20T13:35:00Z",
+  "latency_optimization_20260920": {
+    "status": "no_optimization_retained_quality_gate_open",
+    "branch": "recovery/codex-2026-09-14",
+    "head": "908ad3db0ee1cd0040da0d27cb956e56e4888574",
+    "checkpoint_path": "docs/everyday-use-journey-checkpoint.md",
+    "evidence_directory": "F:/setu/.tools/latency-optimization-20260920",
+    "runtime": {
+      "openvino_version": "2026.3.1",
+      "transformers_version": "4.44.2",
+      "docker_memory_gib": 3.699,
+      "logical_cpus": 8,
+      "embedding_artifact_bytes": 2266886288,
+      "reranker_artifact_bytes": 2271088788,
+      "inference_configuration": {
+        "precision": "float32",
+        "performance_hint": "LATENCY",
+        "streams": 1,
+        "threads": 4,
+        "hyperthreading": false,
+        "candidate_pairs": 20
+      },
+      "model_initializations_per_server": 1,
+      "observed_peak_process_memory_gib": 2.737,
+      "real_components": [
+        "Next.js frontend and BFF",
+        "FastAPI",
+        "LangGraph",
+        "staging PostgreSQL",
+        "OpenVINO embedding and reranking",
+        "grounding, citation validation, response serialization and browser rendering"
+      ],
+      "deterministic_components": [
+        "external route-decision provider boundary",
+        "external answer-generation provider boundary"
+      ],
+      "live_provider_calls": 0
+    },
+    "root_cause": "The two FP32 OpenVINO weight files total about 4.23 GiB while Docker exposes 3.699 GiB. Each model initializes once, but the complete two-model runtime shows minute-scale, variable embedding and reranking consistent with model/page pressure. SQL, grounding and serialization are comparatively small.",
+    "baseline": {
+      "warm_browser_seconds": {
+        "english": 482.715,
+        "hindi": 246.527,
+        "bengali": 251.037,
+        "clarification_follow_up": 597.492,
+        "unsupported_claim": 371.618,
+        "median": 371.618
+      },
+      "representative_english_seconds": {
+        "embedding": 200.119,
+        "dense_sql": 8.409,
+        "keyword_sql": 0.076,
+        "reranking": 264.938,
+        "retrieval": 473.921,
+        "backend_total": 481.947,
+        "browser_total": 482.715
+      },
+      "cold_start_seconds": 389.389
+    },
+    "experiments": [
+      {
+        "factor": "reranker batch size 4",
+        "isolated_seconds": 28.258,
+        "isolated_baseline_seconds": 97.082,
+        "isolated_reduction_percent": 70.9,
+        "quality": "same top five and expected rank 1; maximum score delta 4.13e-9",
+        "full_runtime": "English returned HTTP 504 at 602.006 seconds versus baseline HTTP 200 at 482.715 seconds; rejected and reverted"
+      },
+      {
+        "factor": "reranker batch size 1",
+        "isolated_seconds": 29.135,
+        "isolated_baseline_seconds": 97.082,
+        "isolated_reduction_percent": 70.0,
+        "quality": "same top five and expected rank 1; maximum score delta 2.98e-7",
+        "decision": "rejected because it was slower than batch size 4"
+      }
+    ],
+    "candidate_full_runtime": {
+      "startup_seconds": 218.270,
+      "english_embedding_seconds": 233.047,
+      "browser_seconds": 602.006,
+      "browser_status": 504,
+      "change_from_baseline_percent": 24.7,
+      "distance_beyond_60_second_target_seconds": 542.006,
+      "optimized_multilingual_median": null,
+      "median_explanation": "Not calculated: the bounded gate stopped after the first representative candidate timed out.",
+      "p95_claimed": false
+    },
+    "quality": {
+      "isolated_ranking_preserved": true,
+      "isolated_expected_evidence_preserved": true,
+      "full_runtime_gate_passed": false,
+      "application_changes_reverted": true,
+      "retrieval_logic_changed": false,
+      "database_modified": false
+    },
+    "retained_files": [
+      "tests/real_runtime_server.py deterministic evidence instrumentation",
+      "docs/everyday-use-journey-checkpoint.md",
+      "corpus/progress.json"
+    ],
+    "cleanup": "Audit-owned experiment container and frontend stopped; ports 18001 and 3201 closed. Pre-existing services were not restarted.",
+    "remaining_blocker": "Local FP32 answers remain hundreds of seconds and the best batching candidate failed the unchanged 600-second browser boundary.",
+    "next_action": "With separate authorization for a Docker Desktop restart, benchmark the same FP32 artifacts and frozen connected query with at least 8 GiB Docker memory. If still insufficient, scope model conversion or replacement as a separate quality-gated milestone."
+  },
+  "ux_audit_20260920": {
+    "status": "functional_connected_gate_complete_quality_blocked_by_latency",
+    "branch": "recovery/codex-2026-09-14",
+    "head": "908ad3db0ee1cd0040da0d27cb956e56e4888574",
+    "checkpoint_path": "docs/everyday-use-journey-checkpoint.md",
+    "evidence_directory": "F:/setu/.tools/ux-complete-20260918",
+    "runtime": {
+      "working_tree_source_files_matched": 8,
+      "langgraph_version": "1.2.11",
+      "startup_seconds": 389.389,
+      "real_components": [
+        "Next.js frontend and BFF",
+        "FastAPI",
+        "LangGraph",
+        "staging PostgreSQL",
+        "OpenVINO embedding and reranking",
+        "grounding and citation validation",
+        "response serialization and browser rendering"
+      ],
+      "deterministic_components": [
+        "external route-decision provider boundary",
+        "external answer-generation provider boundary"
+      ],
+      "live_provider_calls": 0
+    },
+    "connected_journeys": {
+      "english_application": "answered, HTTP 200, cited e-Shram evidence, 482.715 seconds",
+      "hindi_eligibility": "answered in Hindi, HTTP 200, cited PMSBY evidence, 246.527 seconds",
+      "bengali_english_evidence": "answered in Bengali, HTTP 200, cited English WBSCC evidence, 251.037 seconds",
+      "clarification": "clarification 6.363 seconds; contextual WBSCC answer 597.492 seconds",
+      "unsupported_amount": "abstained in Hindi, HTTP 200, 371.618 seconds",
+      "controlled_failure": "sanitized HTTP 503 in 2.01 seconds; prior answer and exact failed input preserved"
+    },
+    "verification": {
+      "backend": "141 passed, 1 intentional opt-in skip",
+      "affected_numerical_grounding": "22 passed",
+      "clarification_focus": "6 passed",
+      "runtime_harness": "passed",
+      "corpus_and_host": "53 passed",
+      "frontend_vitest": "39 passed, 1 skipped",
+      "frontend_typecheck": "passed",
+      "frontend_eslint": "passed",
+      "frontend_production_build": "passed on unchanged frontend source snapshot",
+      "responsive_browser": "four-size gate passed",
+      "mobile_link_geometry": "passed",
+      "connected_remaining": "1 passed in 16.6 minutes",
+      "connected_hindi": "1 passed in 4.3 minutes",
+      "live_provider_calls": 0
+    },
+    "database_safety": {
+      "application": {
+        "documents": 8,
+        "chunks": 239,
+        "eligibility_criteria": 3,
+        "query_logs": 0
+      },
+      "staging": {
+        "documents": 26,
+        "chunks": 331,
+        "eligibility_criteria": 0,
+        "query_logs": 0,
+        "application_links": 8,
+        "help_links": 2
+      },
+      "duplicate_document_urls": 0,
+      "duplicate_chunk_positions": 0,
+      "non_contiguous_chunk_sets": 0,
+      "repeated_title_explanation": "PM-KISAN has distinct official landing-page and operational-guidelines PDF records.",
+      "counts_unchanged": true,
+      "modified_data": false,
+      "pool_checked_out_after": 0
+    },
+    "remaining_blocker": "Warm local requests take 246-597 seconds because OpenVINO embedding and reranking dominate latency.",
+    "cleanup": "Audit-owned frontend PID 32192 and setu-ux-complete-20260918 container stopped; ports 3201 and 18001 closed; pre-existing setu-api and setu-db remain healthy with HTTP 200 health checks.",
+    "next_action": "Run a separately scoped local-inference optimization milestone on the same cited passages and bounded latency/quality gate."
+  },
   "batch_id": "batch-003",
   "manifest_path": "corpus/manifests/batch-003.json",
   "staging_database": "setu_corpus_staging",
@@ -141,6 +321,63 @@
       "Live provider answer quality has not been tested."
     ]
   },
+  "recovery_validation": {
+    "checked_on": "2026-09-17",
+    "status": "validation_incomplete_do_not_merge",
+    "branch": "recovery/codex-2026-09-14",
+    "starting_head": "908ad3db0ee1cd0040da0d27cb956e56e4888574",
+    "cached_origin_master": "602f1ee4f74d5ab590ed3d10d15b9c334f165c8d",
+    "remote_refs": "unverified: read-only ls-remote could not connect to GitHub",
+    "checkpoint_path": "docs/everyday-use-journey-checkpoint.md",
+    "evidence_directory": "F:/setu/.tools/recovery-validation-20260917",
+    "working_tree_changes": [
+      "app/retrieval/pipeline.py",
+      "tests/test_retrieval_backends.py",
+      "tests/test_operations.py",
+      "docs/everyday-use-journey-checkpoint.md",
+      "corpus/progress.json"
+    ],
+    "correction": "Reproduced unconditional rollback discarding caller-owned pending writes. Retrieval now ends only its own transaction before reranking; caller transactions are preserved. Real SQLAlchemy lifecycle tests pass with mocked reads/inference. After Docker recovery, the complete Python 3.11 suite exposed and corrected one stale HealthySession test double that lacked the AsyncSession transaction contract; no additional application change was needed.",
+    "environments": {
+      "python": ".venv-ingest Python 3.13.5 for corpus; existing API image Python 3.11.16 with real LangGraph 1.2.11 for backend/offline validation",
+      "node": "F:/setu/.tools/node-v22.14.0/node-v22.14.0-win-x64/node.exe v22.14.0",
+      "venv_ci": "existing, incomplete, only pip",
+      "docker": "Docker Desktop 4.91.0 (239619), Client/Server 29.8.0, desktop-linux; existing setu-api and setu-db healthy"
+    },
+    "verification": {
+      "corpus_module": "17 passed at recovery HEAD, exit 0; valid host result for previously missing bs4",
+      "host_components_baseline": "34 passed across five modules at recovery HEAD, exit 0",
+      "transaction_regression_before": "1 failed, exit 1: pending ORM object removed by rollback",
+      "retrieval_after_correction": "11 passed including 20 failure/cancellation subcases, exit 0",
+      "everyday_use_evidence": "12/12 passages and 12/12 saved retrieval checkpoints; zero external activity, exit 0",
+      "backend_python311": "137 passed, 1 intentional real-staging skip (138 total) with real LangGraph 1.2.11; network-disabled existing API image, exit 0",
+      "offline_evaluation": "60/60 passed with real LangGraph; generated Markdown exactly matches frozen report SHA-256, exit 0",
+      "pip_check": "no broken API-image requirements, exit 0",
+      "frontend_typecheck": "passed, exit 0",
+      "frontend_vitest": "35 passed, 1 skipped, exit 0",
+      "frontend_eslint": "passed, exit 0",
+      "frontend_production_build": "passed in demo mode, exit 0",
+      "frontend_playwright": "12 passed, 3 connected skips; installed Edge, serial desktop/tablet/mobile, exit 0",
+      "static_publication_checks": "passed, exit 0",
+      "python_compilation": "API-image compileall passed with bytecode redirected to temporary storage, exit 0",
+      "git_diff_check": "passed; informational LF-to-CRLF notices",
+      "live_provider_calls": 0
+    },
+    "blocked_test_modules": [
+      "test_real_runtime_staging_integration (intentional opt-in skip; connected retrieval not authorized in this milestone)"
+    ],
+    "database_evidence": "current read-only audit: application 8 documents/239 chunks/3 eligibility rows/0 query logs; staging 26 documents/331 chunks/0 eligibility rows/0 query logs; duplicate audit not rerun",
+    "performance": "historical inference profiles retained; no benchmark or batch/model change; present latency unverified",
+    "cleanup": "only task-owned demo server PID 33572 stopped after executable/start-time ownership verification; previous artifacts retained",
+    "deferred": [
+      "Affected deterministic-provider connected staging path and readiness during inference",
+      "Clarification continuation and remaining full-journey acceptance",
+      "Comparable performance evaluation",
+      "Corpus expansion and promotion as separate later milestones",
+      "Cloud inspection, deployment and live-provider quality with separate authorization"
+    ],
+    "previous_next_action": "Only with separate authorization, run a small budget-bounded live-provider answer-quality milestone. Do not promote staging, deploy, commit, push, or start batch 4 as part of this completed gate."
+  },
   "exact_resume_command": null,
-  "next_action": "Only with separate authorization, run a small budget-bounded live-provider answer-quality milestone. Do not promote staging, deploy, commit, push, or start batch 4 as part of this completed gate."
+  "next_action": "Do not repeat the completed backend, offline or frontend suites. With separate authorization for the expensive connected path, run only tests.test_real_runtime_staging_integration in the existing Python 3.11 API image against staging with deterministic provider operations, then perform the read-only duplicate audit. Live-provider, cloud, corpus expansion and promotion remain separate milestones."
 }

@@ -106,6 +106,16 @@ _UNIT_STOPWORDS = {
     "সালের",
 }
 
+# Reviewed equivalents for age limits in English official evidence. Keep the
+# unit (and number) check; do not accept arbitrary translated unit names.
+_UNIT_ALIASES = {"वर्ष": "year", "वर्षों": "year", "साल": "year", "বছর": "year"}
+_REVIEWED_UNIT_PATTERN = re.compile(
+    r"^\s*(?P<unit>"
+    + "|".join(sorted(map(re.escape, _UNIT_STOPWORDS | _UNIT_ALIASES.keys()), key=len, reverse=True))
+    + r")(?=$|[\s.,;:!?।])",
+    re.UNICODE,
+)
+
 _IDENTIFIER_PATTERN = re.compile(
     r"https?://\S+|www\.\S+|"
     r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b|"
@@ -196,6 +206,8 @@ def _canonical_unit(value: str | None) -> str | None:
     unit = unicodedata.normalize("NFKC", value).casefold()
     if unit in _UNIT_STOPWORDS:
         return None
+    if unit in _UNIT_ALIASES:
+        return _UNIT_ALIASES[unit]
     if unit == "people":
         return "person"
     if unit.endswith("ies") and len(unit) > 3:
@@ -213,7 +225,8 @@ def _extract_numeric_facts(value: str) -> list[_NumericFact]:
         percent_value = match.group("percent")
         scale = _SCALE_ALIASES.get(scale_value.casefold()) if scale_value else None
         is_percent = bool(percent_value)
-        following = _FOLLOWING_WORD_PATTERN.match(content[match.end() :])
+        tail = content[match.end() :]
+        following = _REVIEWED_UNIT_PATTERN.match(tail) or _FOLLOWING_WORD_PATTERN.match(tail)
         unit = None if is_percent else _canonical_unit(
             following.group("unit") if following else None
         )
@@ -239,7 +252,8 @@ def _extract_numeric_facts(value: str) -> list[_NumericFact]:
         scale = _SCALE_ALIASES.get(scale_value.casefold()) if scale_value else None
         is_percent = bool(percent_value)
         suffix_end = match.end() + (suffix.end() if suffix else 0)
-        following = _FOLLOWING_WORD_PATTERN.match(content[suffix_end:])
+        tail = content[suffix_end:]
+        following = _REVIEWED_UNIT_PATTERN.match(tail) or _FOLLOWING_WORD_PATTERN.match(tail)
         unit = None if is_percent else _canonical_unit(
             following.group("unit") if following else None
         )

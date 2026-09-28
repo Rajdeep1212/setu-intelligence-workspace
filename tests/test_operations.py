@@ -29,6 +29,25 @@ class FakeResult:
 
 
 class HealthySession:
+    def __init__(self):
+        self._in_transaction = False
+
+    def in_transaction(self):
+        return self._in_transaction
+
+    def begin(self):
+        session = self
+
+        class Transaction:
+            async def __aenter__(self):
+                session._in_transaction = True
+                return self
+
+            async def __aexit__(self, *_):
+                session._in_transaction = False
+
+        return Transaction()
+
     async def execute(self, _):
         return FakeResult()
 

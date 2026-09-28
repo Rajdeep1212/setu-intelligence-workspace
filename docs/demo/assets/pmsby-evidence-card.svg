@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Recorded Hindi PMSBY evidence card</title>
+  <desc id="desc">A recorded Hindi answer is supported by an official English Department of Financial Services passage.</desc>
+  <defs><style>
+    .bg{fill:#f7f3eb}.ink{fill:#092b3a}.muted{fill:#52646b}.orange{fill:#bd4b0b}.teal{fill:#087f7a}.card{fill:#fff;stroke:#d8d3c8;stroke-width:2}
+    .title{font:700 52px 'Segoe UI','Noto Sans Devanagari',Arial,sans-serif}.eyebrow{font:700 19px 'Segoe UI',Arial,sans-serif;letter-spacing:3px}.h{font:700 30px 'Noto Sans Devanagari','Segoe UI',Arial,sans-serif}.body{font:400 24px 'Segoe UI','Noto Sans Devanagari',Arial,sans-serif}.small{font:600 18px 'Segoe UI',Arial,sans-serif}.mono{font:600 17px Consolas,'Courier New',monospace}
+  </style></defs>
+  <rect class="bg" width="1920" height="1080"/>
+  <text x="90" y="88" class="eyebrow orange">RECORDED CONNECTED EVIDENCE · NOT A LIVE QUERY</text>
+  <text x="90" y="156" class="title ink">PMSBY multilingual grounding</text>
+
+  <rect x="90" y="230" width="1740" height="152" rx="22" class="card"/>
+  <text x="130" y="279" class="eyebrow teal">QUESTION · HINDI</text>
+  <text x="130" y="338" class="h ink">PMSBY के लिए कौन पात्र है?</text>
+
+  <rect x="90" y="422" width="820" height="410" rx="22" class="card"/>
+  <text x="130" y="476" class="eyebrow teal">ANSWER · HINDI</text>
+  <text x="130" y="536" class="body ink">संस्थागत खाताधारकों को छोड़कर सभी बैंक</text>
+  <text x="130" y="578" class="body ink">खाताधारक PMSBY की सदस्यता ले सकते हैं।</text>
+  <line x1="130" y1="632" x2="870" y2="632" stroke="#d8d3c8" stroke-width="2"/>
+  <text x="130" y="680" class="small muted">Citation chunk</text>
+  <text x="130" y="719" class="mono ink">5b38ec36-0a1a-40e8-94b2-e6a8e07049ff</text>
+  <text x="130" y="772" class="small muted">Selected response language: Hindi</text>
+
+  <rect x="950" y="422" width="880" height="410" rx="22" class="card"/>
+  <text x="990" y="476" class="eyebrow orange">OFFICIAL SOURCE PASSAGE · ENGLISH</text>
+  <text x="990" y="535" class="body ink">“All bank account holders other than</text>
+  <text x="990" y="577" class="body ink">institutional account holders are eligible</text>
+  <text x="990" y="619" class="body ink">for subscribing to PMSBY scheme.”</text>
+  <text x="990" y="688" class="small teal">Department of Financial Services</text>
+  <text x="990" y="727" class="body ink">Ministry of Finance, Government of India</text>
+  <text x="990" y="779" class="mono ink">https://financialservices.gov.in/pmsby</text>
+
+  <rect x="90" y="882" width="1740" height="116" rx="18" fill="#092b3a"/>
+  <text x="130" y="928" class="small" fill="#9ee0d6">WHAT THIS FRAME SHOWS</text>
+  <text x="130" y="970" class="body" fill="#fff">The response language can differ from the evidence language; the factual claim still maps to the cited passage.</text>
+</svg>

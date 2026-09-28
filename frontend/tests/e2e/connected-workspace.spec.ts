@@ -59,7 +59,7 @@ test.describe("connected staging journey", () => {
     await page.getByLabel("Ask SETU a question").fill(failureQuestion);
     await page.getByRole("button", { name: "Ask SETU" }).click();
     await expect(page.locator('.inline-error[role="alert"]')).toContainText("temporarily unavailable");
-    await expect(page.getByRole("heading", { name: failureQuestion })).toBeVisible();
+    await expect(page.getByRole("heading", { name: question })).toBeVisible();
     await expect(page.getByText(englishAnswer)).toBeVisible();
 
     await page.getByRole("button", { name: "Response language: বাংলা" }).click();
@@ -70,6 +70,7 @@ test.describe("connected staging journey", () => {
     await expect(page.getByRole("heading", { name: "Clarification needed" })).toBeVisible();
     await expect(page.getByText("Which state or Union Territory's student credit card scheme do you mean?")).toBeVisible();
 
+    await page.getByRole("button", { name: "New question" }).click();
     await page.getByRole("button", { name: "Response language: English" }).click();
     await page.getByRole("menuitemradio", { name: "বাংলা" }).click();
     const bengaliQuestion = "পশ্চিমবঙ্গ স্টুডেন্ট ক্রেডিট কার্ডের জন্য কীভাবে আবেদন করব?";

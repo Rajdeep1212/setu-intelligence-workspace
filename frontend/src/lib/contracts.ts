@@ -3,6 +3,7 @@ export const languageSchema = z.enum(["en", "hi", "bn"]);
 export const queryRequestSchema = z.object({
   query: z.string().max(2000).refine((value) => value.trim().length > 0, "Question must not be blank."),
   language: languageSchema.optional(),
+  clarification_context: z.object({ original_query: z.string().min(1).max(2000).refine((value) => value.trim().length > 0) }).optional(),
 });
 export const citationSchema = z.object({ chunk_id: z.string().min(1), document_id: z.string().min(1), title: z.string().nullable().optional(), source: z.string().nullable().optional(), url: z.url().nullable().optional(), snippet: z.string().nullable().optional() });
 export const answerSectionSchema = z.object({

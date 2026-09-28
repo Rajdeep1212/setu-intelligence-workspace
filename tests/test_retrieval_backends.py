@@ -133,21 +133,56 @@ class OpenVINOAdapterTests(unittest.TestCase):
 
 
 class BackendSelectionTests(unittest.TestCase):
-    def test_retrieval_releases_database_before_cpu_reranking(self):
+    def test_retrieval_preserves_caller_pending_writes(self):
+        from sqlalchemy import Integer
+        from sqlalchemy.ext.asyncio import AsyncSession
+        from sqlalchemy.orm import DeclarativeBase, mapped_column
+
         from app.retrieval import pipeline
 
-        session = Mock()
-        session.rollback = AsyncMock()
+        class Base(DeclarativeBase):
+            pass
+
+        class PendingWrite(Base):
+            __tablename__ = "pending_write"
+            id = mapped_column(Integer, primary_key=True)
+
+        async def exercise():
+            async with AsyncSession() as session:
+                pending = PendingWrite(id=1)
+                session.add(pending)
+                with (
+                    patch.object(pipeline, "embed_chunks", return_value=[[0.0]]),
+                    patch.object(pipeline, "dense_search", AsyncMock(return_value=[])),
+                    patch.object(pipeline, "keyword_search", AsyncMock(return_value=[])),
+                    patch.object(pipeline, "rerank", return_value=[]),
+                ):
+                    await pipeline.retrieve(session, "query")
+                self.assertIn(pending, session.new)
+                self.assertTrue(session.in_transaction())
+
+        asyncio.run(exercise())
+
+    def test_retrieval_releases_database_before_cpu_reranking(self):
+        from sqlalchemy.ext.asyncio import AsyncSession
+
+        from app.retrieval import pipeline
+
+        session = AsyncSession()
         candidates = [{"id": "one", "content": "supported passage"}]
 
+        async def read_candidates(*_args, **_kwargs):
+            self.assertTrue(session.in_transaction())
+            return candidates
+
         def rerank_after_release(*_args, **_kwargs):
-            session.rollback.assert_awaited_once_with()
+            self.assertFalse(session.in_transaction())
             return candidates
 
         with (
             patch.object(pipeline, "embed_chunks", return_value=[[0.0]]),
             patch.object(
-                pipeline, "dense_search", AsyncMock(return_value=candidates)
+                pipeline, "dense_search", AsyncMock(side_effect=read_candidates)
             ),
             patch.object(pipeline, "keyword_search", AsyncMock(return_value=[])),
             patch.object(
@@ -157,8 +192,71 @@ class BackendSelectionTests(unittest.TestCase):
             result = asyncio.run(pipeline.retrieve(session, "query"))
 
         self.assertEqual(result, candidates)
-        session.rollback.assert_awaited_once_with()
+        self.assertFalse(session.in_transaction())
         reranker.assert_called_once()
+
+    def test_retrieval_preserves_explicit_caller_transaction(self):
+        from sqlalchemy.ext.asyncio import AsyncSession
+
+        from app.retrieval import pipeline
+
+        async def exercise():
+            async with AsyncSession() as session, session.begin():
+                original = session.get_transaction()
+
+                def rerank_in_caller_transaction(*_args, **_kwargs):
+                    self.assertIs(session.get_transaction(), original)
+                    self.assertTrue(original.is_active)
+                    return []
+
+                with (
+                    patch.object(pipeline, "embed_chunks", return_value=[[0.0]]),
+                    patch.object(pipeline, "dense_search", AsyncMock(return_value=[])),
+                    patch.object(pipeline, "keyword_search", AsyncMock(return_value=[])),
+                    patch.object(pipeline, "rerank", side_effect=rerank_in_caller_transaction),
+                ):
+                    await pipeline.retrieve(session, "query")
+                self.assertIs(session.get_transaction(), original)
+
+        asyncio.run(exercise())
+
+    def test_failure_and_cancellation_respect_transaction_ownership(self):
+        from sqlalchemy.exc import OperationalError
+        from sqlalchemy.ext.asyncio import AsyncSession
+
+        from app.errors import DatabaseUnavailableError, RetrievalUnavailableError
+        from app.retrieval import pipeline
+
+        async def exercise(caller_owned, stage, failure_kind):
+            async with AsyncSession() as session:
+                original = await session.begin() if caller_owned else None
+                errors = {
+                    "cancelled": (asyncio.CancelledError(), asyncio.CancelledError),
+                    "runtime": (RuntimeError("fixture"), RetrievalUnavailableError),
+                    "database": (OperationalError("fixture", {}, Exception("fixture")), DatabaseUnavailableError),
+                }
+                error, expected = errors[failure_kind]
+                mocks = {
+                    "embed_chunks": Mock(return_value=[[0.0]]),
+                    "dense_search": AsyncMock(return_value=[]),
+                    "keyword_search": AsyncMock(return_value=[]),
+                    "rerank": Mock(return_value=[]),
+                }
+                mocks[stage].side_effect = error
+                with patch.multiple(pipeline, **mocks):
+                    with self.assertRaises(expected):
+                        await pipeline.retrieve(session, "query")
+                self.assertEqual(session.in_transaction(), caller_owned)
+                if caller_owned:
+                    self.assertIs(session.get_transaction(), original)
+                    self.assertTrue(original.is_active)
+
+        for caller_owned in (False, True):
+            for stage in ("embed_chunks", "dense_search", "keyword_search", "rerank"):
+                kinds = ("runtime", "cancelled", "database") if stage in ("dense_search", "keyword_search") else ("runtime", "cancelled")
+                for failure_kind in kinds:
+                    with self.subTest(caller_owned=caller_owned, stage=stage, failure_kind=failure_kind):
+                        asyncio.run(exercise(caller_owned, stage, failure_kind))
 
     def test_dense_and_keyword_rows_include_reviewed_document_metadata(self):
         session = Mock()

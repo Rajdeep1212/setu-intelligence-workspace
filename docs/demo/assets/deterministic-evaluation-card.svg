@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">SETU deterministic offline evaluation</title>
+  <desc id="desc">Version 4C-2.1 passed 60 of 60 deterministic fixture-replay cases, with 20 cases each in English, Hindi, and Bengali. It is not a live quality benchmark.</desc>
+  <defs><style>
+    .bg{fill:#f7f3eb}.ink{fill:#092b3a}.muted{fill:#52646b}.orange{fill:#bd4b0b}.teal{fill:#087f7a}.card{fill:#fff;stroke:#d8d3c8;stroke-width:2}
+    .title{font:700 54px 'Segoe UI',Arial,sans-serif}.eyebrow{font:700 19px 'Segoe UI',Arial,sans-serif;letter-spacing:3px}.big{font:800 104px 'Segoe UI',Arial,sans-serif}.h{font:700 30px 'Segoe UI',Arial,sans-serif}.body{font:400 23px 'Segoe UI',Arial,sans-serif}.small{font:600 18px 'Segoe UI',Arial,sans-serif}
+  </style></defs>
+  <rect class="bg" width="1920" height="1080"/>
+  <text x="90" y="90" class="eyebrow orange">DETERMINISTIC EVALUATION EVIDENCE · VERSION 4C-2.1</text>
+  <text x="90" y="160" class="title ink">A bounded multilingual regression suite</text>
+
+  <rect x="90" y="245" width="570" height="520" rx="26" fill="#092b3a"/>
+  <text x="130" y="325" class="eyebrow" fill="#9ee0d6">FIXTURE REPLAY RESULT</text>
+  <text x="130" y="474" class="big" fill="#fff">60 / 60</text>
+  <text x="130" y="534" class="h" fill="#fff">cases passed</text>
+  <text x="130" y="610" class="body" fill="#c8d7dc">No provider calls</text>
+  <text x="130" y="651" class="body" fill="#c8d7dc">No database requests</text>
+  <text x="130" y="692" class="body" fill="#c8d7dc">No external requests</text>
+
+  <rect x="710" y="245" width="1120" height="240" rx="24" class="card"/>
+  <text x="752" y="305" class="eyebrow teal">LANGUAGE COVERAGE</text>
+  <text x="752" y="401" class="big ink" style="font-size:68px">20 EN</text>
+  <text x="1110" y="401" class="big ink" style="font-size:68px">20 HI</text>
+  <text x="1468" y="401" class="big ink" style="font-size:68px">20 BN</text>
+
+  <rect x="710" y="525" width="1120" height="240" rx="24" class="card"/>
+  <text x="752" y="585" class="eyebrow teal">CHECKED DIMENSIONS</text>
+  <text x="752" y="649" class="h ink">Retrieval · grounding · numeric</text>
+  <text x="752" y="697" class="h ink">Routing · adversarial behavior</text>
+
+  <rect x="90" y="824" width="1740" height="170" rx="22" fill="#fff4ef" stroke="#df8b60" stroke-width="2"/>
+  <text x="130" y="877" class="eyebrow orange">INTERPRETATION LIMIT</text>
+  <text x="130" y="929" class="body ink">This is deterministic fixture replay—not live retrieval accuracy, live-provider quality, calibrated confidence,</text>
+  <text x="130" y="967" class="body ink">semantic entailment, or a statistically robust accuracy study.</text>
+</svg>

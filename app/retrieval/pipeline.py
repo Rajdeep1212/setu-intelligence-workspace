@@ -22,6 +22,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
+from contextlib import nullcontext
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,15 +52,19 @@ async def retrieve(
         query_vector = (await asyncio.to_thread(embed_chunks, [query]))[0]
         embedding_ms = (time.perf_counter() - stage_started) * 1000
 
-        stage_started = time.perf_counter()
-        dense_results = await dense_search(session, query_vector, language, candidate_k)
-        dense_ms = (time.perf_counter() - stage_started) * 1000
-        stage_started = time.perf_counter()
-        keyword_results = await keyword_search(session, query, language, candidate_k)
-        keyword_ms = (time.perf_counter() - stage_started) * 1000
-
-        stage_started = time.perf_counter()
-        await session.rollback()
+        # End only a transaction we own. A caller may have pending writes or an
+        # explicit transaction whose lifetime must extend beyond this read.
+        # Both search legs materialize plain dictionaries before leaving scope.
+        owns_transaction = not session.in_transaction()
+        transaction = session.begin() if owns_transaction else nullcontext()
+        async with transaction:
+            stage_started = time.perf_counter()
+            dense_results = await dense_search(session, query_vector, language, candidate_k)
+            dense_ms = (time.perf_counter() - stage_started) * 1000
+            stage_started = time.perf_counter()
+            keyword_results = await keyword_search(session, query, language, candidate_k)
+            keyword_ms = (time.perf_counter() - stage_started) * 1000
+            stage_started = time.perf_counter()
         database_release_ms = (time.perf_counter() - stage_started) * 1000
 
         stage_started = time.perf_counter()
@@ -72,7 +77,8 @@ async def retrieve(
             "retrieval_profile request_id=%s query_characters=%s candidate_limit=%s "
             "dense_count=%s keyword_count=%s fused_count=%s final_count=%s "
             "embedding_ms=%.2f dense_ms=%.2f keyword_ms=%.2f "
-            "database_release_ms=%.2f fusion_ms=%.2f rerank_ms=%.2f total_ms=%.2f",
+            "database_transaction_owned=%s database_release_ms=%.2f "
+            "fusion_ms=%.2f rerank_ms=%.2f total_ms=%.2f",
             get_request_id(),
             len(query),
             candidate_k,
@@ -83,6 +89,7 @@ async def retrieve(
             embedding_ms,
             dense_ms,
             keyword_ms,
+            owns_transaction,
             database_release_ms,
             fusion_ms,
             rerank_ms,

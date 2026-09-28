@@ -42,16 +42,31 @@ class ProviderCase:
     markers: tuple[str, ...]
     claims: tuple[tuple[str, str], ...]
     abstained: bool = False
+    alternatives: tuple[
+        tuple[tuple[str, ...], tuple[tuple[str, str], ...]], ...
+    ] = ()
 
 
 PROVIDER_CASES = {
+    "PMSBY के लिए कौन पात्र है?": ProviderCase(
+        language="hi", markers=("age group of 18 to 70 years",),
+        claims=(("conditions", "भाग लेने वाले बैंक या डाकघर के 18 से 70 वर्ष आयु के व्यक्तिगत खाताधारक योजना में शामिल हो सकते हैं।"),),
+        alternatives=((
+            ("All bank account holders other than institutional account holders",),
+            (("conditions", "संस्थागत खाताधारकों को छोड़कर सभी बैंक खाताधारक PMSBY की सदस्यता ले सकते हैं।"),),
+        ),),
+    ),
+    "Where do I apply for the student credit card scheme?\n\nClarification reply: West Bengal": ProviderCase(
+        language="en", markers=("Register on the official WBSCC online portal",),
+        claims=(("direct_answer", "Register on the official WBSCC online portal and upload the required documents."),),
+    ),
     "How do I register for e-Shram and what do I need?": ProviderCase(
         language="en",
         markers=("Aadhaar linked Mobile number", "Aadhaar Number"),
         claims=(
             (
-                "required_documents",
-                "The official FAQ lists an Aadhaar number, an Aadhaar-linked mobile number, and bank account details for registration.",
+                "direct_answer",
+                "To register, have your Aadhaar number and Aadhaar-linked mobile number ready, as listed in the cited official FAQ.",
             ),
         ),
     ),
@@ -108,6 +123,7 @@ class RealRuntimeHarness:
             pool_pre_ping=True,
             pool_size=1,
             max_overflow=0,
+            connect_args={"server_settings": {"default_transaction_read_only": "on"}},
         )
         self.sessions = async_sessionmaker(self.engine, expire_on_commit=False)
         self.database_observations: list[dict[str, object]] = []
@@ -189,28 +205,41 @@ class RealRuntimeHarness:
             raise AssertionError("Selected response language did not reach generation")
 
         chunks = _CHUNK_PATTERN.findall(user_prompt)
-        selected: tuple[int, str, str] | None = None
-        for rank, (chunk_id, content) in enumerate(chunks, start=1):
-            if any(marker.casefold() in content.casefold() for marker in case.markers):
-                selected = (rank, chunk_id, content)
+        with self._lock:
+            self.provider_records[query] = {
+                "language": case.language,
+                "retrieved_passages": [
+                    {"chunk_id": chunk_id, "passage": content}
+                    for chunk_id, content in chunks
+                ],
+            }
+        selected: tuple[int, str, str, tuple[tuple[str, str], ...]] | None = None
+        evidence_options = ((case.markers, case.claims),) + case.alternatives
+        for markers, option_claims in evidence_options:
+            for rank, (chunk_id, content) in enumerate(chunks, start=1):
+                if any(marker.casefold() in content.casefold() for marker in markers):
+                    selected = (rank, chunk_id, content, option_claims)
+                    break
+            if selected is not None:
                 break
         if selected is None:
+            logger.error("staging_passage_missing query=%r chunk_ids=%s", query, [item[0] for item in chunks])
             raise AssertionError("Required useful passage was not retrieved")
 
-        rank, chunk_id, content = selected
+        rank, chunk_id, content, selected_claims = selected
         claims = [
             GeneratedClaim(kind=kind, text=claim, citation_ids=[chunk_id])
-            for kind, claim in case.claims
+            for kind, claim in selected_claims
         ]
         answer = " ".join(claim.text for claim in claims)
         with self._lock:
             self.provider_calls[query] += 1
-            self.provider_records[query] = {
+            self.provider_records[query].update({
                 "useful_passage_rank": rank,
                 "chunk_id": chunk_id,
                 "passage": content,
                 "language": case.language,
-            }
+            })
         return GeneratedAnswer(
             answer=answer,
             confidence=0.9,

@@ -271,7 +271,13 @@ async def source_detail(
 async def query(payload: QueryRequest, session: AsyncSession = Depends(get_session)):
     started = time.perf_counter()
     try:
-        final_state = await run_agent(session, payload.query, language=payload.language)
+        effective_query = payload.query
+        if payload.clarification_context:
+            effective_query = (
+                payload.clarification_context.original_query
+                + "\n\nClarification reply: " + payload.query
+            )
+        final_state = await run_agent(session, effective_query, language=payload.language)
     finally:
         logger.info(
             "agent_complete request_id=%s stage=agent_pipeline duration_ms=%.2f",

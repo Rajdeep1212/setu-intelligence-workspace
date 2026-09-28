@@ -36,7 +36,7 @@ import { demoResponse, establishedQuestion, suggestedQuestions } from "@/lib/fix
 
 const languageOptions: ReadonlyArray<{ code: ResponseLanguage; label: string }> = [
   { code: "en", label: "English" },
-  { code: "hi", label: "हिन्दी" },
+  { code: "hi", label: "हिंदी" },
   { code: "bn", label: "বাংলা" },
 ];
 const languageStorageKey = "setu-response-language-v1";
@@ -183,6 +183,7 @@ export function WorkspaceDemo() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [commandOpen, setCommandOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [clarificationContext, setClarificationContext] = useState<QueryRequest["clarification_context"]>();
   const controller = useRef<AbortController | null>(null);
   const sourceRefs = useRef<Record<string, HTMLElement | null>>({});
   const citationFocusRequested = useRef(false);
@@ -228,14 +229,24 @@ export function WorkspaceDemo() {
   const mutation = useMutation({
     retry: false,
     mutationFn: ({ input, signal }: { input: QueryRequest; signal: AbortSignal }) => bffAdapter.query(input, signal),
-    onSuccess: (data) => {
+    onSuccess: (data, { input, signal }) => {
+      if (signal.aborted || controller.current?.signal !== signal) return;
       setResult(data);
+      setSubmittedQuery(input.clarification_context ? `${input.clarification_context.original_query}\n${input.query}` : input.query);
+      setSubmittedLanguage(input.language ?? "en");
+      setClarificationContext(data.response_status === "clarification_needed" ? (input.clarification_context ?? { original_query: input.query }) : undefined);
+      setCopied(false);
       setActiveCitation(0);
       setSourcesOpen(false);
       setDetailsOpen(false);
       setError(null);
     },
-    onError: (reason) => setError(safeError(reason)),
+    onError: (reason, { signal }) => {
+      if (controller.current?.signal === signal) setError(safeError(reason));
+    },
+    onSettled: (_data, _error, { signal }) => {
+      if (controller.current?.signal === signal) controller.current = null;
+    },
   });
 
   const selectLanguage = (language: ResponseLanguage) => {
@@ -244,16 +255,14 @@ export function WorkspaceDemo() {
   };
 
   const submit = () => {
-    if (mutation.isPending) return;
-    const parsed = queryRequestSchema.safeParse({ query, language: responseLanguage });
+    if (controller.current || mutation.isPending) return;
+    const parsed = queryRequestSchema.safeParse({ query, language: responseLanguage, ...(clarificationContext ? { clarification_context: clarificationContext } : {}) });
     if (!parsed.success) {
       setError("Enter a valid question of up to 2,000 characters.");
       return;
     }
     const next = new AbortController();
     controller.current = next;
-    setSubmittedQuery(parsed.data.query);
-    setSubmittedLanguage(parsed.data.language ?? "en");
     setError(null);
     mutation.mutate({ input: parsed.data, signal: next.signal });
   };
@@ -303,12 +312,15 @@ export function WorkspaceDemo() {
     setQuery("");
     setSubmittedQuery("");
     setResult(null);
+    setClarificationContext(undefined);
     setError(null);
     setSourcesOpen(false);
     setDetailsOpen(false);
   };
 
-  const displaySections = result ? (result.sections.length ? result.sections : [{ text: result.answer, citation_ids: [] }]) : [];
+  const displaySections = result ? (result.sections.length ? result.sections : [{ text: result.answer, citation_ids: [] }])
+    .filter((section, index, sections) => section.text.trim() && sections.findIndex((candidate) => candidate.text.trim() === section.text.trim()) === index)
+    .sort((a, b) => Number(b.kind === "direct_answer") - Number(a.kind === "direct_answer")) : [];
   const hasCitedAnswer = result?.response_status === "answered" && result.citations.length > 0;
   const sourceLinks = result?.citations.filter((citation, index, citations) => (
     citation.url && citations.findIndex((candidate) => candidate.url === citation.url) === index
@@ -325,7 +337,7 @@ export function WorkspaceDemo() {
           <Link href="/system"><ShieldCheck size={15} /> Trust</Link>
         </nav>
         <div className="conversation-actions">
-          <button type="button" className="conversation-icon" aria-label="New question" onClick={startNewQuestion}><SquarePen size={17} /></button>
+          <button type="button" className="conversation-icon" aria-label="New question" disabled={mutation.isPending} onClick={startNewQuestion}><SquarePen size={17} /></button>
           <button type="button" className="conversation-icon" aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`} onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
             {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
           </button>
@@ -345,7 +357,7 @@ export function WorkspaceDemo() {
             </section>
 
             <section id="workspace-answer" className="conversation-answer" aria-labelledby="question-title">
-              <div className="question-label">{submittedQuery ? "Your question" : "Ready for a question"}</div>
+              <div className="question-label">{result?.data_mode === "demo" ? "Illustrative example — not a retrieved answer" : submittedQuery ? "Your question" : "Ready for a question"}</div>
               <h2 id="question-title">{submittedQuery || "Ask about the available sources"}</h2>
 
               {mutation.isPending ? (
@@ -355,7 +367,7 @@ export function WorkspaceDemo() {
                   <button type="button" onClick={() => controller.current?.abort()}>Stop waiting</button>
                 </div>
               ) : hasCitedAnswer && result ? (
-                <article className="conversation-answer-copy" aria-label="Generated answer with retrieved citations">
+                <article className="conversation-answer-copy" lang={submittedLanguage} aria-label="Generated answer with retrieved citations">
                   {displaySections.map((section, sectionIndex) => (
                     <section key={`${section.text}-${sectionIndex}`}>
                       {section.kind && section.kind !== "direct_answer" && <h3>{sectionLabels[section.kind]}</h3>}
@@ -371,7 +383,7 @@ export function WorkspaceDemo() {
                   ))}
                 </article>
               ) : result ? (
-                <article className="conversation-abstention">
+                <article className="conversation-abstention" lang={submittedLanguage}>
                   <ShieldCheck size={22} aria-hidden="true" />
                   <div><h3>{result.response_status === "clarification_needed" ? "Clarification needed" : "SETU stopped without a cited answer"}</h3><p>{result.answer}</p></div>
                 </article>
@@ -437,9 +449,9 @@ export function WorkspaceDemo() {
               <div className="explore-list">{suggestedQuestions.map((suggestion) => <button key={suggestion} type="button" onClick={() => setQuery(suggestion)}>{suggestion}<span aria-hidden="true">→</span></button>)}</div>
             </section>
 
-            {error && <div className="inline-error" role="alert">{error}</div>}
-
             <div className="conversation-composer-wrap">
+              {error && <div className="inline-error" role="alert">{error}</div>}
+              {clarificationContext && <p role="status">Replying to the clarification. Use New question to start a different topic.</p>}
               <form className="conversation-composer" onSubmit={(event) => { event.preventDefault(); submit(); }}>
                 <label htmlFor="workspace-query" className="sr-only">Ask SETU a question</label>
                 <textarea id="workspace-query" value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={(event) => {

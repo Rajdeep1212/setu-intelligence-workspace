@@ -27,14 +27,29 @@ FOCUSED_CLARIFICATIONS = {
 def focused_clarification(query: str, language: str | None = None) -> str | None:
     """Ask for one missing discriminator instead of assuming a scheme."""
     normalized = " ".join(query.casefold().split())
+    reply = normalized.rsplit("clarification reply: ", 1)[-1] if "clarification reply: " in normalized else ""
+    insurance_selected = bool(reply) and (("pmjjby" in reply) != ("pmsby" in reply))
+    comparison = any(value in normalized for value in ("compare", "difference", " vs ", "तुलना", "अंतर", "তুলনা", "পার্থক্য"))
     has_west_bengal = any(
         value in normalized
         for value in ("west bengal", "पश्चिम बंगाल", "পশ্চিমবঙ্গ")
     )
     clarification: str | None = None
-    if "student credit card" in normalized and not has_west_bengal:
+    has_named_state = has_west_bengal or any(
+        value in normalized for value in (
+            "bihar", "बिहार", "বিহার", "jharkhand", "झारखंड", "ঝাড়খণ্ড",
+            "andhra pradesh", "arunachal pradesh", "assam", "chhattisgarh",
+            "goa", "gujarat", "haryana", "himachal pradesh", "karnataka",
+            "kerala", "madhya pradesh", "maharashtra", "manipur", "meghalaya",
+            "mizoram", "nagaland", "odisha", "punjab", "rajasthan", "sikkim",
+            "tamil nadu", "telangana", "tripura", "uttar pradesh", "uttarakhand",
+            "delhi", "chandigarh", "puducherry", "ladakh", "jammu", "kashmir",
+            "andaman", "lakshadweep", "dadra", "daman",
+        )
+    )
+    if any(value in normalized for value in ("student credit card", "स्टूडेंट क्रेडिट कार्ड", "स्टुडेंट क्रेडिट कार्ड", "স্টুডেন্ট ক্রেডিট কার্ড")) and not has_named_state:
         clarification = "student_credit_state"
-    elif "pmjjby" in normalized and "pmsby" in normalized and not any(
+    elif "pmjjby" in normalized and "pmsby" in normalized and not insurance_selected and not comparison and not any(
         value in normalized
         for value in (
             "life insurance",

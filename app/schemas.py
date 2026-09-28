@@ -4,9 +4,21 @@ from urllib.parse import urlparse
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
+class ClarificationContext(BaseModel):
+    original_query: str = Field(min_length=1, max_length=2000)
+
+    @field_validator("original_query")
+    @classmethod
+    def reject_blank_original(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("original query must not be blank")
+        return value
+
+
 class QueryRequest(BaseModel):
     query: str = Field(min_length=1, max_length=2000)
     language: Optional[Literal["en", "hi", "bn"]] = None
+    clarification_context: Optional[ClarificationContext] = None
 
     @field_validator("query")
     @classmethod

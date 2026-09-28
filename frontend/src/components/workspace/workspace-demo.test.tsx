@@ -10,7 +10,7 @@ function renderWorkspace() {
   return render(<Providers><WorkspaceDemo /></Providers>);
 }
 
-async function chooseLanguage(user: ReturnType<typeof userEvent.setup>, label: "English" | "हिन्दी" | "বাংলা") {
+async function chooseLanguage(user: ReturnType<typeof userEvent.setup>, label: "English" | "हिंदी" | "বাংলা") {
   await user.click(screen.getByRole("button", { name: /Response language:/ }));
   const menu = screen.getByRole("menu", { name: "Response language" });
   await user.click(within(menu).getByRole("menuitemradio", { name: label }));
@@ -43,13 +43,13 @@ describe("WorkspaceDemo", () => {
   it("persists the response-language selection without storing the question", async () => {
     const user = userEvent.setup();
     const first = renderWorkspace();
-    await chooseLanguage(user, "हिन्दी");
+    await chooseLanguage(user, "हिंदी");
     expect(window.localStorage.getItem("setu-response-language-v1")).toBe("hi");
     expect(JSON.stringify(window.localStorage)).not.toContain("What are the core components");
 
     first.unmount();
     renderWorkspace();
-    await waitFor(() => expect(screen.getByRole("button", { name: "Response language: हिन्दी" })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Response language: हिंदी" })).toBeInTheDocument());
   });
 
   it("captures the exact question and selected language for each request", async () => {
@@ -65,14 +65,14 @@ describe("WorkspaceDemo", () => {
     await user.click(screen.getByRole("button", { name: "Ask SETU" }));
     expect(screen.getByText("Request in progress")).toBeInTheDocument();
 
-    await chooseLanguage(user, "हिन्दी");
+    await chooseLanguage(user, "हिंदी");
     const payload = JSON.parse(String(network.mock.calls[0]?.[1]?.body));
     expect(payload).toEqual({ query: exactQuestion, language: "bn" });
     expect(query).toHaveValue(exactQuestion);
 
     resolveRequest(new Response(JSON.stringify(demoResponse), { status: 200 }));
     await waitFor(() => expect(screen.queryByText("Request in progress")).not.toBeInTheDocument());
-    expect(screen.getByRole("button", { name: "Response language: हिन्दी" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Response language: हिंदी" })).toBeInTheDocument();
   });
 
   it("shows official source and application links as distinct actions", async () => {
@@ -104,6 +104,43 @@ describe("WorkspaceDemo", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("SETU is temporarily unavailable.");
     expect(query).toHaveValue(exactQuestion);
     expect(screen.getByText(/India's digital approach connects digital identity/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What are the core components of India's digital approach?" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: exactQuestion })).not.toBeInTheDocument();
+  });
+
+  it("carries the original question into an exact clarification reply and clears it for a new topic", async () => {
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(async () => new Response(JSON.stringify({ ...demoResponse, response_status: "clarification_needed", answer: "Which state?", citations: [], sections: [] })));
+    const user = userEvent.setup();
+    renderWorkspace();
+    const query = screen.getByLabelText("Ask SETU a question");
+    fireEvent.change(query, { target: { value: "Student credit card?" } });
+    await user.click(screen.getByRole("button", { name: "Ask SETU" }));
+    await screen.findByText("Which state?");
+    fireEvent.change(query, { target: { value: "  West Bengal  " } });
+    await user.click(screen.getByRole("button", { name: "Ask SETU" }));
+    await waitFor(() => expect(network).toHaveBeenCalledTimes(2));
+    expect(JSON.parse(String(network.mock.calls[1][1]?.body))).toEqual({ query: "  West Bengal  ", language: "en", clarification_context: { original_query: "Student credit card?" } });
+    await waitFor(() => expect(screen.getByRole("button", { name: "New question" })).toBeEnabled());
+    await user.click(screen.getByRole("button", { name: "New question" }));
+    expect(screen.queryByText(/Replying to the clarification/)).not.toBeInTheDocument();
+  });
+
+  it("ignores composition Enter, immediate duplicate submission and a cancelled late success", async () => {
+    let resolveRequest!: (value: Response) => void;
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => new Promise((resolve) => { resolveRequest = resolve; }));
+    renderWorkspace();
+    const query = screen.getByLabelText("Ask SETU a question");
+    fireEvent.change(query, { target: { value: "বাংলা প্রশ্ন" } });
+    fireEvent.keyDown(query, { key: "Enter", isComposing: true });
+    expect(network).not.toHaveBeenCalled();
+    fireEvent.submit(query.closest("form")!);
+    fireEvent.submit(query.closest("form")!);
+    await waitFor(() => expect(network).toHaveBeenCalledTimes(1));
+    fireEvent.click(screen.getByText("Stop waiting"));
+    resolveRequest(new Response(JSON.stringify({ ...demoResponse, answer: "Late answer", sections: [] }), { status: 200 }));
+    await waitFor(() => expect(screen.queryByText("Request in progress")).not.toBeInTheDocument());
+    expect(screen.queryByText("Late answer")).not.toBeInTheDocument();
+    expect(screen.getByText(/India's digital approach connects/)).toBeInTheDocument();
   });
 
   it("expands and focuses source passages from claim citations", async () => {
