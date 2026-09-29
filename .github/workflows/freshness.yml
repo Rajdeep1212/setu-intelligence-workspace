@@ -1,0 +1,43 @@
+name: Source freshness watch
+
+# Re-downloads every official source pinned in data/traffic_offences and
+# compares its SHA-256 with the pinned value. A failure means a source changed
+# (a person must re-read it) or no source could be reached. Standard runner,
+# standard library only, no secrets, no artifacts: free for a public
+# repository. GitHub emails the workflow owner when a scheduled run fails.
+
+on:
+  schedule:
+    # Mondays 03:17 UTC (08:47 IST); off the hour to avoid queue peaks.
+    - cron: "17 3 * * 1"
+  push:
+    branches: [master]
+    paths:
+      - "data/traffic_offences/**"
+      - "scripts/freshness_watch.py"
+      - ".github/workflows/freshness.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: freshness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Set up Python
+        # actions/setup-python v5.4.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
+        with:
+          python-version: "3.11"
+
+      - name: Compare official sources with pinned hashes
+        run: python scripts/freshness_watch.py --summary "$GITHUB_STEP_SUMMARY"

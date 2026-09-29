@@ -35,6 +35,33 @@ class AnswerSection(BaseModel):
         return value
 
 
+class PremiseCheck(BaseModel):
+    """Structured result of a traffic-fine premise check (app/agent/premise.py)."""
+
+    verdict: str
+    offence_id: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    occurrence: Optional[str] = None
+    claimed_inr: Optional[int] = None
+    verified_amounts: list[dict] = Field(default_factory=list)
+    source: Optional[dict[str, str]] = None
+    schedule_row: Optional[str] = None
+    missing: list[str] = Field(default_factory=list)
+
+
+class ScamCheck(BaseModel):
+    """Structured result of a message check (app/agent/scam_shield.py).
+
+    The verdict is never "safe": the strongest reassurance is
+    "no_warning_signs".
+    """
+
+    verdict: Literal["likely_scam", "suspicious", "official_link", "no_warning_signs"]
+    signals: list[str] = Field(default_factory=list)
+    links: list[dict] = Field(default_factory=list)
+    debunks: list[dict] = Field(default_factory=list)
+
+
 class NextStep(BaseModel):
     """An official service to act on, from data/next_steps/services.json."""
 
@@ -50,9 +77,12 @@ class QueryResponse(BaseModel):
     sections: list[AnswerSection] = Field(default_factory=list, max_length=12)
     route: Optional[str] = None
     confidence: Optional[float] = None
-    response_status: Literal["answered", "abstained", "eligibility_unverified"] = (
-        "answered"
-    )
+    response_status: Literal[
+        "answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup",
+        "scam_check",
+    ] = "answered"
+    premise_check: Optional[PremiseCheck] = None
+    scam_check: Optional[ScamCheck] = None
     next_steps: list[NextStep] = Field(default_factory=list, max_length=3)
 
     @field_validator("citations")

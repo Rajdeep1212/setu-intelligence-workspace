@@ -66,6 +66,7 @@
           "properties": {
             "provision": {"type": "string", "minLength": 1},
             "penalty_text": {"type": "string", "minLength": 1},
+            "fixed_fine_inr": {"type": "integer", "minimum": 1, "description": "Set only when the Act names one fixed fine; must match penalty_text, which starts 'Fine of <number in words> rupees'."},
             "source_id": {"type": "string"},
             "commencement_source_id": {"type": "string"},
             "effective_from": {"$ref": "#/$defs/date"},

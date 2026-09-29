@@ -5,18 +5,25 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowUp, Ban, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Command, Copy, Download, FileText, Home, Moon, PanelRight, Plus, Scale, Search, ShieldCheck, Sun, X } from "lucide-react";
+import { ArrowUp, Ban, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Command, Copy, Download, FileText, Home, Moon, PanelRight, Plus, Scale, Search, ShieldCheck, Sun, TriangleAlert, X } from "lucide-react";
 
 import { SetuMark } from "@/components/setu-mark";
 import { EligibilityWorkflow } from "@/components/workspace/eligibility-workflow";
 import { bffAdapter, SetuClientError } from "@/lib/adapters";
-import { queryRequestSchema, type ProcessingStage, type QueryRequest, type QueryResponse, type WorkspaceMode } from "@/lib/contracts";
+import { queryRequestSchema, type ProcessingStage, type QueryRequest, type QueryResponse, type ScamCheck, type WorkspaceMode } from "@/lib/contracts";
 import { demoResponse, establishedQuestion, suggestedQuestions } from "@/lib/fixtures";
 
 const processingCopy: Record<ProcessingStage, { title: string; detail: string }> = {
   sending: { title: "Sending securely to the SETU BFF", detail: "The browser is waiting for a single non-streaming response." },
   working: { title: "Preparing an evidence-linked response", detail: "No backend stage or token stream is inferred without telemetry." },
   extended: { title: "The request is still processing", detail: "You can cancel this browser wait; upstream execution may continue." },
+};
+
+const scamVerdictLabel: Record<ScamCheck["verdict"], string> = {
+  likely_scam: "Likely scam",
+  suspicious: "Suspicious: check before acting",
+  official_link: "Official government link",
+  no_warning_signs: "No warning signs found",
 };
 
 function safeError(reason: unknown): string {
@@ -43,7 +50,8 @@ export function WorkspaceDemo() {
   const [navCollapsed, setNavCollapsed] = useState(false);
   const controller = useRef<AbortController | null>(null);
 
-  useEffect(() => { const frame = window.requestAnimationFrame(() => { if (window.localStorage.getItem("setu-theme") === "dark") setTheme("dark"); const supplied = new URLSearchParams(window.location.search).get("q"); if (supplied && supplied.length <= 2000) setQuery(supplied); }); return () => window.cancelAnimationFrame(frame); }, []);
+  // Read the saved theme before the theme effect below writes the default back to storage.
+  useEffect(() => { const savedTheme = window.localStorage.getItem("setu-theme"); const frame = window.requestAnimationFrame(() => { if (savedTheme === "dark") setTheme("dark"); const supplied = new URLSearchParams(window.location.search).get("q"); if (supplied && supplied.length <= 2000) setQuery(supplied); }); return () => window.cancelAnimationFrame(frame); }, []);
   useEffect(() => { document.documentElement.dataset.theme = theme; window.localStorage.setItem("setu-theme", theme); }, [theme]);
   useEffect(() => { const frame = window.requestAnimationFrame(() => { const saved = window.localStorage.getItem("setu-panel-layout"); if (saved) { try { setLayout(JSON.parse(saved)); } catch { window.localStorage.removeItem("setu-panel-layout"); } } setNavCollapsed(window.localStorage.getItem("setu-nav-collapsed") === "true"); }); return () => window.cancelAnimationFrame(frame); }, []);
   useEffect(() => { const handler = (event: KeyboardEvent) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); setEvidenceOpen(false); setCommandOpen((open) => !open); } }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, []);
@@ -61,6 +69,11 @@ export function WorkspaceDemo() {
   const citationIndexById = useMemo(() => new Map(result.citations.map((citation, index) => [citation.chunk_id, index])), [result.citations]);
   const displaySections = result.sections.length ? result.sections : [{ text: result.answer, citation_ids: [] }];
   const linkedSectionCount = displaySections.filter((section) => section.citation_ids.length > 0).length;
+  // Phase 3: traffic-fine answers come from verified offence tables, not retrieved chunks.
+  const isRuleAnswer = result.response_status === "needs_clarification" || result.response_status === "rule_lookup";
+  const ruleSource = result.premise_check?.source ?? null;
+  // Phase 4a: message checks. Pasted links are shown as text, never as clickable links.
+  const scamCheck = result.response_status === "scam_check" ? result.scam_check ?? null : null;
   // The eligibility route answers by design without citations; it is a notice, not an abstention.
   const isEligibilityNotice = result.response_status === "eligibility_unverified";
   const copyAnswer = async () => { await navigator.clipboard.writeText(result.answer); setCopied(true); window.setTimeout(() => setCopied(false), 1200); };
@@ -87,8 +100,10 @@ export function WorkspaceDemo() {
         <Group className="workspace-panels" orientation="horizontal" id="setu-workspace-layout" defaultLayout={layout} onLayoutChanged={(next, meta) => { if (meta.isUserInteraction) window.localStorage.setItem("setu-panel-layout", JSON.stringify(next)); }}>
           <Panel id="answer" defaultSize="68%" minSize="50%"><section id="workspace-answer" className="answer-pane" aria-labelledby="investigation-title"><div className="answer-inner">
             <div className="question-kicker">Corpus investigation</div><h2 id="investigation-title">{query || "Ask a question about the established corpus"}</h2>
-            <div className="answer-statusbar"><span className="grounded-pill"><CheckCircle2 size={13} /> {isEligibilityNotice ? "Eligibility not assessed" : linkedSectionCount ? `${linkedSectionCount}/${displaySections.length} sections evidence linked` : "Insufficient evidence"}</span><div className="answer-actions"><button type="button" onClick={copyAnswer}><Copy size={13} /> {copied ? "Copied" : "Copy"}</button><button type="button" onClick={exportEvidence}><Download size={13} /> Export</button></div></div>
-            {mutation.isPending && processing ? <div className="loading-stage" role="status" aria-live="polite"><strong>{processingCopy[processing].title}</strong><span>{processingCopy[processing].detail}</span>{processing === "extended" && <button type="button" className="cancel-wait" onClick={() => controller.current?.abort()}><Ban size={13} /> Cancel browser wait</button>}</div> : isEligibilityNotice ?
+            <div className="answer-statusbar"><span className={`grounded-pill${scamCheck ? ` scam-pill scam-${scamCheck.verdict}` : ""}`}>{scamCheck && scamCheck.verdict !== "official_link" ? <TriangleAlert size={13} /> : <CheckCircle2 size={13} />} {scamCheck ? scamVerdictLabel[scamCheck.verdict] : isEligibilityNotice ? "Eligibility not assessed" : isRuleAnswer ? (result.response_status === "needs_clarification" ? "Needs one more detail" : "From verified offence tables") : linkedSectionCount ? `${linkedSectionCount}/${displaySections.length} sections evidence linked` : "Insufficient evidence"}</span><div className="answer-actions"><button type="button" onClick={copyAnswer}><Copy size={13} /> {copied ? "Copied" : "Copy"}</button><button type="button" onClick={exportEvidence}><Download size={13} /> Export</button></div></div>
+            {mutation.isPending && processing ? <div className="loading-stage" role="status" aria-live="polite"><strong>{processingCopy[processing].title}</strong><span>{processingCopy[processing].detail}</span>{processing === "extended" && <button type="button" className="cancel-wait" onClick={() => controller.current?.abort()}><Ban size={13} /> Cancel browser wait</button>}</div> : scamCheck ?
+              <article className="answer-card rule-answer scam-answer" data-verdict={scamCheck.verdict} aria-label="Message check">{displaySections.map((section, sectionIndex) => <p className="answer-claim" key={`${section.text}-${sectionIndex}`}>{section.text}</p>)}{scamCheck.links.length ? <ul className="scam-links" aria-label="Links in the message">{scamCheck.links.map((link, linkIndex) => <li key={`${link.host}-${linkIndex}`}><code>{link.host || link.url}</code> <span>{link.official ? "Government domain (.gov.in / .nic.in)" : "Not a government domain"}</span></li>)}</ul> : null}{scamCheck.debunks.map((debunk) => <p className="rule-source" key={debunk.id}>{debunk.issuer}, {debunk.date}: {debunk.topic} <a href={debunk.source} target="_blank" rel="noreferrer">Read the warning</a></p>)}</article> : isRuleAnswer ?
+              <article className="answer-card rule-answer" aria-label="Answer from verified offence tables">{displaySections.map((section, sectionIndex) => <p className="answer-claim" key={`${section.text}-${sectionIndex}`}>{section.text}</p>)}{ruleSource ? <p className="rule-source">Source: {ruleSource.reference}{result.premise_check?.schedule_row ? ` · ${result.premise_check.schedule_row}` : ""} <a href={ruleSource.url} target="_blank" rel="noreferrer">Official notification</a></p> : null}</article> : isEligibilityNotice ?
               <article className="answer-card notice-answer" aria-label="Eligibility not assessed">{displaySections.map((section, sectionIndex) => <p className="answer-claim" key={`${section.text}-${sectionIndex}`}>{section.text}</p>)}</article> : result.citations.length ?
               <article className="answer-card" aria-label="Generated answer with retrieved citations">{displaySections.map((section, sectionIndex) => <p className="answer-claim" key={`${section.text}-${sectionIndex}`}>{section.text}{section.citation_ids.map((citationId) => { const index = citationIndexById.get(citationId); if (index === undefined) return null; return <button key={citationId} type="button" className="citation-button" aria-label={`Focus retrieved citation ${index + 1} for claim ${sectionIndex + 1}`} aria-pressed={activeCitation === index} onClick={() => { setActiveCitation(index); if (window.innerWidth <= 680) setEvidenceOpen(true); }}>{String(index + 1).padStart(2, "0")}</button>; })}</p>)}</article> :
               <article className="answer-card unanswerable-state"><ShieldCheck /><h3>Insufficient retrieved evidence</h3><p>The response did not include validated retrieved citations, so SETU abstained.</p></article>}

@@ -174,6 +174,8 @@ git diff --exit-code "$DEPLOYED_REVISION".."$RELEASE_REVISION" -- db/init.sql
 If that command reports a schema change, stop. Add an ordered, reviewed,
 forward-compatible migration and a tested rollback/roll-forward plan in a
 separate milestone. Application deployment must not improvise DDL.
+Reviewed migrations and their rollbacks are in
+[db/migrations/](../db/migrations/README.md).
 
 Prefer managed encrypted backups and point-in-time recovery. For the reference
 Compose database, an operator can create and validate a restricted custom-format
@@ -313,7 +315,9 @@ provider and account are selected.
 - Rate limiting is process-local and global, not per user or distributed.
 - Provider configuration readiness does not prove provider reachability.
 - OpenVINO readiness checks file presence, not checksums or a warm inference.
-- Database migrations are not implemented; `init.sql` is bootstrap-only.
+- Database migrations are numbered SQL files applied by hand in order
+  ([db/migrations/README.md](../db/migrations/README.md)); there is no automatic
+  runner. CI applies them to a disposable PostgreSQL, not to a deployed one.
 - Restore time, RPO, and RTO are not yet measured.
 - Logs are correlation-friendly text on stdout, not a defined centralized
   schema/retention pipeline.

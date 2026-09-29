@@ -1,0 +1,12 @@
+{"id":"ho-sc-01","language":"en","text":"Your FASTag KYC has expired. Update now at fastag-kyc-update.com or your tag will be blocked.","expected":{"trigger":true,"verdict":"likely_scam"},"label":"scam"}
+{"id":"ho-sc-02","language":"en","text":"Your traffic e-challan: http://tinyurl.com/echln-pay","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["shortened_link"]},"label":"scam"}
+{"id":"ho-sc-03","language":"hi","text":"प्रिय ग्राहक, आपका वाहन चालान लंबित है। लिंक पर क्लिक करके भुगतान करें https://vahan-challan.xyz","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain"]},"label":"scam"}
+{"id":"ho-sc-04","language":"bn","text":"ই-চালান দেখতে এই অ্যাপ ইনস্টল করুন: challan.apk","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["apk"]},"label":"scam"}
+{"id":"ho-sc-05","language":"en","text":"Congratulations! You are selected for PM Kisan tractor subsidy, apply at pmkisan-tractor.in","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain"]},"label":"scam"}
+{"id":"ho-sc-06","language":"en","text":"Pay your pending challan of Rs 1000 by UPI to 98xxxxxx01@ybl today","expected":{"trigger":true,"verdict":"likely_scam"},"label":"scam"}
+{"id":"ho-ge-01","language":"en","text":"Pay your challan online at https://echallan.parivahan.gov.in/index/accused-challan","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ho-ge-02","language":"hi","text":"ई-चालान की स्थिति https://echallan.parivahan.gov.in पर देखें","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ho-ge-03","language":"en","text":"Licence services are at https://sarathi.parivahan.gov.in","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ho-ne-01","language":"en","text":"Background reading: en.wikipedia.org/wiki/Motor_Vehicles_Act,_1988","expected":{"trigger":true,"verdict":"no_warning_signs"},"label":"other"}
+{"id":"ho-su-01","language":"en","text":"Update your details at http://example-update.in immediately","expected":{"trigger":true,"verdict":"suspicious"},"label":"other"}
+{"id":"ho-nt-01","language":"en","text":"What documents do I need at a traffic check?","expected":{"trigger":false},"label":"other"}

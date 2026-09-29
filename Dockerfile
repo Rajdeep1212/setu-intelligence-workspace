@@ -42,6 +42,8 @@ COPY --from=builder /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=${APP_UID}:${APP_GID} app ./app
 COPY --chown=${APP_UID}:${APP_GID} ingestion ./ingestion
+COPY --chown=${APP_UID}:${APP_GID} data/traffic_offences ./data/traffic_offences
+COPY --chown=${APP_UID}:${APP_GID} data/scam_shield ./data/scam_shield
 COPY --chown=${APP_UID}:${APP_GID} data/next_steps ./data/next_steps
 COPY --chown=${APP_UID}:${APP_GID} models/openvino ./models/openvino
 

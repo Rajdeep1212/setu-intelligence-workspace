@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest --pool=threads --maxWorkers=1",
     "test:run": "vitest run --pool=threads --maxWorkers=1",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "roadside:bundle": "node scripts/roadside-bundle.mjs",
+    "roadside:check": "node scripts/roadside-bundle.mjs --check"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.1.23",
