@@ -5,8 +5,8 @@ gaining phase by phase. Each case is marked either "pass" or "xfail" (with a
 reason). The run succeeds only when every "pass" case passes and every
 "xfail" case still fails, so a capability that starts working must be
 re-marked in the same change. Phase 1 made the 6 temporal_retrieval cases
-pass; the missing_facts and false_premise cases stay xfail until Phase 3. It
-is deliberately separate from the frozen 60-case gate in
+pass and Phase 3 the 3 missing_facts and 6 false_premise cases
+(app/agent/premise.py). It is deliberately separate from the frozen 60-case gate in
 eval/offline_evaluation.py, which requires a 100% pass rate.
 
 Probes are offline. The retrieval probe passes a recording stand-in for the

@@ -140,6 +140,12 @@ sources. None needs a paid service.
   compares them with `data/traffic_offences/`. Add a LangGraph node before
   retrieval. A missing state returns a clarifying question; a contradicted
   premise returns the verified amount with sources; an unverified row says so.
+- **Status (28 Sep 2026):** built on branch `phase3/premise-guard`
+  (`app/agent/premise.py`, `app/agent/premise_answer.py`). All 15 temporal
+  cases pass; 0 false premises accepted and 0 over-asks across 43
+  development and held-out cases; the held-out set scored 10 of 12 before its
+  fix. Dates are respected, so an amount not yet in force is never quoted.
+  See [research/premise-guard.md](research/premise-guard.md).
 - **Acceptance test:** the 3 `missing_facts` and 6 `false_premise` cases flip
   to pass. Add complete-query controls so over-asking is measured too (C14
   over-flag finding).

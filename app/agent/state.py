@@ -20,3 +20,4 @@ class AgentState(TypedDict, total=False):
     sections: list[dict]
     response_status: str
     confidence: Optional[float]
+    premise_check: Optional[dict]

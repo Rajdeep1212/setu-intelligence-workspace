@@ -96,3 +96,7 @@
 .roadside-inline-sources{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
 .roadside-disclaimer{margin:14px 0 0;color:var(--muted);font-size:12px;font-weight:650}
 @media(max-width:680px){.roadside-pickers{grid-template-columns:1fr}.roadside-card{padding:16px}.roadside-amounts{font-size:13px}.roadside-inr{font-size:15px}}
+
+/* Phase 3: answers from verified offence tables in the workspace. */
+.rule-answer .rule-source{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
+.rule-answer .rule-source a{margin-left:6px;color:color-mix(in srgb,var(--teal) 70%,var(--text));font-weight:700;text-decoration:underline;text-underline-offset:3px}

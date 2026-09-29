@@ -6,13 +6,26 @@ export const answerSectionSchema = z.object({
   text: z.string().trim().min(1),
   citation_ids: z.array(z.string().min(1)).max(5).refine((ids) => new Set(ids).size === ids.length, "Section citation IDs must be unique."),
 });
+// Phase 3: traffic-fine questions are answered from verified offence tables, not retrieved chunks.
+export const premiseCheckSchema = z.object({
+  verdict: z.string().min(1),
+  offence_id: z.string().nullable().optional(),
+  jurisdiction: z.string().nullable().optional(),
+  occurrence: z.string().nullable().optional(),
+  claimed_inr: z.number().int().nullable().optional(),
+  verified_amounts: z.array(z.object({ occurrence: z.string(), vehicle_class: z.string(), inr: z.number().int() })).default([]),
+  source: z.object({ title: z.string(), reference: z.string(), url: z.url() }).nullable().optional(),
+  schedule_row: z.string().nullable().optional(),
+  missing: z.array(z.string()).default([]),
+});
 export const queryResponseSchema = z.object({
   answer: z.string(),
   citations: z.array(citationSchema).max(5),
   sections: z.array(answerSectionSchema).max(12).default([]),
-  route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(),
+  route: z.enum(["retrieve_docs", "check_eligibility", "traffic_rules"]).nullable().optional(),
   confidence: z.number().min(0).max(1).nullable().optional(),
-  response_status: z.enum(["answered", "abstained", "eligibility_unverified"]).default("answered"),
+  response_status: z.enum(["answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup"]).default("answered"),
+  premise_check: premiseCheckSchema.nullable().optional(),
   data_mode: z.enum(["demo", "local", "cloud"]).optional(),
 }).superRefine((response, context) => {
   const citationIds = response.citations.map((citation) => citation.chunk_id);

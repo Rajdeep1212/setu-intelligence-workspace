@@ -38,8 +38,8 @@ requires every case to pass.
 | Category | Cases | Status |
 |---|---|---|
 | `temporal_retrieval` | 6 | `pass` since Phase 1 (state and date filters in both retrieval legs) |
-| `missing_facts` | 3 | `xfail` until Phase 3 |
-| `false_premise` | 6 | `xfail` until Phase 3 |
+| `missing_facts` | 3 | `pass` since Phase 3 (`app/agent/premise.py` asks for the state) |
+| `false_premise` | 6 | `pass` since Phase 3 (claimed amounts checked against verified tables) |
 
 ```bash
 python -m eval.temporal_evaluation
@@ -49,8 +49,24 @@ The run is strict in both directions. It exits zero only when every `pass`
 case passes and every `xfail` case still fails. It exits nonzero if a `pass`
 case regresses, if an `xfail` case starts passing before its `expected_status`
 is changed, or if a false-premise case stops matching a verified table row.
-Expected result today: 6 pass, 9 xfail, 0 unexpected. See
+Expected result today: 15 pass, 0 unexpected. See
 [FINDINGS](../docs/FINDINGS.md) (P1 and P2).
+
+## Premise checker cases
+
+`premise_cases.jsonl` (development set) and `premise_holdout.jsonl` (written
+after the code was frozen) test `app/agent/premise.py` in English, Hindi,
+Bengali and Hinglish: offence, place, first or repeat offence, claimed
+amount, the facts to ask for, and the verdict against the verified tables.
+
+```bash
+python -m eval.premise_evaluation
+```
+
+It fails on any mismatch, any accepted false premise, and any non-traffic
+question that triggers the checker. It also reports the over-ask rate on
+complete questions. Results and the held-out history are in
+[research/premise-guard.md](../docs/research/premise-guard.md).
 
 ## Corpus-linked retrieval labels
 
