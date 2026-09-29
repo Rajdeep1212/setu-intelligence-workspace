@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from contextlib import nullcontext
 from datetime import date
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -54,12 +55,18 @@ async def retrieve(
     try:
         query_vector = (await asyncio.to_thread(embed_chunks, [query]))[0]
 
-        dense_results = await dense_search(
-            session, query_vector, language, candidate_k, **filter_kwargs
-        )
-        keyword_results = await keyword_search(
-            session, query, language, candidate_k, **filter_kwargs
-        )
+        # Hold a database connection only for the two searches, not during the
+        # CPU-bound rerank, which can take minutes on a local machine. End only
+        # a transaction this function started: a caller's explicit transaction
+        # or pending writes must survive. Both legs return plain dictionaries.
+        owns_transaction = not session.in_transaction()
+        async with session.begin() if owns_transaction else nullcontext():
+            dense_results = await dense_search(
+                session, query_vector, language, candidate_k, **filter_kwargs
+            )
+            keyword_results = await keyword_search(
+                session, query, language, candidate_k, **filter_kwargs
+            )
 
         fused = reciprocal_rank_fusion([dense_results, keyword_results])[:candidate_k]
         return await asyncio.to_thread(rerank, query, fused, top_k=final_k)

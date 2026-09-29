@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 29 Sep 2026.
+Last updated: 29 Sep 2026 (after item G).
 
 ## Work items
 
@@ -23,27 +23,36 @@ Design notes and results for each phase are in `docs/research/`.
 | D2. Phase 4b: document version history | Done | [#7](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/7) | Migration 0002 archives superseded versions; retrieval unchanged; CI runs migrations on real PostgreSQL (`version-history.md`) |
 | D3. Phase 4c: freshness watch | Done | [#8](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/8) | Weekly check of 6 pinned sources; fails on a changed hash or when nothing is reachable (`data/traffic_offences/README.md`) |
 | E1. Phase 5 (P6): official next steps | Done | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Reviewed table of 6 official services; eligibility answers link the official portal (`next-steps.md`) |
-| E2. Phase 5 (P5): rules-as-code for 3 schemes | Blocked, needs the owner | | See item 6 below |
+| E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
-| G. Laptop work recovered from `F:\setu` | To review | | 35 files pushed to branch `recovery/laptop-uncommitted-2026-09-29` (commit `e7050c0`, on top of `908ad3d`); port the useful parts into `master` |
+| G. Laptop work recovered from `F:\setu` | In review | this PR | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
 had changed.
 
-**Next up:** G (review the recovered laptop work), then F (temporal
-benchmark write-up). E2 waits for the owner's decision below.
+## Next milestone: M2, real scheme answers
+
+Goal: SETU answers everyday scheme questions from a staged corpus of
+official sources, in English, Hindi and Bengali, and asks one question
+instead of guessing. Built from the recovered work (`recovery-review.md`),
+rebuilt on today's `master`, one PR per item.
+
+| Item | What | Done when |
+|---|---|---|
+| M2.1 | Scheme corpus pipeline: safe fetching, manifests, staging database; 29 official sources (central schemes and 13 West Bengal schemes) | Pipeline writes jurisdiction, dates and source hashes (migration 0001), keeps versions (0002); manifest URLs join the freshness watch; tests pass without network |
+| M2.2 | Everyday-use evaluation: 12 questions (en, hi, bn) with expected status, sections and evidence | Runs offline in CI from saved retrieval results; baseline recorded before any tuning |
+| M2.3 | Scheme clarification (student credit card state, PMJJBY or PMSBY, old-age pension) with follow-up context | Shares `needs_clarification` with the traffic guard; asks at most one question; over-asking measured |
+| M2.4 | Local speed: 8-bit models or more Docker memory | Median local answer time measured before and after, on the same questions |
+| F | Research write-up: Indian traffic-law temporal benchmark | After M2.2, so it can report both evaluation sets |
 
 ## Waiting for the owner
 
 These need a person. Work continues on everything else.
 
-1. **Delete merged branches on GitHub** (the cloud session is not allowed to):
-   `phase1/temporal-retrieval`, `research/findings-2026-09`,
-   `research/findings-2026-09-local`, `phase2/roadside-mode`,
-   `phase3/premise-guard`, `phase4/scam-shield`, `phase4/version-history`,
-   `phase4/freshness-watch`, `phase5/next-steps`. All their commits are in
-   `master`. Keep `recovery/codex-2026-09-14` and
+1. **Delete one last merged branch:** `phase1/source-provenance` (PR #3,
+   in `master`). The other merged branches were deleted on 29 Sep 2026.
+   Keep `recovery/codex-2026-09-14` and
    `recovery/laptop-uncommitted-2026-09-29`.
 2. **Apply migration 0001, then backfill 0001, to any deployed database**
    before a client sends `jurisdiction` or `as_of`. Until then a filtered
@@ -56,17 +65,9 @@ These need a person. Work continues on everything else.
    can leave UNVERIFIED.
 5. **Name:** "Nyaya Setu" is already used twice; choose a distinct public name
    before launch.
-6. **Eligibility scope (P5).** The PM-KISAN operational guidelines on
-   pmkisan.gov.in could not be read from the cloud session (the fetch needs
-   your approval), so no scheme rule was encoded; SETU does not invent
-   criteria. The government already runs an eligibility engine at
-   `rules.myscheme.gov.in`. Choose one:
-   (a) hand off to myScheme and keep eligibility quarantined (cheapest; P6
-   already links myScheme);
-   (b) rules-as-code for 3 schemes from the official guideline PDFs, each
-   with a named reviewer's sign-off before its quarantine lifts (about 8
-   days).
-   For (b), approve fetching pmkisan.gov.in or attach the guideline PDFs.
+6. **Workspace layout.** The recovered work has a conversation-style
+   redesign; `master` has added cards to the current layout since. Choose
+   one before M2 extends the answer screen (see `recovery-review.md`).
 
 ## Rules every item follows
 
