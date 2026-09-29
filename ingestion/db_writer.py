@@ -88,6 +88,11 @@ async def write_document(
     document and copied to each chunk. They need migration 0001. When all of
     them are None the statements are unchanged, so ingestion still works on a
     database where that migration has not been applied.
+
+    Re-ingesting a URL replaces its row, so ``documents`` always holds the
+    current version. With migration 0002 applied, a database trigger first
+    copies the previous row into ``document_versions`` when the source content
+    changed; this function needs no change for that.
     """
     assert len(chunk_texts) == len(chunk_embeddings), "chunk/embedding count mismatch"
     _validate_provenance(jurisdiction, effective_from, effective_to, source_hash, retrieved_at)

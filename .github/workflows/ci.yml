@@ -61,6 +61,46 @@ jobs:
           docker compose config --quiet
           docker compose -f docker-compose.yml -f compose.production.yml config --quiet
 
+  migrations-postgres:
+    # Applies db/init.sql and every migration to a disposable PostgreSQL with
+    # pgvector, then exercises ingestion against it. The service container is
+    # free on standard runners; the password is a placeholder, not a secret.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-placeholder
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Check out repository
+        # actions/checkout v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Set up Python
+        # actions/setup-python v5.4.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
+        with:
+          python-version: "3.11"
+
+      - name: Install deterministic test dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir -r requirements-ci.txt
+
+      - name: Run migrations against PostgreSQL
+        env:
+          SETU_TEST_ADMIN_DSN: postgresql://postgres:ci-placeholder@127.0.0.1:5432/postgres
+          SETU_REQUIRE_DB_TESTS: "1"
+        run: python -m unittest tests.test_migrations_postgres -v
+
   frontend-quality:
     runs-on: ubuntu-latest
     timeout-minutes: 20

@@ -40,6 +40,7 @@ def check_workflow(errors: list[str]) -> None:
         "python -m eval.offline_evaluation",
         "npm run test:run",
         "npm run test:e2e",
+        "python -m unittest tests.test_migrations_postgres",
     )
     for fragment in required_fragments:
         if fragment not in text:

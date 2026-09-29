@@ -17,7 +17,12 @@ Rules:
 - Every migration must be forward-compatible with the code already deployed:
   add nullable columns first, backfill later, tighten constraints last.
 - `tests/test_migrations.py` checks structure offline. It does not execute SQL.
+- `tests/test_migrations_postgres.py` applies `db/init.sql` and every
+  migration to a disposable PostgreSQL with pgvector, runs ingestion against
+  it, and tests each rollback. CI runs it in the `migrations-postgres` job;
+  locally set `SETU_TEST_ADMIN_DSN` to a throwaway server.
 
 | Migration | Adds |
 |---|---|
 | `0001_jurisdiction_and_effective_dates` | `jurisdiction`, `effective_from`, `effective_to`, `source_hash`, `retrieved_at` on `documents` and `chunks`, with format checks and a lookup index |
+| `0002_document_version_history` | `document_versions` table and a trigger that archives the previous row whenever a re-ingest changes a document's source content. Requires 0001. Rollback drops the archive |
