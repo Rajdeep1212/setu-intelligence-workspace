@@ -206,7 +206,11 @@ sources. None needs a paid service.
   `effective_to`, because that column means legal validity; a re-scanned PDF
   does not end a law. See
   [research/version-history.md](research/version-history.md). The freshness
-  watch is next.
+  watch is built on branch `phase4/freshness-watch`:
+  `.github/workflows/freshness.yml` runs `scripts/freshness_watch.py` every
+  Monday and on changes to the tables. It fails when a pinned hash no longer
+  matches, and also when no source can be reached, so a blocked runner is
+  never read as "all fresh".
 - **Acceptance test:** a test source whose pinned hash is altered makes the
   watch fail in one run; unchanged sources pass.
 - **Effort:** 4 days.

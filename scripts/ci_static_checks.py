@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
+FRESHNESS_WORKFLOW = ROOT / ".github" / "workflows" / "freshness.yml"
 EXPECTED_ACTIONS = {
     "actions/checkout": "11bd71901bbe5b1630ceea73d27597364c9af683",
     "actions/setup-python": "42375524e23c412d93fb67b49958b491fce71c38",
@@ -30,21 +31,44 @@ def tracked_files() -> list[Path]:
 
 
 def check_workflow(errors: list[str]) -> None:
-    text = WORKFLOW.read_text(encoding="utf-8")
-    lowered = text.casefold()
-    required_fragments = (
-        "permissions:\n  contents: read",
-        "runs-on: ubuntu-latest",
-        "python-version: \"3.11\"",
-        "node-version: \"22\"",
-        "python -m eval.offline_evaluation",
-        "npm run test:run",
-        "npm run test:e2e",
-        "python -m unittest tests.test_migrations_postgres",
+    check_workflow_file(
+        errors,
+        WORKFLOW,
+        (
+            "permissions:\n  contents: read",
+            "runs-on: ubuntu-latest",
+            "python-version: \"3.11\"",
+            "node-version: \"22\"",
+            "python -m eval.offline_evaluation",
+            "npm run test:run",
+            "npm run test:e2e",
+            "python -m unittest tests.test_migrations_postgres",
+        ),
     )
+    reviewed = {WORKFLOW.name, FRESHNESS_WORKFLOW.name}
+    for path in sorted(WORKFLOW.parent.iterdir()):
+        if path.name not in reviewed:
+            errors.append(f"unreviewed workflow file: {path.name}")
+    # The weekly source watch: read-only, standard runner, no secrets.
+    check_workflow_file(
+        errors,
+        FRESHNESS_WORKFLOW,
+        (
+            "permissions:\n  contents: read",
+            "runs-on: ubuntu-latest",
+            "schedule:",
+            "python scripts/freshness_watch.py",
+        ),
+    )
+
+
+def check_workflow_file(errors: list[str], path: Path, required_fragments: tuple[str, ...]) -> None:
+    name = path.name
+    text = path.read_text(encoding="utf-8")
+    lowered = text.casefold()
     for fragment in required_fragments:
         if fragment not in text:
-            errors.append(f"workflow missing required fragment: {fragment}")
+            errors.append(f"{name} missing required fragment: {fragment}")
     prohibited = (
         "pull_request_target",
         "workflow_dispatch",
@@ -62,11 +86,11 @@ def check_workflow(errors: list[str]) -> None:
     )
     for fragment in prohibited:
         if fragment in lowered:
-            errors.append(f"workflow contains prohibited capability: {fragment}")
+            errors.append(f"{name} contains prohibited capability: {fragment}")
 
     uses = re.findall(r"^\s*-?\s*uses:\s*([^\s#]+)", text, re.MULTILINE)
     if not uses:
-        errors.append("workflow contains no actions")
+        errors.append(f"{name} contains no actions")
     for reference in uses:
         if "@" not in reference:
             errors.append(f"action lacks ref: {reference}")
