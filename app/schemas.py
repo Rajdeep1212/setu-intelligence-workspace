@@ -49,6 +49,19 @@ class PremiseCheck(BaseModel):
     missing: list[str] = Field(default_factory=list)
 
 
+class ScamCheck(BaseModel):
+    """Structured result of a message check (app/agent/scam_shield.py).
+
+    The verdict is never "safe": the strongest reassurance is
+    "no_warning_signs".
+    """
+
+    verdict: Literal["likely_scam", "suspicious", "official_link", "no_warning_signs"]
+    signals: list[str] = Field(default_factory=list)
+    links: list[dict] = Field(default_factory=list)
+    debunks: list[dict] = Field(default_factory=list)
+
+
 class QueryResponse(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list, max_length=5)
@@ -56,9 +69,11 @@ class QueryResponse(BaseModel):
     route: Optional[str] = None
     confidence: Optional[float] = None
     response_status: Literal[
-        "answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup"
+        "answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup",
+        "scam_check",
     ] = "answered"
     premise_check: Optional[PremiseCheck] = None
+    scam_check: Optional[ScamCheck] = None
 
     @field_validator("citations")
     @classmethod

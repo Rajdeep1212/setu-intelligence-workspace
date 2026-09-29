@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Providers } from "@/components/providers";
@@ -37,6 +37,39 @@ describe("WorkspaceDemo", () => {
     expect(card).toHaveTextContent("₹5,000 does not match this amount.");
     expect(screen.getByRole("link", { name: "Official notification" })).toHaveAttribute("href", expect.stringMatching(/^https:\/\/transport\.wb\.gov\.in\//));
     expect(screen.getByText("From verified offence tables")).toBeInTheDocument();
+    expect(screen.queryByText("Insufficient retrieved evidence")).not.toBeInTheDocument();
+  });
+  it("shows a message check with cited warnings and never makes the pasted link clickable", async () => {
+    const scamAnswer = {
+      answer: "This message shows strong signs of a scam. The link uses a shortened address. Check challans only on https://echallan.parivahan.gov.in/.",
+      citations: [],
+      sections: [
+        { text: "This message shows strong signs of a scam.", citation_ids: [] },
+        { text: "The link uses a shortened address.", citation_ids: [] },
+        { text: "Check challans only on https://echallan.parivahan.gov.in/.", citation_ids: [] },
+      ],
+      route: "scam_check",
+      response_status: "scam_check",
+      scam_check: {
+        verdict: "likely_scam",
+        signals: ["shortened_link", "payment_link_not_official"],
+        links: [{ url: "bit.ly/3xYzAb", host: "bit.ly", official: false, kinds: ["shortened_link"] }],
+        debunks: [{ id: "fake-echallan-links-2026", kind: "channel_warning", topic: "Fake traffic e-challan messages", summary: "Scammers send fake challan links.", date: "2026-07-10", issuer: "PIB Fact Check", source: "https://www.business-standard.com/india-news/fake-traffic-challan-scam-pib-warning-whatsapp-sms-links-126071000400_1.html" }],
+      },
+    };
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(scamAnswer), { status: 200 }));
+    const user = userEvent.setup();
+    render(<Providers><WorkspaceDemo /></Providers>);
+    await user.click(screen.getByRole("button", { name: "Run corpus investigation" }));
+    const card = await screen.findByRole("article", { name: "Message check" });
+    expect(card).toHaveAttribute("data-verdict", "likely_scam");
+    expect(screen.getByText("Likely scam")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Links in the message" })).toHaveTextContent("bit.ly");
+    expect(screen.getByRole("list", { name: "Links in the message" })).toHaveTextContent("Not a government domain");
+    const links = within(card).getAllByRole("link");
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveTextContent("Read the warning");
+    expect(links.some((link) => link.getAttribute("href")?.includes("bit.ly"))).toBe(false);
     expect(screen.queryByText("Insufficient retrieved evidence")).not.toBeInTheDocument();
   });
   it("keeps the completed research query for edit and resubmit", async () => { vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(demoResponse), { status: 200 })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const query = screen.getByLabelText("Ask SETU a question"); const before = (query as HTMLTextAreaElement).value; await user.click(screen.getByRole("button", { name: "Run corpus investigation" })); await screen.findByText("2/2 sections evidence linked"); expect(query).toHaveValue(before); });

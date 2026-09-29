@@ -100,3 +100,16 @@
 /* Phase 3: answers from verified offence tables in the workspace. */
 .rule-answer .rule-source{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.55}
 .rule-answer .rule-source a{margin-left:6px;color:color-mix(in srgb,var(--teal) 70%,var(--text));font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* Phase 4a: message checks. Pasted links are shown as plain text. */
+.scam-answer{border-left:3px solid var(--line-strong)}
+.scam-answer[data-verdict="likely_scam"]{border-left-color:var(--red)}
+.scam-answer[data-verdict="suspicious"]{border-left-color:var(--amber)}
+.scam-answer[data-verdict="official_link"]{border-left-color:var(--teal)}
+.scam-links{display:grid;gap:6px;margin:14px 0 0;padding:0;list-style:none;font-size:12px}
+.scam-links li{display:flex;flex-wrap:wrap;gap:4px 10px;min-width:0}
+.scam-links code{overflow-wrap:anywhere;font:12px var(--font-mono);color:var(--text)}
+.scam-links span{color:var(--muted)}
+.grounded-pill.scam-likely_scam{background:color-mix(in srgb,var(--red) 12%,var(--surface));color:color-mix(in srgb,var(--red) 60%,var(--text))}
+.grounded-pill.scam-suspicious{background:color-mix(in srgb,var(--amber) 14%,var(--surface));color:color-mix(in srgb,var(--amber) 55%,var(--text))}
+.grounded-pill.scam-no_warning_signs{background:var(--mineral-100);color:var(--text)}

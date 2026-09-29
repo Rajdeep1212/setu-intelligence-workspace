@@ -167,6 +167,14 @@ sources. None needs a paid service.
   distance to allow-listed names), and flags personal-number senders. It also
   matches text against a curated list of PIB Fact Check debunks, each with its
   source URL and date. There is no model in the loop.
+- **Status (28 Sep 2026):** built on branch `phase4/scam-shield`
+  (`app/agent/scam_shield.py`, `data/scam_shield/sources.json`). The
+  allow-list was replaced by a structural rule: only `.gov.in` and `.nic.in`
+  hosts count as official, because only government bodies can register them
+  (registry.gov.in FAQ). 0 missed scams and 0 false alarms on genuine
+  official messages across 44 cases; the held-out set scored 10 of 12 before
+  its fix; no answer calls a message safe. See
+  [research/scam-shield.md](research/scam-shield.md).
 - **Acceptance test:** a fixture set of known scam samples (from C6/C7
   descriptions, synthetic) is never marked safe; every allow-listed host
   passes; `gov.in.net`-style hosts fail.

@@ -1,0 +1,151 @@
+{
+  "schema_version": "setu.scam-shield/v1",
+  "retrieved_at": "2026-09-28",
+  "notes": [
+    "Every entry cites where it was confirmed. Add an entry only from PIB Fact Check, a government department or police statement, or reputable reporting of one; never from a social media repost alone.",
+    "official_services lists well-known government portals by name so answers can point people to them. The checker's official-domain rule itself is structural (.gov.in and .nic.in, both registrable only by government through NIC), so this list is guidance, not an allow-list.",
+    "Debunk kinds: false_claim (the claim itself is false, so a matching message is a warning sign on its own) and channel_warning (a warning about fake links or apps; it counts as a risk only when the message uses an unofficial link, an APK or asks for an OTP, and is otherwise shown as related context)."
+  ],
+  "official_services": [
+    {
+      "id": "echallan",
+      "name": "e-Challan (Parivahan)",
+      "url": "https://echallan.parivahan.gov.in/",
+      "confirmed_by": "Maharashtra Transport Department warning on fake e-challan links, reported by Pune Pulse; The Quint WebQoof, 22 Dec 2025",
+      "sources": [
+        "https://www.mypunepulse.com/maharashtra-transport-department-warns-citizens-against-fake-websites-apps-and-fraudulent-e-challan-links/",
+        "https://www.thequint.com/news/webqoof/echallan-scam-using-fake-parivahan-website"
+      ]
+    },
+    {
+      "id": "cybercrime",
+      "name": "National Cyber Crime Reporting Portal (helpline 1930)",
+      "url": "https://cybercrime.gov.in/",
+      "confirmed_by": "PIB Fact Check warning on fake traffic challan links, reported by Business Standard, 10 Jul 2026",
+      "sources": [
+        "https://www.business-standard.com/india-news/fake-traffic-challan-scam-pib-warning-whatsapp-sms-links-126071000400_1.html"
+      ]
+    }
+  ],
+  "gov_domain_rule": {
+    "rule": "Hosts ending in .gov.in or .nic.in",
+    "evidence": "registry.gov.in FAQ: only government organisations can register under GOV.IN, and NIC is the only registrar.",
+    "source": "https://registry.gov.in/faq.php"
+  },
+  "debunks": [
+    {
+      "id": "fake-echallan-links-2026",
+      "topic": "Fake traffic e-challan messages",
+      "summary": "Scammers send SMS and WhatsApp messages about pending traffic challans with fake payment links, APK files and PDFs. Check challans only on the official e-Challan portal. Report fraud on 1930.",
+      "date": "2026-07-10",
+      "issuer": "PIB Fact Check",
+      "source": "https://www.business-standard.com/india-news/fake-traffic-challan-scam-pib-warning-whatsapp-sms-links-126071000400_1.html",
+      "match_all": [
+        [
+          "challan",
+          "चालान",
+          "চালান"
+        ]
+      ],
+      "match_any": [
+        [
+          "pay",
+          "payment",
+          "pending",
+          "link",
+          "apk",
+          "भुगतान",
+          "लंबित",
+          "লিঙ্ক",
+          "পেমেন্ট",
+          "বকেয়া"
+        ]
+      ],
+      "kind": "channel_warning"
+    },
+    {
+      "id": "kerala-echallan-apk-2026",
+      "topic": "Fake e-challan SMS that installs an app",
+      "summary": "Kerala Police warned about fake e-challan SMS messages that lead to a malicious APK and give fraudsters control of the phone. Do not install apps from messages.",
+      "date": "2026-09-26",
+      "issuer": "Kerala Police (reported by PTI)",
+      "source": "https://theprint.in/india/keralam-police-warn-of-malicious-apk-scam-via-fake-e-challan-sms/3053993/",
+      "match_all": [
+        [
+          "challan",
+          "चालान",
+          "চালান"
+        ],
+        [
+          "apk",
+          "install",
+          "download",
+          "इंस्टॉल",
+          "डाउनलोड",
+          "ইনস্টল",
+          "ডাউনলোড"
+        ]
+      ],
+      "match_any": [],
+      "kind": "channel_warning"
+    },
+    {
+      "id": "fake-students-laptop-scheme-2026",
+      "topic": "Fake \"Students Laptop Scheme 2026\"",
+      "summary": "PIB Fact Check: no such scheme has been announced. Messages asking students to share personal details for a free laptop are fake.",
+      "date": "2026-01-12",
+      "issuer": "PIB Fact Check (reported by All India Radio)",
+      "source": "https://www.newsonair.gov.in/govt-warns-public-against-fake-students-laptop-scheme-2026-messages",
+      "match_all": [
+        [
+          "laptop",
+          "लैपटॉप",
+          "ল্যাপটপ"
+        ]
+      ],
+      "match_any": [
+        [
+          "free",
+          "scheme",
+          "yojana",
+          "मुफ्त",
+          "मुफ़्त",
+          "योजना",
+          "বিনামূল্যে",
+          "প্রকল্প",
+          "যোজনা"
+        ]
+      ],
+      "kind": "false_claim"
+    },
+    {
+      "id": "pm-kusum-registration-fee-2024",
+      "topic": "PM-KUSUM registration fee scam",
+      "summary": "PIB Fact Check warned about fraudsters charging Rs 8,000 for PM-KUSUM registration through fake websites. Apply only through official government channels.",
+      "date": "2024-09-08",
+      "issuer": "PIB Fact Check (reported by All India Radio)",
+      "source": "https://www.newsonair.gov.in/pib-fact-check-unit-warns-of-scam-fraudsters-charging-rs-8000-for-pm-kusum-yojana-registration",
+      "match_all": [
+        [
+          "kusum",
+          "कुसुम",
+          "কুসুম"
+        ]
+      ],
+      "match_any": [
+        [
+          "registration",
+          "fee",
+          "pay",
+          "पंजीकरण",
+          "शुल्क",
+          "रजिस्ट्रेशन",
+          "নিবন্ধন",
+          "ফি",
+          "রেজিস্ট্রেশন"
+        ]
+      ],
+      "kind": "false_claim"
+    }
+  ]
+}

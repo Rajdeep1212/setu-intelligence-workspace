@@ -21,3 +21,4 @@ class AgentState(TypedDict, total=False):
     response_status: str
     confidence: Optional[float]
     premise_check: Optional[dict]
+    scam_check: Optional[dict]

@@ -1,8 +1,12 @@
 """
-LangGraph agent — Week 3.
+LangGraph agent.
 
-    route --(retrieve_docs)--> retrieve_docs -----> generate -> END
-          `-(check_eligibility)-> check_eligibility -^
+    scam_gate --(message check)--> END
+        `--> premise_gate --(traffic fine)--> END
+                 `--> route --(retrieve_docs)--> retrieve_docs -----> generate -> END
+                           `-(check_eligibility)-> check_eligibility -^
+
+The two gates are deterministic and make no provider call.
 
 `session` (an AsyncSession, request-scoped in FastAPI) is bound into the
 tool nodes via functools.partial when the graph is built, rather than
@@ -24,6 +28,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.agent.llm import generate_structured
 from app.agent.premise import extract_facts
 from app.agent.premise_answer import compose as compose_premise_answer
+from app.agent.scam_shield import compose as compose_scam_check
+from app.agent.scam_shield import should_check as should_check_message
 from app.agent.models import GeneratedAnswer, RouteDecision
 from app.agent.state import AgentState
 from app.agent.tools import retrieve_docs_tool
@@ -129,6 +135,24 @@ def _selected_citation_evidence(
         for chunk in retrieved_chunks
         if str(chunk["id"]) in selected_ids
     ]
+
+
+async def scam_gate_node(state: AgentState) -> dict:
+    """Screen pasted messages and links before anything else.
+
+    A message with a link, an APK, a request for an OTP or PIN, a UPI ID, or
+    a direct "is this fake?" question is checked by fixed rules and cited
+    debunks (app/agent/scam_shield.py). No provider call. Other questions pass
+    through with no state change.
+    """
+    if not should_check_message(state["query"]):
+        return {}
+    language = query_language(state["query"], state.get("language"))
+    return compose_scam_check(state["query"], language)
+
+
+def _after_scam_gate(state: AgentState) -> str:
+    return "done" if state.get("route") == "scam_check" else "premise_gate"
 
 
 async def premise_gate_node(state: AgentState) -> dict:
@@ -358,6 +382,7 @@ def _pick_route(state: AgentState) -> str:
 def build_graph(session: AsyncSession):
     graph = StateGraph(AgentState)
 
+    graph.add_node("scam_gate", scam_gate_node)
     graph.add_node("premise_gate", premise_gate_node)
     graph.add_node("route", route_node)
     graph.add_node("retrieve_docs", functools.partial(retrieve_docs_node, session=session))
@@ -367,7 +392,8 @@ def build_graph(session: AsyncSession):
     )
     graph.add_node("generate", generate_node)
 
-    graph.set_entry_point("premise_gate")
+    graph.set_entry_point("scam_gate")
+    graph.add_conditional_edges("scam_gate", _after_scam_gate, {"done": END, "premise_gate": "premise_gate"})
     graph.add_conditional_edges("premise_gate", _after_premise_gate, {"done": END, "route": "route"})
     graph.add_conditional_edges(
         "route",
