@@ -233,15 +233,14 @@ sources. None needs a paid service.
   Catala, Apache-2.0, if the owner prefers). Each clause cites its official
   source clause and effective date. The LLM only extracts user facts into a
   typed profile; the rule function decides.
-- **Status (28 Sep 2026):** not built; the owner must decide the scope.
-  The PM-KISAN operational guidelines could not be read from the cloud
-  session, and no criterion is encoded from secondary sites. The Government
-  of India already runs a "myScheme - Eligibility Engine" at
-  `rules.myscheme.gov.in`, with per-scheme checkers (for example PMUY 2.0 and
-  PM Mudra Yojana; page titles found by search on 28 Sep 2026; the pages are
-  rendered in the browser and could not be read). Handing off to it may beat
-  re-encoding the same rules. See [PROGRESS.md](PROGRESS.md), item 6 under
-  "Waiting for the owner".
+- **Status (29 Sep 2026): decided, not built.** The owner chose to hand
+  off to the government's own eligibility engine instead of encoding scheme
+  rules: eligibility stays quarantined, and answers link myScheme and the
+  scheme's official portal (P6, PR #9). The PM-KISAN guidelines could not
+  be read from the cloud session, and no criterion is taken from
+  secondary sites. The myScheme engine is at `rules.myscheme.gov.in`
+  (page titles found by search on 28 Sep 2026; the pages render in the
+  browser and could not be read).
 - **Acceptance test:** one unit test per rule clause, including boundary
   values; a recorded human sign-off per scheme before its quarantine lifts.
 - **Effort:** 8 days for 3 schemes.
