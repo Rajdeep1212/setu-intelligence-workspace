@@ -6,13 +6,35 @@ export const answerSectionSchema = z.object({
   text: z.string().trim().min(1),
   citation_ids: z.array(z.string().min(1)).max(5).refine((ids) => new Set(ids).size === ids.length, "Section citation IDs must be unique."),
 });
+// Phase 3: traffic-fine questions are answered from verified offence tables, not retrieved chunks.
+export const premiseCheckSchema = z.object({
+  verdict: z.string().min(1),
+  offence_id: z.string().nullable().optional(),
+  jurisdiction: z.string().nullable().optional(),
+  occurrence: z.string().nullable().optional(),
+  claimed_inr: z.number().int().nullable().optional(),
+  verified_amounts: z.array(z.object({ occurrence: z.string(), vehicle_class: z.string(), inr: z.number().int() })).default([]),
+  source: z.object({ title: z.string(), reference: z.string(), url: z.url() }).nullable().optional(),
+  schedule_row: z.string().nullable().optional(),
+  missing: z.array(z.string()).default([]),
+});
+// Phase 4a: pasted messages and links are checked by fixed rules and cited official warnings.
+// The verdict is never "safe"; the strongest reassurance is "no_warning_signs".
+export const scamCheckSchema = z.object({
+  verdict: z.enum(["likely_scam", "suspicious", "official_link", "no_warning_signs"]),
+  signals: z.array(z.string()).default([]),
+  links: z.array(z.object({ url: z.string(), host: z.string(), official: z.boolean(), kinds: z.array(z.string()).default([]) })).default([]),
+  debunks: z.array(z.object({ id: z.string(), kind: z.string(), topic: z.string(), summary: z.string(), date: z.string(), issuer: z.string(), source: z.url() })).default([]),
+});
 export const queryResponseSchema = z.object({
   answer: z.string(),
   citations: z.array(citationSchema).max(5),
   sections: z.array(answerSectionSchema).max(12).default([]),
-  route: z.enum(["retrieve_docs", "check_eligibility"]).nullable().optional(),
+  route: z.enum(["retrieve_docs", "check_eligibility", "traffic_rules", "scam_check"]).nullable().optional(),
   confidence: z.number().min(0).max(1).nullable().optional(),
-  response_status: z.enum(["answered", "abstained", "eligibility_unverified"]).default("answered"),
+  response_status: z.enum(["answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup", "scam_check"]).default("answered"),
+  premise_check: premiseCheckSchema.nullable().optional(),
+  scam_check: scamCheckSchema.nullable().optional(),
   data_mode: z.enum(["demo", "local", "cloud"]).optional(),
 }).superRefine((response, context) => {
   const citationIds = response.citations.map((citation) => citation.chunk_id);
@@ -44,6 +66,7 @@ export const sourceFiltersSchema = z.object({
 });
 export type QueryRequest = z.infer<typeof queryRequestSchema>;
 export type QueryResponse = z.infer<typeof queryResponseSchema>;
+export type ScamCheck = z.infer<typeof scamCheckSchema>;
 export type AnswerSection = z.infer<typeof answerSectionSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 export type SourceSummary = z.infer<typeof sourceSummarySchema>;
