@@ -98,6 +98,17 @@ describe("WorkspaceDemo", () => {
     expect(screen.queryByText(/appears to meet|you are eligible|not eligible/i)).not.toBeInTheDocument();
   });
   it("shows no next steps for an ordinary answer", () => { render(<Providers><WorkspaceDemo /></Providers>); expect(screen.queryByRole("navigation", { name: "Official next steps" })).not.toBeInTheDocument(); });
+  it("labels demo answers as illustrative and tags each answer with its language", async () => {
+    render(<Providers><WorkspaceDemo /></Providers>);
+    expect(screen.getByText("Illustrative example: not a retrieved answer")).toBeInTheDocument();
+    expect(screen.getByRole("article", { name: "Generated answer with retrieved citations" })).toHaveAttribute("lang", "en");
+    const hindi = demoResponseForQuery({ query: "भारत में आधार का क्या उपयोग है?" });
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({ ...hindi, data_mode: "local" }), { status: 200 }));
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Run corpus investigation" }));
+    await waitFor(() => expect(screen.getByRole("article", { name: "Generated answer with retrieved citations" })).toHaveAttribute("lang", "hi"));
+    expect(screen.getByText("Corpus investigation")).toBeInTheDocument();
+  });
   it("keeps the completed research query for edit and resubmit", async () => { vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify(demoResponse), { status: 200 })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const query = screen.getByLabelText("Ask SETU a question"); const before = (query as HTMLTextAreaElement).value; await user.click(screen.getByRole("button", { name: "Run corpus investigation" })); await screen.findByText("2/2 sections evidence linked"); expect(query).toHaveValue(before); });
   it("prevents duplicate query submissions while one request is pending", async () => { let resolve!: (value: Response) => void; const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => new Promise((done) => { resolve = done; })); const user = userEvent.setup(); render(<Providers><WorkspaceDemo /></Providers>); const submit = screen.getByRole("button", { name: "Run corpus investigation" }); await user.click(submit); await user.click(submit); expect(network).toHaveBeenCalledTimes(1); expect(submit).toBeDisabled(); resolve(new Response(JSON.stringify({ answer: "No evidence.", citations: [], route: "retrieve_docs", confidence: 0 }), { status: 200 })); });
 });
