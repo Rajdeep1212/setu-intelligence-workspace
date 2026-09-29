@@ -26,6 +26,9 @@ export const scamCheckSchema = z.object({
   links: z.array(z.object({ url: z.string(), host: z.string(), official: z.boolean(), kinds: z.array(z.string()).default([]) })).default([]),
   debunks: z.array(z.object({ id: z.string(), kind: z.string(), topic: z.string(), summary: z.string(), date: z.string(), issuer: z.string(), source: z.url() })).default([]),
 });
+// P6: official services to act on. Only https links on .gov.in or .nic.in are accepted.
+export const isOfficialUrl = (value: string) => { try { const url = new URL(value); return url.protocol === "https:" && /\.(gov|nic)\.in$/.test(url.hostname); } catch { return false; } };
+export const nextStepSchema = z.object({ id: z.string().min(1), label: z.string().min(1), url: z.url().refine(isOfficialUrl, "Next steps must link to an https .gov.in or .nic.in page."), operator: z.string().min(1) });
 export const queryResponseSchema = z.object({
   answer: z.string(),
   citations: z.array(citationSchema).max(5),
@@ -35,6 +38,7 @@ export const queryResponseSchema = z.object({
   response_status: z.enum(["answered", "abstained", "eligibility_unverified", "needs_clarification", "rule_lookup", "scam_check"]).default("answered"),
   premise_check: premiseCheckSchema.nullable().optional(),
   scam_check: scamCheckSchema.nullable().optional(),
+  next_steps: z.array(nextStepSchema).max(3).default([]),
   data_mode: z.enum(["demo", "local", "cloud"]).optional(),
 }).superRefine((response, context) => {
   const citationIds = response.citations.map((citation) => citation.chunk_id);

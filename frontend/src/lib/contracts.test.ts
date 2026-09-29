@@ -61,3 +61,23 @@ describe("message checks (Phase 4a)", () => {
     expect(() => queryResponseSchema.parse({ ...base, scam_check: { verdict: "safe" } })).toThrow();
   });
 });
+
+describe("official next steps (P6)", () => {
+  const base = { answer: "Eligibility is not assessed.", citations: [], response_status: "eligibility_unverified" };
+  const step = { id: "myscheme", label: "Find schemes on myScheme", url: "https://www.myscheme.gov.in/", operator: "Digital India Corporation (MeitY)" };
+
+  it("defaults to no steps and accepts official https links", () => {
+    expect(queryResponseSchema.parse(base).next_steps).toEqual([]);
+    expect(queryResponseSchema.parse({ ...base, next_steps: [step] }).next_steps[0].url).toBe("https://www.myscheme.gov.in/");
+  });
+
+  it("rejects look-alike, plain-http and non-government links", () => {
+    for (const url of ["https://pmkisan.app/", "https://pmkisan.gov.in.example.com/", "http://pmkisan.gov.in/", "https://www.example.com/"]) {
+      expect(queryResponseSchema.safeParse({ ...base, next_steps: [{ ...step, url }] }).success).toBe(false);
+    }
+  });
+
+  it("allows at most three steps", () => {
+    expect(queryResponseSchema.safeParse({ ...base, next_steps: [step, step, step, step] }).success).toBe(false);
+  });
+});

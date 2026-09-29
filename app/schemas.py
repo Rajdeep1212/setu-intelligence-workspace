@@ -62,6 +62,15 @@ class ScamCheck(BaseModel):
     debunks: list[dict] = Field(default_factory=list)
 
 
+class NextStep(BaseModel):
+    """An official service to act on, from data/next_steps/services.json."""
+
+    id: str
+    label: str
+    url: str
+    operator: str
+
+
 class QueryResponse(BaseModel):
     answer: str
     citations: list[Citation] = Field(default_factory=list, max_length=5)
@@ -74,6 +83,7 @@ class QueryResponse(BaseModel):
     ] = "answered"
     premise_check: Optional[PremiseCheck] = None
     scam_check: Optional[ScamCheck] = None
+    next_steps: list[NextStep] = Field(default_factory=list, max_length=3)
 
     @field_validator("citations")
     @classmethod

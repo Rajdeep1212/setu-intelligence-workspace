@@ -113,3 +113,12 @@
 .grounded-pill.scam-likely_scam{background:color-mix(in srgb,var(--red) 12%,var(--surface));color:color-mix(in srgb,var(--red) 60%,var(--text))}
 .grounded-pill.scam-suspicious{background:color-mix(in srgb,var(--amber) 14%,var(--surface));color:color-mix(in srgb,var(--amber) 55%,var(--text))}
 .grounded-pill.scam-no_warning_signs{background:var(--mineral-100);color:var(--text)}
+
+/* P6: official next steps after an answer. */
+.notice-answer{border-left:3px solid var(--line-strong)}
+.next-steps{margin-top:14px;padding:16px 18px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+.next-steps h3{margin:0 0 10px;font-size:13px}
+.next-steps ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.next-steps li{display:grid;gap:2px;min-width:0}
+.next-steps a{color:color-mix(in srgb,var(--teal) 70%,var(--text));font-size:13px;font-weight:700;line-height:1.45;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.next-steps span{color:var(--muted);font-size:11px}
