@@ -9,6 +9,8 @@ pull request for that run.
 import asyncio
 import hashlib
 import unittest
+
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import date
 from unittest.mock import AsyncMock, patch
 
@@ -149,7 +151,7 @@ class ThreadingTests(unittest.IsolatedAsyncioTestCase):
             patch.object(pipeline, "keyword_search", keyword),
             patch.object(pipeline, "rerank", return_value=[]),
         ):
-            await pipeline.retrieve(object(), "q", "en", jurisdiction="IN-WB", as_of=date(2019, 6, 15))
+            await pipeline.retrieve(AsyncSession(), "q", "en", jurisdiction="IN-WB", as_of=date(2019, 6, 15))
 
         for leg in (dense, keyword):
             self.assertEqual(leg.await_args.kwargs, {"jurisdiction": "IN-WB", "as_of": date(2019, 6, 15)})
@@ -163,7 +165,7 @@ class ThreadingTests(unittest.IsolatedAsyncioTestCase):
             patch.object(pipeline, "keyword_search", keyword),
             patch.object(pipeline, "rerank", return_value=[]),
         ):
-            await pipeline.retrieve(object(), "q", "en")
+            await pipeline.retrieve(AsyncSession(), "q", "en")
 
         self.assertEqual(dense.await_args.kwargs, {})
         self.assertEqual(keyword.await_args.kwargs, {})
