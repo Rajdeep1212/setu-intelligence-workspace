@@ -14,6 +14,8 @@ or `LEGAL_REVIEW`.
 `.github/workflows/freshness.yml` runs `scripts/freshness_watch.py` every
 Monday at 03:17 UTC, and whenever these tables change on `master`. It
 downloads each source again and compares the SHA-256 with the pinned value.
+The same run also checks the scheme corpus sources
+([corpus/README.md](../../corpus/README.md)).
 Run it locally with:
 
 ```bash

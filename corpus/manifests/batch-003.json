@@ -1,0 +1,342 @@
+{
+  "schema_version": 2,
+  "batch_id": "batch-003",
+  "title": "SETU corpus expansion +25 checkpoint final five",
+  "reviewed_on": "2026-09-13",
+  "notes": "Counting unit: distinct scheme or public service; source documents are not additional items. Converted from the recovered 14 Sep 2026 manifest (commit 908ad3d); pins are the staged September snapshots.",
+  "fetch_policy": {
+    "allowed_hosts": [
+      "wb.gov.in",
+      "www.wb.gov.in"
+    ],
+    "connect_timeout_seconds": 10,
+    "read_timeout_seconds": 30,
+    "retries": 2,
+    "max_redirects": 5,
+    "max_response_bytes": 12582912,
+    "min_host_interval_seconds": 1,
+    "max_retry_after_seconds": 30
+  },
+  "items": [
+    {
+      "stable_id": "scheme.central.sbm-gramin-ihhl",
+      "canonical_title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+      "item_type": "central_scheme",
+      "category": "sanitation_basic_services",
+      "jurisdiction": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported as of page update date",
+        "documents": "not stated",
+        "application_route": "supported through Gram Panchayat or rural development office",
+        "deadline": "not stated",
+        "jurisdiction": "supported: rural India",
+        "status_or_help": "not stated"
+      },
+      "sources": [
+        {
+          "source_id": "sbm-gramin-ihhl.wb-overview.current.en",
+          "document_title": "Swachh Bharat Mission (Grameen) Individual Household Latrine",
+          "document_identifier": "government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-swachh-bharat-mission-grameen-individual-household-latrine.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current overview; local verification and applicable component norms still govern",
+          "coverage_scope": "Rural household eligibility, financial incentive, local application route and verification process; no documents, deadline or status channel.",
+          "required_markers": [
+            "Individual Household Latrine",
+            "Application Details"
+          ],
+          "min_extracted_characters": 1000,
+          "pin": {
+            "sha256": "8415757e363d711468a1408cdb456545aee5b9be2870fcdd50914b9ece9e7796",
+            "retrieved_at": "2026-09-13T03:32:31Z",
+            "watch": "text",
+            "text_sha256": "74d5b8f50cec0f96f1835290bc563f9d2d2f7711f5060d04aa2ed1368ebe488d",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "sbm-ihhl.hi.apply",
+          "query": "ग्रामीण घर में शौचालय नहीं है तो SBM-G सहायता के लिए कहाँ आवेदन करें?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "local Gram Panchayat"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.ddu-gky",
+      "canonical_title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+      "item_type": "central_scheme",
+      "category": "rural_skills_employment",
+      "jurisdiction": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported qualitatively; no amount stated",
+        "documents": "not stated",
+        "application_route": "supported through state skill mission or training partner",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "sources": [
+        {
+          "source_id": "ddu-gky.wb-overview.current.en",
+          "document_title": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana",
+          "document_identifier": "government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-deen-dayal-upadhyaya-grameen-kaushalya-yojana.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current official overview; course-specific criteria and openings require the implementing portal",
+          "coverage_scope": "Rural-youth eligibility, free training and placement-linked purpose, and high-level application route; documents and deadlines absent.",
+          "required_markers": [
+            "DDU-GKY",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "pin": {
+            "sha256": "84665da614b868aefc4419381451383d33608b6ec443018c4b630d3eaa134b58",
+            "retrieved_at": "2026-09-13T03:32:32Z",
+            "watch": "text",
+            "text_sha256": "ae054f75415fdd6865d3aa2d58e036ffc398ce0629bcd09994a9ba316ac3c2d0",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "ddu-gky.bn.eligibility",
+          "query": "DDU-GKY প্রশিক্ষণের জন্য কোন গ্রামীণ যুবকেরা যোগ্য?",
+          "query_language": "bn",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Rural youth aged 15-35 years"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.naps",
+      "canonical_title": "National Apprenticeship Promotion Scheme (NAPS)",
+      "item_type": "central_scheme",
+      "category": "apprenticeship",
+      "jurisdiction": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "official_application_url": "https://www.apprenticeshipindia.gov.in/",
+      "practical_coverage": {
+        "eligibility": "supported at overview level; trade-specific conditions may vary",
+        "benefit": "supported qualitatively; reimbursement limit not stated",
+        "documents": "not stated",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "sources": [
+        {
+          "source_id": "naps.wb-overview.current.en",
+          "document_title": "National Apprenticeship Promotion Scheme",
+          "document_identifier": "government-schemes-details-national-apprenticeship-promotion-scheme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-promotion-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current official overview; trade and employer-specific requirements require portal verification",
+          "coverage_scope": "Youth and employer eligibility overview, apprenticeship benefits and portal application steps; documents and deadlines absent.",
+          "required_markers": [
+            "National Apprenticeship Promotion Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "pin": {
+            "sha256": "acf3331a0c52645ab6016cd718e351dfc33fc93ea3edc60d23887e255316e865",
+            "retrieved_at": "2026-09-13T03:32:33Z",
+            "watch": "text",
+            "text_sha256": "335e4462af176d9ea0a42e877bd6e88972300330bdd4eae10dca701beda0eb76",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "naps.en.application",
+          "query": "How does a young person apply for an apprenticeship under NAPS?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Choose desired trade and employer"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.nats",
+      "canonical_title": "National Apprenticeship Training Scheme (NATS)",
+      "item_type": "central_scheme",
+      "category": "graduate_apprenticeship",
+      "jurisdiction": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central scheme",
+      "status_as_of": "2026-09-13",
+      "official_application_url": "https://nats.education.gov.in/",
+      "practical_coverage": {
+        "eligibility": "supported at overview level",
+        "benefit": "supported qualitatively; stipend amount not stated",
+        "documents": "not stated",
+        "application_route": "supported",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "sources": [
+        {
+          "source_id": "nats.wb-overview.current.en",
+          "document_title": "National Apprenticeship Training Scheme",
+          "document_identifier": "government-schemes-details-national-apprenticeship-training-scheme",
+          "source_type": "official_state_scheme_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-national-apprenticeship-training-scheme.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current official overview; opportunity-specific requirements require portal verification",
+          "coverage_scope": "Graduate, diploma-holder and technical-student scope, benefits and portal steps; documents, stipend amount and deadlines absent.",
+          "required_markers": [
+            "National Apprenticeship Training Scheme",
+            "Application Details"
+          ],
+          "min_extracted_characters": 800,
+          "pin": {
+            "sha256": "f10aed1087940f310596706332419a2bfd0bb79fefb855280356a7ab1fc9a816",
+            "retrieved_at": "2026-09-13T03:32:34Z",
+            "watch": "text",
+            "text_sha256": "ba16c24bdcf3b0a8a6098fee92dfa0186fca3ed2fc2364105ec7816703cf37dc",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "nats.hi.eligibility",
+          "query": "NATS में स्नातक और डिप्लोमा धारक कैसे आवेदन करते हैं?",
+          "query_language": "hi",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "graduates and diploma holders"
+          ]
+        }
+      ]
+    },
+    {
+      "stable_id": "service.central.udyam-registration",
+      "canonical_title": "Udyam Registration",
+      "item_type": "central_public_service",
+      "category": "msme_registration",
+      "jurisdiction": "IN",
+      "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+      "current_status": "current official state information page for a central service",
+      "status_as_of": "2026-09-13",
+      "official_application_url": "https://udyamregistration.gov.in/",
+      "practical_coverage": {
+        "eligibility": "supported at overview level; current MSME thresholds not stated",
+        "benefit": "supported qualitatively",
+        "documents": "minimal-document statement and Aadhaar requirement supported; exhaustive list absent",
+        "application_route": "official central registration portal linked",
+        "deadline": "not stated",
+        "jurisdiction": "supported: India",
+        "status_or_help": "not stated"
+      },
+      "sources": [
+        {
+          "source_id": "udyam-registration.wb-overview.current.en",
+          "document_title": "Udyam Registration",
+          "document_identifier": "government-schemes-details-udyam-registration",
+          "source_type": "official_state_service_page",
+          "official_url": "https://wb.gov.in/government-schemes-details-udyam-registration.aspx",
+          "publisher": "Information and Cultural Affairs Department, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": "2026-06-26",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current official overview; current investment/turnover thresholds require the central portal or notification",
+          "coverage_scope": "Who may register, qualitative benefits, no-fee/minimal-document claim and central portal link; detailed steps, thresholds and deadline absent.",
+          "required_markers": [
+            "Udyam initiative",
+            "Eligibility"
+          ],
+          "min_extracted_characters": 900,
+          "pin": {
+            "sha256": "50b57e064eee67f29880540999bbdf92aa8c102e837ec6690c7fa43d4ac454ef",
+            "retrieved_at": "2026-09-13T03:32:35Z",
+            "watch": "text",
+            "text_sha256": "dd042cb1bfbb88c95bae9c05f642a9afbbad5670330f7cb52087427042a33a81",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "udyam.en.basic-eligibility",
+          "query": "Can a new service business register under Udyam and is registration free?",
+          "query_language": "en",
+          "expected_rank_max": 5,
+          "expected_passage_markers": [
+            "Both new and existing businesses"
+          ]
+        }
+      ]
+    }
+  ],
+  "batch_retrieval_checks": [
+    {
+      "check_id": "batch-003.naps-vs-nats.en",
+      "query": "I am a diploma holder seeking graduate-level practical industry training. Is this NAPS or NATS?",
+      "query_language": "en",
+      "expected_rank_max": 3,
+      "expected_passage_markers": [
+        "graduates, diploma holders"
+      ],
+      "expected_item_id": "scheme.central.nats"
+    },
+    {
+      "check_id": "batch-003.ihhl.jurisdiction.bn",
+      "query": "আমার বাড়িতে শৌচাগার নেই। আমি শহরে থাকি—এই গ্রামীণ IHHL তথ্য কি আমার জন্য প্রযোজ্য?",
+      "query_language": "bn",
+      "expected_rank_max": 5,
+      "expected_passage_markers": [
+        "rural area"
+      ],
+      "expected_item_id": "scheme.central.sbm-gramin-ihhl"
+    }
+  ]
+}

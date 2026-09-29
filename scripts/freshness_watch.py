@@ -1,7 +1,14 @@
-"""Freshness watch: have the official sources behind SETU's fine tables changed?
+"""Freshness watch: have the official sources behind SETU changed?
 
 Every source in data/traffic_offences/*.json pins the SHA-256 of the exact
-file that was read. This script downloads each source again and compares.
+file that was read, and so does every active source in the scheme corpus
+manifests (corpus/manifests/*.json, M2.1). This script downloads each source
+again and compares.
+
+Most sources are compared byte for byte. Scheme web pages that differ on
+every request (session tokens, visitor counters) are pinned on their
+extracted text instead ("watch": "text"), using the corpus extractor and the
+manifest's narrow ``ignore_lines``; that needs beautifulsoup4 and lxml.
 
     python scripts/freshness_watch.py [--summary FILE] [--json-out FILE]
 
@@ -14,7 +21,7 @@ Exit status
 A changed hash means a person must re-read the source before any amount is
 trusted again. It does not mean the law changed: a re-scanned or re-signed
 PDF also changes the bytes. Only hashes and metadata are kept in Git, never
-source bodies. Standard library only; no secrets.
+source bodies. Byte comparisons use the standard library only; no secrets.
 """
 
 from __future__ import annotations
@@ -32,6 +39,9 @@ from typing import Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 TABLES = ROOT / "data" / "traffic_offences"
+MANIFESTS = ROOT / "corpus" / "manifests"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 MAX_BYTES = 50 * 1024 * 1024
 TIMEOUT_SECONDS = 60
 USER_AGENT = "SETU-freshness-watch/1.0 (+https://github.com/Rajdeep1212/setu-intelligence-workspace)"
@@ -46,6 +56,8 @@ class Source:
     url: str
     pinned_sha256: str
     used_by: list[str] = field(default_factory=list)
+    mode: str = "bytes"  # bytes | text (hash of extracted text, see corpus/manifests)
+    ignore_lines: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -58,8 +70,10 @@ class Result:
     detail: str = ""
 
 
-def load_sources(tables: Path = TABLES) -> list[Source]:
-    """Every distinct (url, sha256) pinned in the offence tables."""
+def load_sources(tables: Path = TABLES, manifests: Path = MANIFESTS) -> list[Source]:
+    """Every distinct pinned source in the offence tables and the corpus manifests."""
+    from ingestion.corpus_manifest import iter_active_sources, load_manifest, manifest_paths
+
     sources: dict[tuple[str, str], Source] = {}
     for path in sorted(tables.glob("*.json")):
         if path.name == "schema.json":
@@ -69,13 +83,22 @@ def load_sources(tables: Path = TABLES) -> list[Source]:
             key = (source["url"], source["sha256"])
             entry = sources.setdefault(key, Source(url=source["url"], pinned_sha256=source["sha256"]))
             entry.used_by.append(f"{path.name}:{source_id}")
+    for path in manifest_paths(manifests):
+        for _item, source in iter_active_sources(load_manifest(path)):
+            pin = source["pin"]
+            pinned = pin["text_sha256"] if pin["watch"] == "text" else pin["sha256"]
+            entry = sources.setdefault(
+                (source["official_url"], pinned),
+                Source(source["official_url"], pinned, mode=pin["watch"], ignore_lines=list(pin.get("ignore_lines", []))),
+            )
+            entry.used_by.append(f"{path.name}:{source['source_id']}")
     return list(sources.values())
 
 
-def fetch_sha256(url: str, timeout: float = TIMEOUT_SECONDS, max_bytes: int = MAX_BYTES) -> str:
-    """SHA-256 of the bytes served at url, read in blocks with a size cap."""
+def fetch_bytes(url: str, timeout: float = TIMEOUT_SECONDS, max_bytes: int = MAX_BYTES) -> bytes:
+    """The bytes served at url, read in blocks with a size cap."""
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    digest = hashlib.sha256()
+    blocks = []
     size = 0
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 - https URLs from reviewed tables
@@ -83,7 +106,7 @@ def fetch_sha256(url: str, timeout: float = TIMEOUT_SECONDS, max_bytes: int = MA
                 size += len(block)
                 if size > max_bytes:
                     raise FetchError(f"larger than {max_bytes // (1024 * 1024)} MB")
-                digest.update(block)
+                blocks.append(block)
     except urllib.error.HTTPError as error:
         raise FetchError(f"HTTP {error.code}") from None
     except urllib.error.URLError as error:
@@ -92,14 +115,33 @@ def fetch_sha256(url: str, timeout: float = TIMEOUT_SECONDS, max_bytes: int = MA
         raise FetchError("timed out") from None
     except OSError as error:
         raise FetchError(f"connection error ({type(error).__name__})") from None
-    return digest.hexdigest()
+    return b"".join(blocks)
 
 
-def check(sources: list[Source], fetch: Callable[[str], str] = fetch_sha256) -> list[Result]:
+def fetch_sha256(url: str, timeout: float = TIMEOUT_SECONDS, max_bytes: int = MAX_BYTES) -> str:
+    """SHA-256 of the bytes served at url."""
+    return hashlib.sha256(fetch_bytes(url, timeout, max_bytes)).hexdigest()
+
+
+def source_fingerprint(source: Source) -> str:
+    """What the source's pin is compared with: its bytes, or its extracted text."""
+    if source.mode == "bytes":
+        return fetch_sha256(source.url)
+    from ingestion.corpus_extract import ExtractionError, extract_html, text_fingerprint
+
+    try:
+        text = extract_html(fetch_bytes(source.url)).text
+    except ExtractionError as error:
+        raise FetchError(f"text could not be extracted ({error})") from None
+    return text_fingerprint(text, source.ignore_lines)
+
+
+def check(sources: list[Source], fetch: Callable[[str], str] | None = None) -> list[Result]:
+    """Compare every source with its pin; ``fetch`` (url -> fingerprint) replaces the network in tests."""
     results = []
     for source in sources:
         try:
-            current = fetch(source.url)
+            current = fetch(source.url) if fetch else source_fingerprint(source)
         except FetchError as error:
             results.append(Result(source.url, "unreachable", source.pinned_sha256, None, source.used_by, str(error)))
             continue
@@ -129,7 +171,7 @@ def summary_markdown(results: list[Result], checked_at: str) -> str:
         lines += [
             "**Changed sources must be re-read by a person before their amounts are trusted.** "
             "A new hash can also come from a re-scanned or re-signed file, so check the content, "
-            "then update `sha256` and `retrieved_at` in the table.",
+            "then update the pin (`sha256` and `retrieved_at`, or the manifest `pin`) where the source is used.",
             "",
         ]
     if results and counts["unreachable"] == len(results):
@@ -144,7 +186,7 @@ def summary_markdown(results: list[Result], checked_at: str) -> str:
     return "\n".join(lines) + "\n"
 
 
-def main(argv: list[str] | None = None, fetch: Callable[[str], str] = fetch_sha256) -> int:
+def main(argv: list[str] | None = None, fetch: Callable[[str], str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--summary", type=Path, help="append a Markdown summary to this file (e.g. $GITHUB_STEP_SUMMARY)")
     parser.add_argument("--json-out", type=Path)
@@ -152,8 +194,15 @@ def main(argv: list[str] | None = None, fetch: Callable[[str], str] = fetch_sha2
     try:
         sources = load_sources()
     except (OSError, ValueError, KeyError) as error:
-        print(f"could not read the offence tables: {error}", file=sys.stderr)
+        print(f"could not read the offence tables or corpus manifests: {error}", file=sys.stderr)
         return 2
+    if fetch is None and any(source.mode == "text" for source in sources):
+        try:
+            import bs4  # noqa: F401
+            import lxml  # noqa: F401
+        except ImportError:
+            print("text-watched sources need beautifulsoup4 and lxml (see freshness.yml)", file=sys.stderr)
+            return 2
     checked_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     results = check(sources, fetch)
     markdown = summary_markdown(results, checked_at)
