@@ -285,4 +285,6 @@ async def query(payload: QueryRequest, session: AsyncSession = Depends(get_sessi
         route=final_state.get("route"),
         confidence=final_state.get("confidence"),
         response_status=final_state.get("response_status", "answered"),
+        premise_check=final_state.get("premise_check"),
+        scam_check=final_state.get("scam_check"),
     )

@@ -1,0 +1,32 @@
+{"id":"sc-en-01","language":"en","text":"Dear user, your traffic challan of Rs 500 is pending. Pay today to avoid licence suspension: https://echallan-parivahan.online/pay","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain","payment_link_not_official"]},"label":"scam"}
+{"id":"sc-en-02","language":"en","text":"Traffic violation detected. Download mParivahan_Update.apk to see your challan details.","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["apk"]},"label":"scam"}
+{"id":"sc-en-03","language":"en","text":"Your e-challan is pending, pay now bit.ly/3xYzAb","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["shortened_link","payment_link_not_official"]},"label":"scam"}
+{"id":"sc-en-04","language":"en","text":"Enter the OTP sent to your phone to clear your challan at parivahan-gov.in","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["asks_for_secret","impersonating_domain"]},"label":"scam"}
+{"id":"sc-en-05","language":"en","text":"Students Laptop Scheme 2026: get a free laptop, register with your details at freelaptop-yojana.com","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["matches_debunk"]},"label":"scam"}
+{"id":"sc-en-06","language":"en","text":"PM KUSUM registration fee Rs 8000, pay at pmkusum-registration.in","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["matches_debunk"]},"label":"scam"}
+{"id":"sc-en-07","language":"en","text":"Challan pending. Pay at echallan.parivahan.gov.in.verify-now.site/pay now","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain"]},"label":"scam"}
+{"id":"sc-en-08","language":"en","text":"http://192.168.10.5/challan/pay your fine immediately","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["ip_address_link"]},"label":"scam"}
+{"id":"sc-en-09","language":"en","text":"RTO notice: install RTO Services.apk to avoid vehicle seizure","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["apk"]},"label":"scam"}
+{"id":"sc-hi-01","language":"hi","text":"आपका चालान बकाया है, तुरंत भुगतान करें: echallan-pay.in/challan","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain","payment_link_not_official"]},"label":"scam"}
+{"id":"sc-hi-02","language":"hi","text":"ट्रैफिक चालान देखने के लिए यह ऐप डाउनलोड करें: eChallan_Pay.apk","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["apk"]},"label":"scam"}
+{"id":"sc-bn-01","language":"bn","text":"আপনার চালান বকেয়া, এখনই পেমেন্ট করুন: parivahan-challan.site","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain","payment_link_not_official"]},"label":"scam"}
+{"id":"sc-bn-02","language":"bn","text":"চালান পরিশোধ করতে আপনার OTP পাঠান","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["asks_for_secret"]},"label":"scam"}
+{"id":"su-en-01","language":"en","text":"Check this offer https://xn--parivahn-5ya.com/offer","expected":{"trigger":true,"verdict":"suspicious","signals_include":["punycode_domain"]},"label":"other"}
+{"id":"su-en-02","language":"en","text":"See the details here: bit.ly/abc123","expected":{"trigger":true,"verdict":"suspicious","signals_include":["shortened_link"]},"label":"other"}
+{"id":"ge-en-01","language":"en","text":"VM-ECHALN: Your challan no. WB123 is pending. Visit https://echallan.parivahan.gov.in to view.","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ge-en-02","language":"en","text":"Check https://www.myscheme.gov.in for schemes you can apply to.","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ge-en-03","language":"en","text":"Read the release at https://www.pib.gov.in/PressReleasePage.aspx?PRID=1585679","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ge-en-04","language":"en","text":"Download your RC from https://digilocker.gov.in","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ge-en-05","language":"en","text":"Kolkata Traffic Police fine list: https://www.kolkatatrafficpolice.gov.in/offences.pdf","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ge-hi-01","language":"hi","text":"योजनाओं की जानकारी के लिए https://www.myscheme.gov.in देखें","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
+{"id":"ne-en-01","language":"en","text":"An article about traffic rules: timesofindia.indiatimes.com/city/kolkata","expected":{"trigger":true,"verdict":"no_warning_signs"},"label":"other"}
+{"id":"ne-en-02","language":"en","text":"Is this message fake? 'Your vehicle challan is pending'","expected":{"trigger":true,"verdict":"no_warning_signs"},"label":"other"}
+{"id":"nt-en-01","language":"en","text":"What is the helmet fine in Kolkata?","expected":{"trigger":false},"label":"other"}
+{"id":"nt-en-02","language":"en","text":"How do I apply for PM-KISAN?","expected":{"trigger":false},"label":"other"}
+{"id":"nt-en-03","language":"en","text":"Is the helmet fine of ₹5,000 real?","expected":{"trigger":false},"label":"other"}
+{"id":"sc-en-10","language":"en","text":"Your FASTag will be deactivated. Complete KYC at fastag-update.online","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain"]},"label":"scam"}
+{"id":"sc-en-11","language":"en","text":"Traffic fine due: send Rs 2000 to rtoindia@paytm to avoid court case","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["payment_to_personal_upi"]},"label":"scam"}
+{"id":"sc-hi-03","language":"hi","text":"चालान का ₹500 इस UPI पर भेजें: challan.office@okaxis","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["payment_to_personal_upi"]},"label":"scam"}
+{"id":"ge-en-06","language":"en","text":"Contact our support team at help@example.com for questions about the Roadside page.","expected":{"trigger":false},"label":"other"}
+{"id":"sc-en-12","language":"en","text":"PM KUSUM solar pump registration open, apply at https://kusumyojanaonline.in.net/register","expected":{"trigger":true,"verdict":"likely_scam","signals_include":["impersonating_domain"]},"label":"scam"}
+{"id":"ge-en-07","language":"en","text":"Is this real? Apply for PM-KUSUM at https://pmkusum.mnre.gov.in/","expected":{"trigger":true,"verdict":"official_link"},"label":"genuine"}
