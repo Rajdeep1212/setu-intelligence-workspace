@@ -18,6 +18,13 @@ from scripts import freshness_watch as watch
 
 BODY = b"%PDF-1.4 notification text"
 BODY_SHA = hashlib.sha256(BODY).hexdigest()
+IGNORE = ["^Total Visitors: \d+$"]
+_visits = iter(range(1000, 10**6))
+
+
+def _page(visitors: int, clause: str = "benefit process") -> bytes:
+    body = "".join(f"<p>Clause {n}: the official {clause} for the scheme.</p>" for n in range(20))
+    return f"<html><body><main><h1>Scheme</h1>{body}<p>Total Visitors: {visitors}</p></main></body></html>".encode()
 
 
 class _Handler(http.server.BaseHTTPRequestHandler):
@@ -31,6 +38,13 @@ class _Handler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(b"x" * 4096)
+        elif self.path == "/page.html":
+            page = _page(next(_visits))
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(page)))
+            self.end_headers()
+            self.wfile.write(page)
         else:
             self.send_response(403)
             self.end_headers()
@@ -70,6 +84,20 @@ class LocalServerTests(unittest.TestCase):
         self.assertEqual(results[0].current_sha256, BODY_SHA)
         self.assertEqual(watch.exit_code(results), 1)
 
+    def test_text_watch_ignores_a_visitor_counter_but_not_an_edit(self):
+        from ingestion.corpus_extract import extract_html, text_fingerprint
+
+        pinned = text_fingerprint(extract_html(_page(1)).text, IGNORE)
+        source = watch.Source(f"{self.base}/page.html", pinned, ["batch-x.json:s"], mode="text", ignore_lines=IGNORE)
+        self.assertEqual(watch.source_fingerprint(source), pinned)
+        self.assertEqual(watch.source_fingerprint(source), pinned)
+        self.assertEqual(watch.check([source])[0].status, "unchanged")
+        edited = text_fingerprint(extract_html(_page(1, "benefit procedure")).text, IGNORE)
+        stale = watch.Source(source.url, edited, source.used_by, mode="text", ignore_lines=IGNORE)
+        self.assertEqual(watch.check([stale])[0].status, "changed")
+        no_ignore = watch.Source(source.url, pinned, source.used_by, mode="text")
+        self.assertEqual(watch.check([no_ignore])[0].status, "changed")
+
 
 class RuleTests(unittest.TestCase):
     def test_every_pinned_source_in_the_tables_is_loaded_once(self):
@@ -82,6 +110,19 @@ class RuleTests(unittest.TestCase):
         for source in sources:
             self.assertRegex(source.pinned_sha256, r"^[0-9a-f]{64}$")
             self.assertTrue(source.url.startswith("https://"), source.url)
+
+    def test_corpus_manifest_sources_join_the_watch(self):
+        sources = watch.load_sources()
+        corpus = [s for s in sources if any(u.startswith("batch-") for u in s.used_by)]
+        self.assertEqual(len(corpus), 26)
+        kisan = next(s for s in corpus if s.url == "https://pmkisan.gov.in/")
+        self.assertEqual(kisan.used_by, ["batch-001.json:pm-kisan.portal.current"])
+        self.assertEqual(kisan.mode, "text")
+        pdf = next(s for s in corpus if s.url.endswith(".pdf"))
+        self.assertEqual(pdf.mode, "bytes")
+        self.assertFalse(any("nrega.nic.in" in s.url for s in corpus), "excluded sources are not watched")
+        traffic = [s for s in sources if s not in corpus]
+        self.assertTrue(all(s.mode == "bytes" for s in traffic))
 
     def test_some_unreachable_passes_but_all_unreachable_fails(self):
         def flaky(url):

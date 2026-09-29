@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 29 Sep 2026 (after item G).
+Last updated: 29 Sep 2026 (M2.1 in review).
 
 ## Work items
 
@@ -25,7 +25,7 @@ Design notes and results for each phase are in `docs/research/`.
 | E1. Phase 5 (P6): official next steps | Done | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Reviewed table of 6 official services; eligibility answers link the official portal (`next-steps.md`) |
 | E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
-| G. Laptop work recovered from `F:\setu` | In review | this PR | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
+| G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -40,11 +40,26 @@ rebuilt on today's `master`, one PR per item.
 
 | Item | What | Done when |
 |---|---|---|
-| M2.1 | Scheme corpus pipeline: safe fetching, manifests, staging database; 29 official sources (central schemes and 13 West Bengal schemes) | Pipeline writes jurisdiction, dates and source hashes (migration 0001), keeps versions (0002); manifest URLs join the freshness watch; tests pass without network |
+| M2.1 (in review, this PR) | Scheme corpus pipeline: safe fetching, manifests, staging database; 29 schemes and laws (7 West Bengal schemes; 8 central-scheme pages from the West Bengal government), 26 active official sources | Pipeline writes jurisdiction, dates and source hashes (migration 0001), keeps versions (0002); manifest URLs join the freshness watch; tests pass without network |
 | M2.2 | Everyday-use evaluation: 12 questions (en, hi, bn) with expected status, sections and evidence | Runs offline in CI from saved retrieval results; baseline recorded before any tuning |
 | M2.3 | Scheme clarification (student credit card state, PMJJBY or PMSBY, old-age pension) with follow-up context | Shares `needs_clarification` with the traffic guard; asks at most one question; over-asking measured |
 | M2.4 | Local speed: 8-bit models or more Docker memory | Median local answer time measured before and after, on the same questions |
 | F | Research write-up: Indian traffic-law temporal benchmark | After M2.2, so it can report both evaluation sets |
+
+M2.1 result: 29 items (4 excluded, with reasons) and 26 active sources in
+three reviewed manifests; see [corpus/README.md](../corpus/README.md).
+Manifests hold no run state or local paths. The pipeline writes
+jurisdiction, effective dates, source hash and retrieval time; re-indexing
+keeps the old version (tested on PostgreSQL in CI). HTML pages are pinned on
+their extracted text, because 7 of them differed byte for byte between two
+requests seconds apart. The freshness watch now covers 32 sources. First
+live run on 29 Sep 2026: 27 unchanged, 1 changed (e-Shram FAQ, restructured
+since 13 Sep), 4 unreachable from the laptop (TLS; 2 are traffic PDFs the
+GitHub runner reached in #8). Retrieval checks were not re-run: they need
+the local models and a staged database.
+
+Handoff: next is M2.2 (everyday-use evaluation). Staging a batch is a local
+run (`corpus/README.md`); the e-Shram re-review below should come first.
 
 ## Waiting for the owner
 
@@ -65,7 +80,12 @@ These need a person. Work continues on everything else.
    can leave UNVERIFIED.
 5. **Name:** "Nyaya Setu" is already used twice; choose a distinct public name
    before launch.
-6. **Workspace layout.** The recovered work has a conversation-style
+6. **Re-read the e-Shram FAQ** (`https://eshram.gov.in/faqs`). The page was
+   restructured after the 13 Sep review, so the watch reports it as changed
+   and `collect` holds it back. If it is still the right source, update its
+   pin in `corpus/manifests/batch-002.json` (see `corpus/README.md`);
+   otherwise exclude it with a reason.
+7. **Workspace layout.** The recovered work has a conversation-style
    redesign; `master` has added cards to the current layout since. Choose
    one before M2 extends the answer screen (see `recovery-review.md`).
 

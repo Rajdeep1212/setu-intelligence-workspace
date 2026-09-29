@@ -32,6 +32,13 @@ temp/
 *.out
 eval_results.json
 
+# Scheme corpus runs (M2.1): downloaded sources, extracted text and run state
+# stay local. The reviewed manifests in corpus/manifests are tracked.
+corpus/staging/
+
+# Local agent tool metadata
+.freebuff/
+
 # Local database and Docker data
 *.sqlite
 *.sqlite3

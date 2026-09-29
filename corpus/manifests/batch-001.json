@@ -1,0 +1,597 @@
+{
+  "schema_version": 2,
+  "batch_id": "batch-001",
+  "title": "SETU corpus expansion first bounded batch",
+  "reviewed_on": "2026-09-09",
+  "notes": "Counting unit: distinct scheme or legal instrument; sources and versions are counted separately. Converted from the recovered 14 Sep 2026 manifest (commit 908ad3d); pins are the staged September snapshots.",
+  "fetch_policy": {
+    "allowed_hosts": [
+      "pmkisan.gov.in",
+      "www.pmkisan.gov.in",
+      "pmjdy.gov.in",
+      "www.pmjdy.gov.in",
+      "pfrda.org.in",
+      "www.pfrda.org.in",
+      "pmuy.gov.in",
+      "www.pmuy.gov.in",
+      "nha.gov.in",
+      "www.nha.gov.in",
+      "beneficiary.nha.gov.in",
+      "indiapost.gov.in",
+      "www.indiapost.gov.in",
+      "kanyashree.wb.gov.in",
+      "indiacode.nic.in",
+      "www.indiacode.nic.in",
+      "dfpd.gov.in",
+      "www.dfpd.gov.in",
+      "consumeraffairs.nic.in",
+      "www.consumeraffairs.nic.in",
+      "socialjustice.gov.in",
+      "www.socialjustice.gov.in",
+      "pib.gov.in",
+      "www.pib.gov.in",
+      "static.pib.gov.in"
+    ],
+    "connect_timeout_seconds": 10,
+    "read_timeout_seconds": 30,
+    "retries": 2,
+    "max_redirects": 5,
+    "max_response_bytes": 12582912,
+    "min_host_interval_seconds": 1,
+    "max_retry_after_seconds": 30
+  },
+  "items": [
+    {
+      "stable_id": "scheme.central.pm-kisan",
+      "canonical_title": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "item_type": "central_scheme",
+      "category": "agriculture_income_support",
+      "jurisdiction": "IN",
+      "publisher": "Department of Agriculture and Farmers Welfare, Government of India",
+      "current_status": "active; current portal plus dated guidelines",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "pm-kisan.portal.current",
+          "document_title": "PM Kisan Samman Nidhi official portal",
+          "document_identifier": "official-scheme-portal",
+          "source_type": "official_scheme_page",
+          "official_url": "https://pmkisan.gov.in/",
+          "publisher": "Department of Agriculture and Farmers Welfare, Government of India",
+          "publication_date": null,
+          "updated_date": "2026-02-17",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "current official portal as checked; dynamic operational figures are time-sensitive",
+          "coverage_scope": "Current scheme identity, funding model, and portal-level public information; not a substitute for every later circular.",
+          "required_markers": [
+            "PM Kisan Samman Nidhi",
+            "Central Sector scheme"
+          ],
+          "min_extracted_characters": 500,
+          "pin": {
+            "sha256": "d16fee667462d383a6fcf31a010fff5715a0d3bf0cad87e1027884319d934b59",
+            "retrieved_at": "2026-09-09T06:57:15Z",
+            "watch": "text",
+            "text_sha256": "b68b7b5cf59ee12c75341d0a2a3d4c98395f5fb7d2464f6c43aa3935a37434e3",
+            "text_version": "setu-structured-v2"
+          }
+        },
+        {
+          "source_id": "pm-kisan.guidelines.2020-03-29.en",
+          "document_title": "PM-KISAN Operational Guidelines (Revised as on 29 March 2020)",
+          "document_identifier": "RevisedPM-KISANOperationalGuidelines-English-2020-03-29",
+          "source_type": "operational_guidelines",
+          "official_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+          "publisher": "Department of Agriculture, Cooperation and Farmers Welfare, Government of India",
+          "publication_date": "2020-03-29",
+          "updated_date": "2020-03-29",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "dated revised guidelines; later official amendments and circulars exist",
+          "coverage_scope": "Scheme objectives, benefit structure, eligibility exclusions, implementation, and the revision state explicitly dated 29 March 2020.",
+          "required_markers": [
+            "PRADHAN MANTRI KISAN SAMMAN NIDHI",
+            "OPERATIONAL GUIDELINES",
+            "29.03.2020"
+          ],
+          "min_extracted_characters": 5000,
+          "pin": {
+            "sha256": "ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+            "retrieved_at": "2026-09-09T06:57:17Z",
+            "watch": "bytes"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pm-kisan.en.benefit",
+          "query": "Under PM-KISAN how much annual income support is provided and in how many instalments?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        },
+        {
+          "check_id": "pm-kisan.hi.benefit",
+          "query": "पीएम-किसान योजना के तहत किसानों को सालाना कितनी सहायता मिलती है और कितनी किस्तों में?",
+          "query_language": "hi",
+          "expected_rank_max": 5
+        },
+        {
+          "check_id": "pm-kisan.bn.benefit",
+          "query": "পিএম-কিষান প্রকল্পে বছরে কত টাকা সহায়তা দেওয়া হয় এবং কত কিস্তিতে?",
+          "query_language": "bn",
+          "expected_rank_max": 5
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmjdy",
+      "canonical_title": "Pradhan Mantri Jan-Dhan Yojana (PMJDY)",
+      "item_type": "central_scheme",
+      "category": "financial_inclusion",
+      "jurisdiction": "IN",
+      "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "pmjdy.scheme-details.current",
+          "document_title": "PMJDY Scheme Details",
+          "document_identifier": "scheme-detail.aspx",
+          "source_type": "official_scheme_page",
+          "official_url": "https://pmjdy.gov.in/scheme-detail.aspx",
+          "publisher": "Department of Financial Services, Ministry of Finance, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_from": "2014-08-28",
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "current official page as checked; page does not state a revision date",
+          "coverage_scope": "Scheme purpose, account access, and benefits shown on the official scheme-details page.",
+          "required_markers": [
+            "Pradhan Mantri Jan-Dhan Yojana",
+            "Benefits under PMJDY"
+          ],
+          "min_extracted_characters": 500,
+          "pin": {
+            "sha256": "65ae549709d8eb86e8878edb695c5a630ed32010b3a37db5a147eda8171eee4a",
+            "retrieved_at": "2026-09-09T07:12:09Z",
+            "watch": "text",
+            "text_sha256": "9e82a1f25312e3ceaa477186fdd61ad1ca4b83a77709f4e31fd312318dbd1192",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmjdy.en.overdraft",
+          "query": "What overdraft facility and minimum-balance requirement apply to a PMJDY account?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.apy",
+      "canonical_title": "Atal Pension Yojana (APY)",
+      "item_type": "central_pension_scheme",
+      "category": "pension_social_security",
+      "jurisdiction": "IN",
+      "publisher": "Pension Fund Regulatory and Development Authority",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "apy.pfrda.scheme.current",
+          "document_title": "Atal Pension Yojana (APY): Overview, Eligibility and Features",
+          "document_identifier": "pfrda-scheme-apy",
+          "source_type": "official_regulator_scheme_page",
+          "official_url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+          "publisher": "Pension Fund Regulatory and Development Authority",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_from": "2015-06-01",
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "current official page as checked; includes the taxpayer restriction effective 1 October 2022",
+          "coverage_scope": "Eligibility, administration, contribution nature, pension bands, spouse/nominee benefits, and joining routes.",
+          "required_markers": [
+            "Atal Pension Yojana",
+            "minimum age",
+            "income-tax payer"
+          ],
+          "min_extracted_characters": 1000,
+          "pin": {
+            "sha256": "37ea316b83073bc5c7be44d49dff14c1ab27431d51e2a12e6e3d0ac22556c86b",
+            "retrieved_at": "2026-09-09T06:57:24Z",
+            "watch": "text",
+            "text_sha256": "45e5f81807ed04eea37130aa3fee285310b09516fe82dd31cfad8deecb6cf751",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "apy.en.eligibility",
+          "query": "Who can join Atal Pension Yojana, what is the joining age, and are income-tax payers eligible?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.pmuy",
+      "canonical_title": "Pradhan Mantri Ujjwala Yojana (PMUY)",
+      "item_type": "central_scheme",
+      "category": "clean_cooking_fuel",
+      "jurisdiction": "IN",
+      "publisher": "Ministry of Petroleum and Natural Gas, Government of India",
+      "current_status": "active official scheme page",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "pmuy.about.current",
+          "document_title": "About Pradhan Mantri Ujjwala Yojana",
+          "document_identifier": "about.html",
+          "source_type": "official_scheme_page",
+          "official_url": "https://www.pmuy.gov.in/about.html",
+          "publisher": "Ministry of Petroleum and Natural Gas, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_from": "2016-05-01",
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "current official page as checked; live target figures are time-sensitive",
+          "coverage_scope": "Scheme history, eligibility, required documents, and connection assistance described by the official portal.",
+          "required_markers": [
+            "Pradhan Mantri",
+            "Eligibility Criteria",
+            "PMUY Benefits"
+          ],
+          "min_extracted_characters": 1000,
+          "pin": {
+            "sha256": "26ce708c9fc4ada69c415e910fcdb6bf62be5ce16bf075c844de490479a9a8b4",
+            "retrieved_at": "2026-09-09T06:57:25Z",
+            "watch": "text",
+            "text_sha256": "22d1c59e6d249fbf2106bd124f60271a69905a8398fb8d9ea7098512a6c8aaa9",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "pmuy.en.eligibility",
+          "query": "Who is eligible for a PMUY LPG connection and what documents are required?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.ab-pmjay",
+      "canonical_title": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+      "item_type": "central_scheme",
+      "category": "health_assurance",
+      "jurisdiction": "IN",
+      "publisher": "National Health Authority",
+      "current_status": "active scheme; this source covers general beneficiary rights, not every later expansion",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "ab-pmjay.pib-explainer-pdf.2024-09-23",
+          "document_title": "Transforming Healthcare: Six Years of Ayushman Bharat PM-JAY",
+          "document_identifier": "PIB-specificdoc-doc2024923400001",
+          "source_type": "official_government_explainer_pdf",
+          "official_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2024/sep/doc2024923400001.pdf",
+          "publisher": "Ministry of Health and Family Welfare; published by Press Information Bureau, Government of India",
+          "publication_date": "2024-09-23",
+          "updated_date": "2024-09-23",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "dated official Government of India explainer; statistics and programme coverage are only as stated on 23 September 2024",
+          "coverage_scope": "PM-JAY identity and features stated in the dated explainer, including annual family cover, secondary and tertiary hospitalization, cashless access, pre/post-hospitalization coverage, portability, and the September 2024 senior expansion; excludes later operational changes.",
+          "required_markers": [
+            "Transforming Healthcare: Six Years of Ayushman Bharat PM-JAY",
+            "Key Features of PM-JAY",
+            "Cashless Access to Healthcare"
+          ],
+          "min_extracted_characters": 3000,
+          "pin": {
+            "sha256": "0bb1de6ea0caff7f973116b68aeaa25dae776048bcc2c16d8143fbdf6525becc",
+            "retrieved_at": "2026-09-09T07:21:33Z",
+            "watch": "bytes"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "ab-pmjay.en.coverage",
+          "query": "According to the September 2024 Government of India explainer, what PM-JAY hospitalization cover, cashless access, and portability does it describe?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.central.sukanya-samriddhi",
+      "canonical_title": "Sukanya Samriddhi Account",
+      "item_type": "central_savings_scheme",
+      "category": "girl_child_savings",
+      "jurisdiction": "IN",
+      "publisher": "Department of Posts, Ministry of Communications, Government of India",
+      "current_status": "active scheme represented here by its dated 2019 base notification; later amendments and current rates require separate sources",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "sukanya-samriddhi.scheme-2019.en",
+          "document_title": "Sukanya Samriddhi Account Scheme, 2019",
+          "document_identifier": "G.S.R. 914(E)",
+          "source_type": "official_gazette_scheme_notification",
+          "official_url": "https://www.indiapost.gov.in/documents/offerings/schemesandservices/posb/SukanyaSamriddhiAccountScheme2019English.pdf",
+          "publisher": "Department of Economic Affairs, Ministry of Finance, Government of India",
+          "publication_date": "2019-12-12",
+          "updated_date": "2019-12-12",
+          "effective_from": "2019-12-12",
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "base 2019 Scheme notification hosted by India Post; later amendments and current interest-rate notifications are not included",
+          "coverage_scope": "The original 2019 Scheme's account opening, documents, deposits, operation, withdrawal, and closure provisions; no claim that the stated rate or all provisions remain unamended.",
+          "required_markers": [
+            "Sukanya Samriddhi",
+            "G.S.R. 914(E)"
+          ],
+          "min_extracted_characters": 4000,
+          "pin": {
+            "sha256": "512a9ec0dc17f2aed48d58c8902a54cd6f3604eae0068416fe5cb035235b16b6",
+            "retrieved_at": "2026-09-09T07:12:21Z",
+            "watch": "bytes"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "sukanya.en.documents",
+          "query": "Which documents must accompany Form-1 when opening a Sukanya Samriddhi Account under the 2019 Scheme?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "scheme.wb.kanyashree",
+      "canonical_title": "Kanyashree Prakalpa",
+      "item_type": "state_scheme",
+      "category": "education_and_child_marriage_prevention",
+      "jurisdiction": "IN-WB",
+      "publisher": "Department of Women Development and Social Welfare, Government of West Bengal",
+      "current_status": "active official scheme portal",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "kanyashree.faq.current",
+          "document_title": "Kanyashree Prakalpa FAQ",
+          "document_identifier": "kanyashree-9-faq",
+          "source_type": "official_scheme_faq",
+          "official_url": "https://kanyashree.wb.gov.in/faq",
+          "publisher": "Department of Women Development and Social Welfare, Government of West Bengal",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN-WB",
+          "source_status": "current official FAQ as checked; page does not state a revision date",
+          "coverage_scope": "Objectives, K1/K2 conditions, benefits, exceptions, and application process for West Bengal residents.",
+          "required_markers": [
+            "Kanyashree Prakalpa",
+            "Conditions",
+            "West Bengal"
+          ],
+          "min_extracted_characters": 1000,
+          "pin": {
+            "sha256": "6c596d672e47cbb7b4b13dc7c929752a538cddeef77c3e6a0524a7602f2c2204",
+            "retrieved_at": "2026-09-09T06:57:35Z",
+            "watch": "text",
+            "text_sha256": "3e66f4d5d152a6c75096f36a95147c1e8b0dfcbcdff2e838547ac52e2ceb69c5",
+            "text_version": "setu-structured-v2",
+            "ignore_lines": [
+              "^- \\d+ Visitors counter$"
+            ]
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "kanyashree.en.conditions",
+          "query": "What are the age, education, marital-status and West Bengal residence conditions for Kanyashree K1 and K2?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        },
+        {
+          "check_id": "kanyashree.bn.conditions",
+          "query": "কন্যাশ্রী প্রকল্পের K1 ও K2-এর বয়স, পড়াশোনা এবং অবিবাহিত থাকার শর্ত কী?",
+          "query_language": "bn",
+          "expected_rank_max": 5
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.national-food-security-act-2013",
+      "canonical_title": "National Food Security Act, 2013",
+      "item_type": "central_act",
+      "category": "food_security_law",
+      "jurisdiction": "IN",
+      "publisher": "Legislative Department, Ministry of Law and Justice, Government of India",
+      "current_status": "base central Act text with appended notifications through the dated official compendium; later changes require separate sources",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "nfsa.act-20-of-2013.en",
+          "document_title": "The National Food Security Act, 2013",
+          "document_identifier": "Act No. 20 of 2013",
+          "source_type": "official_central_act_text",
+          "official_url": "https://dfpd.gov.in/WriteReadData/Other/nfsa_1.pdf",
+          "publisher": "Legislative Department, Ministry of Law and Justice, Government of India; hosted by the Department of Food and Public Distribution",
+          "publication_date": "2013-09-10",
+          "updated_date": null,
+          "effective_from": "2013-07-05",
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "official department-hosted compendium containing the base Act and appended dated notifications; not asserted complete after its latest included notification",
+          "coverage_scope": "Act identity, chapters, sections, schedules, and only the appended notifications present in this exact PDF; rules and later notifications outside the file are not covered.",
+          "required_markers": [
+            "THE NATIONAL FOOD SECURITY ACT, 2013",
+            "NO. 20 OF 2013"
+          ],
+          "min_extracted_characters": 10000,
+          "pin": {
+            "sha256": "4f7f27f452ceda2a1951e4bde77177717971487453e45906b1ffc2bb75579c34",
+            "retrieved_at": "2026-09-09T07:12:25Z",
+            "watch": "bytes"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "nfsa.en.grievance",
+          "query": "Which provisions of the National Food Security Act establish internal and district grievance redressal?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.consumer-protection-act-2019",
+      "canonical_title": "Consumer Protection Act, 2019",
+      "item_type": "central_act",
+      "category": "consumer_law",
+      "jurisdiction": "IN",
+      "publisher": "Department of Consumer Affairs, Ministry of Consumer Affairs, Food and Public Distribution, Government of India",
+      "current_status": "the 2019 central Act is described by a dated 2025 official government brief; the full statutory text and later changes are not covered by this source",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "consumer-protection.pib-brief.2025-03-14",
+          "document_title": "World Consumer Rights Day 2025: Key Initiatives and Developments in Consumer Protection",
+          "document_identifier": "PIB-specificdoc-doc2025314520301",
+          "source_type": "official_government_brief_pdf",
+          "official_url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/mar/doc2025314520301.pdf",
+          "publisher": "Ministry of Consumer Affairs, Food and Public Distribution; published by Press Information Bureau, Government of India",
+          "publication_date": "2025-03-14",
+          "updated_date": "2025-03-14",
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "dated official government brief; it is not the Gazette Act text and 2024-25 operational figures are time-specific",
+          "coverage_scope": "The brief's identification of the Consumer Protection Act, 2019, the three-tier Consumer Commission machinery, Section 38(7) disposal targets, and selected 2024-25 consumer-protection initiatives; no claim of full statutory, rule, or amendment coverage.",
+          "required_markers": [
+            "World Consumer Rights Day 2025",
+            "Consumer Protection Act, 2019",
+            "Section 38"
+          ],
+          "min_extracted_characters": 4000,
+          "pin": {
+            "sha256": "f13d16b52f329ba6e9892221d98a53337d4e25d193d8df58b6f11ab5e181a1d9",
+            "retrieved_at": "2026-09-09T07:21:34Z",
+            "watch": "bytes"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "consumer-act.en.mediation",
+          "query": "What Consumer Commission structure and Section 38(7) disposal targets does the March 2025 official brief describe for the Consumer Protection Act 2019?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    },
+    {
+      "stable_id": "law.central.senior-citizens-act-2007",
+      "canonical_title": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+      "item_type": "central_act",
+      "category": "senior_citizen_welfare_law",
+      "jurisdiction": "IN",
+      "publisher": "Department of Social Justice and Empowerment, Government of India",
+      "current_status": "official ministry overview of the 2007 Act's identity and purpose; full sections, state commencement, and rules are not covered",
+      "status_as_of": "2026-09-09",
+      "sources": [
+        {
+          "source_id": "senior-citizens.mosje-overview.current",
+          "document_title": "About the Ageing Division: Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+          "document_identifier": "MoSJE-Ageing-Division-overview-47564",
+          "source_type": "official_ministry_law_overview",
+          "official_url": "https://socialjustice.gov.in/common/47564",
+          "publisher": "Department of Social Justice and Empowerment, Government of India",
+          "publication_date": null,
+          "updated_date": null,
+          "effective_from": null,
+          "language": "en",
+          "jurisdiction": "IN",
+          "source_status": "current official division overview as checked; it is not the statutory text",
+          "coverage_scope": "The Act's name, December 2007 enactment timeframe, need-based maintenance purpose, and ministry programme context; no substantive section, commencement, state-rule, or amendment claim.",
+          "required_markers": [
+            "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+            "enacted in December 2007"
+          ],
+          "min_extracted_characters": 500,
+          "pin": {
+            "sha256": "431c8dc8357d3902c8974c517621f46100dcdc0b0e1dba8dfb4ff752756a04d1",
+            "retrieved_at": "2026-09-09T07:12:50Z",
+            "watch": "text",
+            "text_sha256": "099a6353b8a86cd277cb257622659683f524509d6250edf3a2ddb387d42e6a24",
+            "text_version": "setu-structured-v2"
+          }
+        }
+      ],
+      "retrieval_checks": [
+        {
+          "check_id": "senior-act.en.property",
+          "query": "Why was the Maintenance and Welfare of Parents and Senior Citizens Act enacted, and whose maintenance and welfare does it address?",
+          "query_language": "en",
+          "expected_rank_max": 3
+        }
+      ]
+    }
+  ],
+  "batch_retrieval_checks": [
+    {
+      "check_id": "batch.wrong-state.kanyashree",
+      "query": "Can a student who is only a resident of Maharashtra claim West Bengal Kanyashree K1?",
+      "query_language": "en",
+      "expected_rank_max": 3,
+      "expected_item_id": "scheme.wb.kanyashree"
+    },
+    {
+      "check_id": "batch.similar-name.pmjay-vs-pmjdy",
+      "query": "Does PM-JAY open a zero-balance bank account, or is that benefit under PMJDY?",
+      "query_language": "en",
+      "expected_rank_max": 3,
+      "expected_item_id": "scheme.central.pmjdy"
+    },
+    {
+      "check_id": "batch.historical.nfsa",
+      "query": "What Act number and enactment date identify the National Food Security Act 2013?",
+      "query_language": "en",
+      "expected_rank_max": 3,
+      "expected_item_id": "law.central.national-food-security-act-2013"
+    },
+    {
+      "check_id": "batch.unsupported.annapurna-bhandar",
+      "query": "What monthly benefit is guaranteed by the Annapurna Bhandar scheme?",
+      "query_language": "en",
+      "expected_rank_max": 5,
+      "expect_no_supported_item": true,
+      "max_top_score": 0.5
+    },
+    {
+      "check_id": "batch.multilingual.kanyashree.bn",
+      "query": "কন্যাশ্রী প্রকল্প কি পশ্চিমবঙ্গের বাসিন্দাদের জন্য?",
+      "query_language": "bn",
+      "expected_rank_max": 5,
+      "expected_item_id": "scheme.wb.kanyashree"
+    }
+  ]
+}

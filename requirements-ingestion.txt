@@ -11,5 +11,6 @@ asyncpg==0.29.0          # same DB the API uses
 requests==2.32.3
 beautifulsoup4==4.12.3
 lxml==5.3.0
+pypdf==5.1.0            # scheme corpus PDFs (python -m ingestion.corpus_pipeline)
 sentence-transformers==3.1.1
 torch

@@ -153,6 +153,64 @@ class VersionHistoryMigrationTests(unittest.TestCase):
         self.assertEqual([(d["raw_text"], d["source_hash"]) for d in documents], [("Helmet: Rs 1,000", HASH_A)])
         self.assertEqual([c["content"] for c in chunks], ["Helmet: Rs 1,000"])
 
+    def test_corpus_pipeline_stages_provenance_and_keeps_versions(self):
+        """M2.1: staging schema, then two reviewed versions of one scheme page."""
+        import hashlib
+        import json
+        import tempfile
+
+        from ingestion import corpus_pipeline, staging_db
+        from tests.test_corpus_pipeline import PAGE, _Fetched, _manifest, _text_pin
+
+        new_page = PAGE.replace(b"benefit process", b"benefit procedure")
+
+        class Fetcher:
+            def __init__(self, body):
+                self.body = body
+
+            def fetch(self, url):
+                return _Fetched(self.body, final_url=url)
+
+        async def scenario(pool):
+            async with pool.acquire() as conn:
+                applied = await staging_db.apply_schema(conn)
+                reapplied = await staging_db.apply_schema(conn)
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "batch-test.json"
+                stage = Path(directory) / "staging"
+                manifest = _manifest()
+                path.write_text(json.dumps(manifest), encoding="utf-8")
+                corpus_pipeline.collect_batch(path, stage, fetcher=Fetcher(PAGE))
+                await corpus_pipeline.index_batch(path, stage, pool=pool, embed=lambda c: [_embedding() for _ in c])
+                # A person re-reads the changed page and updates the pin.
+                pin = manifest["items"][0]["sources"][0]["pin"]
+                pin.update(sha256=hashlib.sha256(new_page).hexdigest(), text_sha256=_text_pin(new_page, pin["ignore_lines"]))
+                path.write_text(json.dumps(manifest), encoding="utf-8")
+                corpus_pipeline.collect_batch(path, stage, fetcher=Fetcher(new_page))
+                state = await corpus_pipeline.index_batch(path, stage, pool=pool, embed=lambda c: [_embedding() for _ in c])
+            async with pool.acquire() as conn:
+                document = await conn.fetchrow(
+                    "SELECT jurisdiction, effective_from, source_hash, retrieved_at, metadata FROM documents"
+                )
+                chunk_jurisdictions = await conn.fetch("SELECT DISTINCT jurisdiction FROM chunks")
+                versions = await conn.fetch("SELECT source_hash, superseded_by_hash FROM document_versions")
+            return applied, reapplied, state, document, chunk_jurisdictions, versions
+
+        applied, reapplied, state, document, chunk_jurisdictions, versions = self._run(scenario)
+        self.assertEqual(len(applied), 3)
+        self.assertEqual(reapplied, [])
+        self.assertEqual(state.source("example.portal.current")["stage"], "indexed")
+        self.assertEqual(document["jurisdiction"], "IN")
+        self.assertEqual(document["effective_from"], date(2015, 6, 1))
+        self.assertEqual(document["source_hash"], hashlib.sha256(new_page).hexdigest())
+        self.assertIsNotNone(document["retrieved_at"])
+        self.assertEqual(json.loads(document["metadata"])["corpus_source_id"], "example.portal.current")
+        self.assertEqual([row["jurisdiction"] for row in chunk_jurisdictions], ["IN"])
+        self.assertEqual(
+            [(v["source_hash"], v["superseded_by_hash"]) for v in versions],
+            [(hashlib.sha256(PAGE).hexdigest(), hashlib.sha256(new_page).hexdigest())],
+        )
+
     def test_writer_without_provenance_is_archived_by_text(self):
         async def scenario(pool):
             await self._apply(
