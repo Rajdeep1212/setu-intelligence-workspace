@@ -60,6 +60,7 @@
       "central_law": {
         "provision": "MV Act 1988 s.129 read with s.194D (inserted by Act 32 of 2019, s.79)",
         "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "fixed_fine_inr": 1000,
         "source_id": "IN-ACT-32-2019",
         "commencement_source_id": "IN-SO-3110E-2019",
         "effective_from": "2019-09-01"
@@ -111,6 +112,7 @@
       "central_law": {
         "provision": "MV Act 1988 s.3 read with s.181 (fine substituted by Act 32 of 2019, s.63)",
         "penalty_text": "Fine of five thousand rupees",
+        "fixed_fine_inr": 5000,
         "source_id": "IN-ACT-32-2019",
         "commencement_source_id": "IN-SO-3110E-2019",
         "effective_from": "2019-09-01"
@@ -207,6 +209,7 @@
       "central_law": {
         "provision": "MV Act 1988 s.128(1) read with s.194C (inserted by Act 32 of 2019, s.79)",
         "penalty_text": "Fine of one thousand rupees and disqualification from holding a licence for three months",
+        "fixed_fine_inr": 1000,
         "source_id": "IN-ACT-32-2019",
         "commencement_source_id": "IN-SO-3110E-2019",
         "effective_from": "2019-09-01",

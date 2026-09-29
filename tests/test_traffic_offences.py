@@ -69,6 +69,20 @@ def _date(value):
     return dt.date.fromisoformat(value)
 
 
+# Number words used by the Act's fixed fines. fixed_fine_inr must equal the
+# words in penalty_text, so a structured value can never drift from the text.
+_UNITS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "ten": 10}
+_SCALES = {"hundred": 100, "thousand": 1000}
+
+
+def _fixed_fine_from_text(penalty_text: str):
+    match = re.match(r"Fine of ((?:one|two|three|four|five|ten) (?:hundred|thousand)) rupees\b", penalty_text)
+    if not match:
+        return None
+    unit, scale = match.group(1).split()
+    return _UNITS[unit] * _SCALES[scale]
+
+
 def provenance_errors(table: dict) -> list[str]:
     errors = _schema_errors(table, SCHEMA)
     if errors:
@@ -100,6 +114,8 @@ def provenance_errors(table: dict) -> list[str]:
             cited(law["commencement_source_id"], f"{where}.central_law")
         if _date(law["effective_from"]) > retrieved:
             errors.append(f"{where}: central effective date is after retrieval")
+        if "fixed_fine_inr" in law and _fixed_fine_from_text(law["penalty_text"]) != law["fixed_fine_inr"]:
+            errors.append(f"{where}: fixed_fine_inr does not match the fine named in penalty_text")
 
         state = offence["state_compounding"]
         if state["status"] == "VERIFIED":
@@ -159,6 +175,14 @@ class TrafficOffenceProvenanceTests(unittest.TestCase):
                         self.assertEqual(state["status"], "VERIFIED")
                         self.assertEqual(table["sources"][state["source_id"]]["kind"], "state_s200_notification")
 
+    def test_fixed_central_fines_are_structured_where_the_act_names_one(self):
+        expected = {"helmet": 1000, "triple_riding": 1000, "no_licence": 5000}
+        for path in STATE_FILES:
+            table = json.loads(path.read_text(encoding="utf-8"))
+            for offence in table["offences"]:
+                with self.subTest(state=path.stem, offence=offence["offence_id"]):
+                    self.assertEqual(offence["central_law"].get("fixed_fine_inr"), expected.get(offence["offence_id"]))
+
     def test_delhi_has_no_verified_amounts(self):
         table = json.loads((DATA_DIR / "DL.json").read_text(encoding="utf-8"))
         self.assertTrue(all(o["state_compounding"]["status"] == "UNVERIFIED" for o in table["offences"]))
@@ -184,6 +208,16 @@ class ProvenanceGateRejectsBadRowsTests(unittest.TestCase):
 
     def test_missing_notification_reference_fails(self):
         self.assertTrue(self._mutated(lambda t: t["sources"]["IN-ACT-32-2019"].pop("notification_reference")))
+
+    def test_fixed_fine_that_disagrees_with_text_fails(self):
+        self.assertTrue(self._mutated(lambda t: t["offences"][0]["central_law"].update(fixed_fine_inr=500)))
+
+    def test_fixed_fine_on_a_range_penalty_fails(self):
+        def mutate(table):
+            law = next(o for o in table["offences"] if o["offence_id"] == "phone_device")["central_law"]
+            law["fixed_fine_inr"] = 5000
+
+        self.assertTrue(self._mutated(mutate))
 
     def test_missing_central_effective_date_fails(self):
         self.assertTrue(self._mutated(lambda t: t["offences"][0]["central_law"].pop("effective_from")))
