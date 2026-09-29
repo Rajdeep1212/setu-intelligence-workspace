@@ -12,11 +12,14 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("all primary routes render without leaking requests", async ({ page }) => {
+  // Six full page loads in one test: allow three times the default budget so
+  // parallel runs on a busy machine do not time out (seen locally at 25-32 s).
+  test.slow();
   const external: string[] = [];
   const consoleIssues: string[] = [];
   page.on("request", (request) => { if (!request.url().startsWith("http://127.0.0.1:3000")) external.push(request.url()); });
   page.on("console", (message) => { if (message.type() === "error" || message.type() === "warning") consoleIssues.push(message.text()); });
-  const routes = [["/", /Understand India's digital public infrastructure/], ["/workspace", /What are the core components/], ["/sources", /Evidence before inference/], ["/system", /Private by construction/], ["/case-study", /From one question to inspectable evidence/]] as const;
+  const routes = [["/", /Understand India's digital public infrastructure/], ["/workspace", /What are the core components/], ["/sources", /Evidence before inference/], ["/system", /Private by construction/], ["/case-study", /From one question to inspectable evidence/], ["/roadside", /Roadside Mode/]] as const;
   for (const [path, heading] of routes) { await page.goto(path); await expect(page.getByRole("heading", { name: heading }).first()).toBeVisible(); }
   expect(external).toEqual([]);
   expect(consoleIssues).toEqual([]);
