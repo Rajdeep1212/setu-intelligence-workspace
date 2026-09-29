@@ -18,17 +18,21 @@ Design notes and results for each phase are in `docs/research/`.
 | Phase 1: jurisdiction- and date-aware retrieval | Done | [#2](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/2) | 6 of 15 temporal cases pass; unfiltered SQL byte-identical |
 | A. Phase 1 leftovers: source hash, retrieval time, PIB backfill | Done | [#3](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/3) | Ingestion stores SHA-256 and UTC fetch time; backfill tags PIB as `IN` |
 | B. Phase 2: Roadside Mode (offline) | Done | [#4](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/4) | `/roadside` works offline; 12 of 21 rows show a verified amount; 0 accessibility violations (`roadside-mode.md`) |
-| C. Phase 3: False-premise guard | In review | [#5](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/5) | 15 of 15 temporal cases; 0 false premises accepted; 0 over-asks; held-out 10 of 12 before fix (`premise-guard.md`) |
-| D1. Phase 4a: Scam Shield | In review | [#6](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/6) | 0 missed scams, 0 false alarms on genuine official messages (44 cases); held-out 10 of 12 before fix; never says "safe" (`scam-shield.md`) |
-| D2. Phase 4b: document version history | In review | [#7](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/7) | Migration 0002 archives superseded versions; retrieval unchanged; CI runs migrations on real PostgreSQL (`version-history.md`) |
-| D3. Phase 4c: freshness watch | In review | [#8](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/8) | Weekly check of 6 pinned sources; fails on a changed hash or when nothing is reachable (`data/traffic_offences/README.md`) |
-| E1. Phase 5 (P6): official next steps | In review | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Reviewed table of 6 official services; eligibility answers link the official portal (`next-steps.md`) |
+| C. Phase 3: False-premise guard | Done | [#5](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/5) | 15 of 15 temporal cases; 0 false premises accepted; 0 over-asks; held-out 10 of 12 before fix (`premise-guard.md`) |
+| D1. Phase 4a: Scam Shield | Done | [#6](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/6) | 0 missed scams, 0 false alarms on genuine official messages (44 cases); held-out 10 of 12 before fix; never says "safe" (`scam-shield.md`) |
+| D2. Phase 4b: document version history | Done | [#7](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/7) | Migration 0002 archives superseded versions; retrieval unchanged; CI runs migrations on real PostgreSQL (`version-history.md`) |
+| D3. Phase 4c: freshness watch | Done | [#8](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/8) | Weekly check of 6 pinned sources; fails on a changed hash or when nothing is reachable (`data/traffic_offences/README.md`) |
+| E1. Phase 5 (P6): official next steps | Done | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Reviewed table of 6 official services; eligibility answers link the official portal (`next-steps.md`) |
 | E2. Phase 5 (P5): rules-as-code for 3 schemes | Blocked, needs the owner | | See item 6 below |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | To review | | 35 files pushed to branch `recovery/laptop-uncommitted-2026-09-29` (commit `e7050c0`, on top of `908ad3d`); port the useful parts into `master` |
 
-Merge order for the open PRs: #5, #6, #7, #8, #9. Each branch already
-contains the ones before it, so each merges cleanly in that order.
+All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
+freshness run on GitHub (started by the #8 merge) passed: no pinned source
+had changed.
+
+**Next up:** G (review the recovered laptop work), then F (temporal
+benchmark write-up). E2 waits for the owner's decision below.
 
 ## Waiting for the owner
 
@@ -36,8 +40,10 @@ These need a person. Work continues on everything else.
 
 1. **Delete merged branches on GitHub** (the cloud session is not allowed to):
    `phase1/temporal-retrieval`, `research/findings-2026-09`,
-   `research/findings-2026-09-local`, `phase2/roadside-mode`. All their
-   commits are in `master`. Keep `recovery/codex-2026-09-14` and
+   `research/findings-2026-09-local`, `phase2/roadside-mode`,
+   `phase3/premise-guard`, `phase4/scam-shield`, `phase4/version-history`,
+   `phase4/freshness-watch`, `phase5/next-steps`. All their commits are in
+   `master`. Keep `recovery/codex-2026-09-14` and
    `recovery/laptop-uncommitted-2026-09-29`.
 2. **Apply migration 0001, then backfill 0001, to any deployed database**
    before a client sends `jurisdiction` or `as_of`. Until then a filtered
