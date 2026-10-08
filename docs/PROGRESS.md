@@ -26,7 +26,7 @@ Design notes and results for each phase are in `docs/research/`.
 | E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
-| H. Security: patched Next.js and dependencies | In review | (this PR) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
+| H. Security: patched Next.js and dependencies | In review | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
