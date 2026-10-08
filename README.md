@@ -1,5 +1,48 @@
 # SETU Intelligence Workspace
 
+## At a glance
+
+**What it does.** SETU answers everyday questions about Indian traffic rules
+and government schemes from official sources only, in English, Hindi and
+Bengali. It shows the source behind every claim and says so plainly when
+something is not verified.
+
+**The scenario it is built for.** A rider is stopped for wearing earphones
+and is asked to pay extra on the spot. SETU shows what the official rule
+actually names, the notified on-the-spot amount with a link to the government
+source, and where no amount has been verified. The tone stays calm: it never
+tells anyone to argue with an officer or refuse to pay.
+
+**Live demo:** _link to be added after the first deploy_
+
+> The demo site runs in demo mode. Workspace answers there are one fixed,
+> illustrative example, each headed "Illustrative example: not a retrieved
+> answer". Roadside Mode shows the real reviewed tables. See
+> [docs/HOSTING.md](docs/HOSTING.md).
+
+![Roadside Mode showing a West Bengal on-the-spot amount with its official source](docs/images/roadside.png)
+
+![Workspace answer with its evidence panel, marked as an illustrative example](docs/images/answer.png)
+
+**Tech stack.** Next.js 16, React 19 and TypeScript for the site; FastAPI,
+LangGraph, PostgreSQL with pgvector, and local BGE-M3 and reranker models on
+OpenVINO for the backend; Vitest, Playwright, axe and GitHub Actions for
+checks. Details are in [Technology](#technology).
+
+**Key results** (from [docs/PROGRESS.md](docs/PROGRESS.md)):
+
+- Research check: 19 claims graded, 11 verified, 8 partly, 0 wrong.
+- Roadside Mode works offline; 12 of 21 rows show a verified amount; 0
+  accessibility violations.
+- False-premise guard: 15 of 15 temporal cases pass, 0 false premises
+  accepted, 0 over-asks; 10 of 12 on held-out cases before the fix.
+- Scam Shield: 0 missed scams and 0 false alarms on 44 cases; 10 of 12 on
+  held-out cases before the fix; it never says "safe".
+- Scheme corpus: 29 schemes and laws from 26 active official sources; a
+  weekly freshness watch covers 32 sources.
+
+## Overview
+
 SETU is an evidence-first workspace for exploring India’s digital public
 infrastructure and an explicitly quarantined eligibility-experience prototype. It combines a
 multilingual retrieval-augmented generation (RAG) backend with a recruiter-ready
