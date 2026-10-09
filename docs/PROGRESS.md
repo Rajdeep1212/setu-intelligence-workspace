@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 29 Sep 2026 (M2.1 in review).
+Last updated: 8 Oct 2026 (M2.1 merged as #12; security update in review).
 
 ## Work items
 
@@ -26,6 +26,7 @@ Design notes and results for each phase are in `docs/research/`.
 | E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
+| H. Security: patched Next.js and dependencies | In review | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
 | I. Portfolio demo: hosting notes, README, screenshots | In review | (this PR) | Demo mode checked: every answer is headed "Illustrative example", `/roadside` works offline, no request leaves the site (`HOSTING.md`); 5 screenshots in `docs/images/` |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
@@ -59,7 +60,9 @@ since 13 Sep), 4 unreachable from the laptop (TLS; 2 are traffic PDFs the
 GitHub runner reached in #8). Retrieval checks were not re-run: they need
 the local models and a staged database.
 
-Handoff: next is M2.2 (everyday-use evaluation). Staging a batch is a local
+Handoff (8 Oct 2026, item H): merge the security PR before any public deploy;
+`roadside-bundle.json` is now pinned to LF in `.gitattributes`, which fixes the
+Windows-only bundle test. Next is M2.2 (everyday-use evaluation). Staging a batch is a local
 run (`corpus/README.md`); the e-Shram re-review below should come first.
 
 ## Owner decisions, 8 Oct 2026
