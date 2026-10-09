@@ -370,6 +370,22 @@ class TrackedManifestTests(unittest.TestCase):
             values = [source[key] for source in sources]
             self.assertEqual(len(values), len(set(values)), key)
 
+    def test_eshram_faq_pin_is_the_october_review_and_ignores_the_footer_date(self):
+        source = next(
+            source
+            for manifest in self.manifests
+            for _, source in cm.iter_active_sources(manifest)
+            if source["source_id"] == "eshram.faq.current.en"
+        )
+        pin = source["pin"]
+        self.assertEqual(pin["retrieved_at"][:10], "2026-10-09")
+        self.assertEqual(source["updated_date"], "2026-10-09")
+        # The site footer restamps "Last Update" daily; a pin that hashed it would fail every week.
+        page = "Q - 1. What is eShram?\nLast Update: {}\nTotal Visitors: {}"
+        first = text_fingerprint(page.format("09-Oct-2026", 1), pin["ignore_lines"])
+        self.assertEqual(first, text_fingerprint(page.format("16-Oct-2026", 2), pin["ignore_lines"]))
+        self.assertNotEqual(first, text_fingerprint(page.replace("What", "Why").format("09-Oct-2026", 1), pin["ignore_lines"]))
+
     def test_west_bengal_pages_are_tagged_in_wb(self):
         for manifest in self.manifests:
             for item, source in cm.iter_active_sources(manifest):

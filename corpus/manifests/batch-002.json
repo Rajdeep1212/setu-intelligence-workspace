@@ -39,7 +39,7 @@
       "jurisdiction": "IN",
       "publisher": "Ministry of Labour and Employment, Government of India",
       "current_status": "current official FAQ",
-      "status_as_of": "2026-09-13",
+      "status_as_of": "2026-10-09",
       "official_application_url": "https://register.eshram.gov.in/",
       "official_help_url": "https://gms.eshram.gov.in/",
       "practical_coverage": {
@@ -60,7 +60,7 @@
           "official_url": "https://eshram.gov.in/faqs",
           "publisher": "Ministry of Labour and Employment, Government of India",
           "publication_date": null,
-          "updated_date": "2026-09-11",
+          "updated_date": "2026-10-09",
           "effective_from": null,
           "language": "en",
           "jurisdiction": "IN",
@@ -72,13 +72,14 @@
           ],
           "min_extracted_characters": 3000,
           "pin": {
-            "sha256": "7d067cee442d8459d8d4729f60137a236feb183d44193cb4584d252c54001fab",
-            "retrieved_at": "2026-09-13T03:00:19Z",
+            "sha256": "fbf656aa6cece8cdf1164f6079c9eab57022630864b3a1540552da1792d5977b",
+            "retrieved_at": "2026-10-09T07:33:23Z",
             "watch": "text",
-            "text_sha256": "67c916ffbaddec8cbf5436c2294fd0e38c2c90b36fa2ac0c004d5ae0459eefb5",
+            "text_sha256": "4e0265d0c128d8256f783f1c0ffc84f96de5da863efa10361a836224c0adc387",
             "text_version": "setu-structured-v2",
             "ignore_lines": [
-              "^Total Visitors: \\d+$"
+              "^Total Visitors: \\d+$",
+              "^Last Update: \\d{2}-[A-Za-z]{3}-\\d{4}$"
             ]
           }
         }

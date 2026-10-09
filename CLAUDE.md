@@ -27,6 +27,10 @@ fine or eligibility answer can cost a real person money.
   or refuse to pay.
 - **Privacy:** no secrets, `.env` values or local folder paths in the repo.
 - SETU and the career-agent project are separate. Never mix them.
+- **Ponytail (lite) is used for SETU** (owner, 9 Oct 2026). It may simplify
+  code. It never removes or shortens tests, held-out evaluation cases,
+  source links and dates, `UNVERIFIED` / `LEGAL_REVIEW` labels, input
+  validation, security checks or accessibility. This file wins over Ponytail.
 
 ## How to do an item
 
