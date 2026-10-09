@@ -26,7 +26,7 @@ Design notes and results for each phase are in `docs/research/`.
 | E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
-| H. Security: patched Next.js and dependencies | In review | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
+| H. Security: patched Next.js and dependencies | Done | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -42,7 +42,7 @@ rebuilt on today's `master`, one PR per item.
 | Item | What | Done when |
 |---|---|---|
 | M2.1 (in review, this PR) | Scheme corpus pipeline: safe fetching, manifests, staging database; 29 schemes and laws (7 West Bengal schemes; 8 central-scheme pages from the West Bengal government), 26 active official sources | Pipeline writes jurisdiction, dates and source hashes (migration 0001), keeps versions (0002); manifest URLs join the freshness watch; tests pass without network |
-| M2.2 | Everyday-use evaluation: 12 questions (en, hi, bn) with expected status, sections and evidence | Runs offline in CI from saved retrieval results; baseline recorded before any tuning |
+| M2.2 (cases and evaluator in review, this PR; **baseline blocked**) | Everyday-use evaluation: 12 questions (en, hi, bn) with expected status, sections and evidence | Runs offline in CI from saved retrieval results; baseline recorded before any tuning |
 | M2.3 | Scheme clarification (student credit card state, PMJJBY or PMSBY, old-age pension) with follow-up context | Shares `needs_clarification` with the traffic guard; asks at most one question; over-asking measured |
 | M2.4 | Local speed: 8-bit models or more Docker memory | Median local answer time measured before and after, on the same questions |
 | F | Research write-up: Indian traffic-law temporal benchmark | After M2.2, so it can report both evaluation sets |
@@ -63,6 +63,16 @@ Handoff (8 Oct 2026, item H): merge the security PR before any public deploy;
 `roadside-bundle.json` is now pinned to LF in `.gitattributes`, which fixes the
 Windows-only bundle test. Next is M2.2 (everyday-use evaluation). Staging a batch is a local
 run (`corpus/README.md`); the e-Shram re-review below should come first.
+
+Handoff (9 Oct 2026, M2.2): the 12 held-out cases (`eval/everyday_cases.jsonl`)
+were committed before any capture or tuning, with an offline evaluator and its
+scoring tests. **No baseline is recorded.** Recording retrieval needs both local
+models; two attempts in Docker ran out of memory and stopped Docker Desktop
+(restarted; both databases checked intact). `--capture` has therefore never
+completed and is untested end to end. M2.2 is not done until
+`eval/everyday_retrieval.json` and `docs/everyday-evaluation-report.md` are
+committed. Do not start M2.3 tuning before that. Next: record the baseline
+(see "Waiting for the owner"), or do M2.4 first so the models fit.
 
 ## Waiting for the owner
 
@@ -91,6 +101,10 @@ These need a person. Work continues on everything else.
 7. **Workspace layout.** The recovered work has a conversation-style
    redesign; `master` has added cards to the current layout since. Choose
    one before M2 extends the answer screen (see `recovery-review.md`).
+8. **M2.2 baseline capture.** Free memory on the laptop (close other apps, or
+   give Docker more memory), then run `python -m eval.everyday_evaluation
+   --capture` where the OpenVINO models can load (see `eval/README.md`), or
+   decide to do M2.4 (smaller models) first.
 
 ## Rules every item follows
 
