@@ -102,6 +102,31 @@ prediction must contain its case `id`, citations with `chunk_id`, and human
 claims but marks them unsupported instead of treating lexical overlap as
 semantic proof.
 
+## Everyday-use evaluation (M2.2)
+
+`everyday_cases.jsonl` holds 12 held-out scheme questions (4 English, 4 Hindi,
+4 Bengali), written before any tuning. Each states the expected response
+status, the sections a person needs, and the evidence. The run replays saved
+retrieval results (`everyday_retrieval.json`) through the agent graph, with no
+provider, database, network or model:
+
+```bash
+python -m eval.everyday_evaluation --markdown-out docs/everyday-evaluation-report.md
+```
+
+It scores status, evidence and sections separately and does not measure answer
+wording. Recording the retrieval results is a laptop step: it reads the local
+staging database and needs both local models.
+
+```bash
+python -m eval.everyday_evaluation --capture
+```
+
+Status on 9 Oct 2026: **not recorded yet.** Two attempts on the laptop ran out
+of memory (7.7 GB machine; the two models total 4.23 GiB), so there is no
+baseline and the two tests that need the file are skipped. Do not tune
+anything these cases cover until the baseline is recorded and committed.
+
 ## Interpretation boundary
 
 The deterministic 60-case gate covers citation membership, duplicate and
