@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 8 Oct 2026 (M2.1 merged as #12; security update in review).
+Last updated: 9 Oct 2026 (security update merged as #13; e-Shram re-pin in review).
 
 ## Work items
 
@@ -26,7 +26,8 @@ Design notes and results for each phase are in `docs/research/`.
 | E2. Phase 5 (P5): eligibility | Decided: hand off to myScheme | [#9](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/9) | Owner chose option A on 29 Sep 2026: eligibility stays switched off; answers link myScheme and the scheme's official portal. No rules-as-code |
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
-| H. Security: patched Next.js and dependencies | In review | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
+| H. Security: patched Next.js and dependencies | Done | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
+| J. e-Shram FAQ re-pin (owner decision, 9 Oct 2026) | In review | [#15](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/15) | Pin moved from the 13 Sep snapshot to the page fetched 9 Oct 2026; the pin ignores the footer "Last Update" date, which moves daily. Local watch: 25 unchanged, 1 changed (PFRDA APY page, see "Waiting for the owner"), 6 unreachable from the laptop (TLS) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -46,6 +47,7 @@ rebuilt on today's `master`, one PR per item.
 | M2.3 | Scheme clarification (student credit card state, PMJJBY or PMSBY, old-age pension) with follow-up context | Shares `needs_clarification` with the traffic guard; asks at most one question; over-asking measured |
 | M2.4 | Local speed: 8-bit models or more Docker memory | Median local answer time measured before and after, on the same questions |
 | F | Research write-up: Indian traffic-law temporal benchmark | After M2.2, so it can report both evaluation sets |
+| Extractor keeps answer paragraphs on FAQ pages (needs re-pinning every HTML source) | Planned. The extractor stores FAQ questions and lists but drops answer paragraphs; on e-Shram that hides the age range (16 to 59) and the removed income-tax clause | Answer paragraphs are stored; `EXTRACTION_VERSION` raised; every HTML pin recomputed and reviewed in the same PR |
 
 M2.1 result: 29 items (4 excluded, with reasons) and 26 active sources in
 three reviewed manifests; see [corpus/README.md](../corpus/README.md).
@@ -63,6 +65,10 @@ Handoff (8 Oct 2026, item H): merge the security PR before any public deploy;
 `roadside-bundle.json` is now pinned to LF in `.gitattributes`, which fixes the
 Windows-only bundle test. Next is M2.2 (everyday-use evaluation). Staging a batch is a local
 run (`corpus/README.md`); the e-Shram re-review below should come first.
+
+Handoff (9 Oct 2026, item J): owner decisions of 9 Oct are in `FINDINGS.md`
+(Ponytail lite rule, e-Shram re-pin). The e-Shram pin is current; `collect`
+will fetch it again and `index` stores it as a new version. Next is M2.2.
 
 ## Waiting for the owner
 
@@ -83,11 +89,13 @@ These need a person. Work continues on everything else.
    can leave UNVERIFIED.
 5. **Name:** "Nyaya Setu" is already used twice; choose a distinct public name
    before launch.
-6. **Re-read the e-Shram FAQ** (`https://eshram.gov.in/faqs`). The page was
-   restructured after the 13 Sep review, so the watch reports it as changed
-   and `collect` holds it back. If it is still the right source, update its
-   pin in `corpus/manifests/batch-002.json` (see `corpus/README.md`);
-   otherwise exclude it with a reason.
+6. **Re-read the PFRDA Atal Pension Yojana page**
+   (`https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy`). On
+   9 Oct 2026 the watch reported it as changed: the address now shows text
+   about "NPS Sanchay", not APY. `collect` holds it back. Choose a new
+   official APY source or exclude it with a reason
+   (`corpus/manifests/batch-001.json`). (The e-Shram re-read that was here
+   was decided on 9 Oct 2026: re-pinned.)
 7. **Workspace layout.** The recovered work has a conversation-style
    redesign; `master` has added cards to the current layout since. Choose
    one before M2 extends the answer screen (see `recovery-review.md`).
