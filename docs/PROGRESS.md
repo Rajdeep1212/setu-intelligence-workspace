@@ -27,6 +27,7 @@ Design notes and results for each phase are in `docs/research/`.
 | F. Research write-up: Indian traffic-law temporal benchmark | Planned | | After C |
 | G. Laptop work recovered from `F:\setu` | Done | [#11](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/11) | 4 fixes carried over with tests (local query timeout, DB connection during rerank, Hindi/Bengali "year", answer language tag and demo label); larger parts planned as M2 below (`recovery-review.md`) |
 | H. Security: patched Next.js and dependencies | In review | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
+| I. Portfolio demo: hosting notes, README, screenshots | In review | (this PR) | Demo mode checked: every answer is headed "Illustrative example", `/roadside` works offline, no request leaves the site (`HOSTING.md`); 5 screenshots in `docs/images/` |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -63,6 +64,23 @@ Handoff (8 Oct 2026, item H): merge the security PR before any public deploy;
 `roadside-bundle.json` is now pinned to LF in `.gitattributes`, which fixes the
 Windows-only bundle test. Next is M2.2 (everyday-use evaluation). Staging a batch is a local
 run (`corpus/README.md`); the e-Shram re-review below should come first.
+
+## Owner decisions, 8 Oct 2026
+
+- **Hosting at zero cost.** Website on Vercel (free Hobby plan); database on
+  Supabase (Free plan: Postgres and pgvector, 500 MB, pauses after 7 idle
+  days); the backend stays on the owner's laptop for now.
+- **Demo mode in public.** The public site runs with `SETU_DATA_MODE=demo`
+  until the owner approves live answers.
+- **Free tiers only.** If any step asks for a card, a paid plan or a trial,
+  stop and ask the owner.
+
+Details and the exact settings are in [HOSTING.md](HOSTING.md).
+
+Handoff (8 Oct 2026, item I): after #13 and this PR are merged, set
+`SETU_DATA_MODE=demo` for Production on Vercel and redeploy (steps in the PR),
+then send the live URL for the read-only smoke and accessibility check, and
+replace the "Live demo" placeholder in `README.md`.
 
 ## Waiting for the owner
 

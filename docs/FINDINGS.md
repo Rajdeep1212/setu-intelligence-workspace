@@ -387,3 +387,15 @@ there, so for this test only the `embedding` column type was swapped for
   was seen in search results only and not reviewed.
 - A Vercel preview check runs on pull requests in this repository. Keep that
   Vercel account on its free plan to stay within the zero-spend rule.
+
+## Owner decisions, 8 Oct 2026
+
+- **Hosting at zero cost.** Website on Vercel (free Hobby plan); database on
+  Supabase (Free plan: Postgres and pgvector, 500 MB, pauses after 7 idle
+  days); the backend stays on the owner's laptop for now.
+- **Demo mode in public.** The public site runs with `SETU_DATA_MODE=demo`
+  until the owner approves live answers.
+- **Free tiers only.** If any step asks for a card, a paid plan or a trial,
+  stop and ask the owner.
+
+Details and the exact settings are in [HOSTING.md](HOSTING.md).

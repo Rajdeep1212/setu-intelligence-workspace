@@ -16,7 +16,11 @@ fine or eligibility answer can cost a real person money.
 
 ## Hard rules
 
-- **Zero spend.** No paid services, accounts, API keys or cloud resources.
+- **Zero spend.** Free tiers only: the website on Vercel (Hobby), the database
+  on Supabase (Free), the backend on the owner's laptop. No paid services,
+  plans, trials or API keys. If a step asks for a card, stop and ask. The
+  public site stays in demo mode until the owner approves live answers
+  (`docs/HOSTING.md`).
 - **Official sources only.** Every amount, date, rule or link comes from a
   `.gov.in` / `.nic.in` page or an official notification, with its date. If
   it cannot be verified, mark it `UNVERIFIED`; never invent or estimate.
