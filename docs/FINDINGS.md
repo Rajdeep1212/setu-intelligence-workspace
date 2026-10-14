@@ -387,3 +387,34 @@ there, so for this test only the `embedding` column type was swapped for
   was seen in search results only and not reviewed.
 - A Vercel preview check runs on pull requests in this repository. Keep that
   Vercel account on its free plan to stay within the zero-spend rule.
+
+## Owner decisions, 8 Oct 2026
+
+- **Hosting at zero cost.** Website on Vercel (free Hobby plan); database on
+  Supabase (Free plan: Postgres and pgvector, 500 MB, pauses after 7 idle
+  days); the backend stays on the owner's laptop for now.
+- **Demo mode in public.** The public site runs with `SETU_DATA_MODE=demo`
+  until the owner approves live answers.
+- **Free tiers only.** If any step asks for a card, a paid plan or a trial,
+  stop and ask the owner.
+
+Details and the exact settings are in [HOSTING.md](HOSTING.md).
+
+## Owner decisions, 9 Oct 2026
+
+- **Ponytail (lite) is used for SETU.** It may simplify code. It never
+  removes or shortens tests, held-out evaluation cases, source links and
+  dates, `UNVERIFIED` / `LEGAL_REVIEW` labels, input validation, security
+  checks or accessibility. `CLAUDE.md` wins over Ponytail.
+- **e-Shram FAQ: re-pin to the current official page**
+  (`https://eshram.gov.in/faqs`), reviewed 9 Oct 2026. Done in the re-pin PR.
+  The page footer read "Last Update: 09-Oct-2026" when fetched (08-Oct-2026
+  the day before, 13-Sep-2026 in the September snapshot). The footer date
+  moves without the questions changing, so the pin ignores that one line,
+  as it already ignores the visitor counter.
+- **Known gap, planned:** the extractor keeps FAQ questions and lists but
+  drops answer paragraphs. On the e-Shram page the registration age (now
+  "16 to 59 years") and the removed income-tax clause are in answer
+  paragraphs, so SETU does not store them and must not state them from this
+  source yet. Fixing the extractor changes `EXTRACTION_VERSION`, so every
+  HTML source must be re-pinned at the same time.
