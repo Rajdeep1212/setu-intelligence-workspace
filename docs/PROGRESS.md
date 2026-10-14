@@ -88,7 +88,7 @@ Handoff (9 Oct 2026, item J): owner decisions of 9 Oct are in `FINDINGS.md`
 (Ponytail lite rule, e-Shram re-pin). The e-Shram pin is current; `collect`
 will fetch it again and `index` stores it as a new version. Next is M2.2.
 
-Handoff (14 Oct 2026, cleanup): owner decisions applied. The local folder path
+Handoff (14 Oct 2026, cleanup, [#17](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/17)): owner decisions applied. The local folder path
 in row G is replaced with plain wording (no other tracked file held one);
 `requirements-security.txt` is kept. The git-ignored `frontend/screenshots/`
 (August screenshots) and `.freebuff/` (one project-id file left by an AI
