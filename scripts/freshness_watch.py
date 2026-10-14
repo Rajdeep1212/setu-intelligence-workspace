@@ -32,6 +32,7 @@ import json
 import sys
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -44,6 +45,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 MAX_BYTES = 50 * 1024 * 1024
 TIMEOUT_SECONDS = 60
+FETCH_WORKERS = 8
 USER_AGENT = "SETU-freshness-watch/1.0 (+https://github.com/Rajdeep1212/setu-intelligence-workspace)"
 
 
@@ -138,16 +140,17 @@ def source_fingerprint(source: Source) -> str:
 
 def check(sources: list[Source], fetch: Callable[[str], str] | None = None) -> list[Result]:
     """Compare every source with its pin; ``fetch`` (url -> fingerprint) replaces the network in tests."""
-    results = []
-    for source in sources:
+    def one(source: Source) -> Result:
         try:
             current = fetch(source.url) if fetch else source_fingerprint(source)
         except FetchError as error:
-            results.append(Result(source.url, "unreachable", source.pinned_sha256, None, source.used_by, str(error)))
-            continue
+            return Result(source.url, "unreachable", source.pinned_sha256, None, source.used_by, str(error))
         status = "unchanged" if current == source.pinned_sha256 else "changed"
-        results.append(Result(source.url, status, source.pinned_sha256, current, source.used_by))
-    return results
+        return Result(source.url, status, source.pinned_sha256, current, source.used_by)
+
+    # Parallel: hosts that time out from the runner (60 s each) overran the job limit one at a time.
+    with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as pool:
+        return list(pool.map(one, sources))
 
 
 def exit_code(results: list[Result]) -> int:

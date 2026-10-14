@@ -29,6 +29,7 @@ Design notes and results for each phase are in `docs/research/`.
 | H. Security: patched Next.js and dependencies | Done | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
 | I. Portfolio demo: hosting notes, README, screenshots | Done | [#14](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/14) | Demo mode checked: every answer is headed "Illustrative example", `/roadside` works offline, no request leaves the site (`HOSTING.md`); 5 screenshots in `docs/images/` |
 | J. e-Shram FAQ re-pin (owner decision, 9 Oct 2026) | In review | [#15](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/15) | Pin moved from the 13 Sep snapshot to the page fetched 9 Oct 2026; the pin ignores the footer "Last Update" date, which moves daily. Local watch: 25 unchanged, 1 changed (PFRDA APY page, see "Waiting for the owner"), 6 unreachable from the laptop (TLS) |
+| K. Freshness watch fix: fetch sources in parallel | In review | | The master runs since 8 Oct were cancelled, not failed: with 32 sources (6 before M2.1) fetched one at a time and many official hosts timing out from GitHub's runner after 60 s, the step overran the 15-minute job limit. Now 8 at a time; same sources, same pins; the local run takes 6 s instead of 24 s |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -87,6 +88,10 @@ replace the "Live demo" placeholder in `README.md`.
 Handoff (9 Oct 2026, item J): owner decisions of 9 Oct are in `FINDINGS.md`
 (Ponytail lite rule, e-Shram re-pin). The e-Shram pin is current; `collect`
 will fetch it again and `index` stores it as a new version. Next is M2.2.
+
+Handoff (14 Oct 2026, item K): no source was added or removed. Once merged, the
+push run will report the PFRDA APY page as changed (it is, see item 6 below),
+so that first run fails until the owner decides on the APY source.
 
 ## Waiting for the owner
 
