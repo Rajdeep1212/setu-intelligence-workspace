@@ -11,6 +11,7 @@ import http.server
 import json
 import tempfile
 import threading
+import time
 import unittest
 from pathlib import Path
 
@@ -138,6 +139,22 @@ class RuleTests(unittest.TestCase):
 
         self.assertEqual(watch.exit_code(watch.check(sources, blocked)), 1)
         self.assertIn("No source could be reached", watch.summary_markdown(watch.check(sources, blocked), "now"))
+
+    def test_slow_sources_are_fetched_in_parallel_and_keep_their_order(self):
+        # On GitHub's runner many official hosts time out; one at a time, 32 sources overran the 15-minute job.
+        def slow(url):
+            time.sleep(0.5)
+            if url.endswith("/3"):
+                raise watch.FetchError("timed out")
+            return url[-1] * 64
+
+        sources = [watch.Source(f"https://slow.gov.in/{n}", str(n) * 64) for n in range(1, 9)] * 2
+        started = time.monotonic()
+        results = watch.check(sources, slow)
+        self.assertLess(time.monotonic() - started, 2.5, "16 half-second fetches must not run one after another")
+        self.assertEqual([r.url for r in results], [s.url for s in sources])
+        self.assertEqual([r.status for r in results].count("unreachable"), 2)
+        self.assertEqual([r.status for r in results].count("unchanged"), 14)
 
     def test_summary_lists_changed_sources_first_and_asks_for_a_person(self):
         results = [
