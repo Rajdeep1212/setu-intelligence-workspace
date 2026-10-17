@@ -1,3 +1,4 @@
+import { scriptLanguage } from "@/lib/utils";
 import { queryResponseSchema, sourceDetailSchema, sourcesResponseSchema, type QueryRequest } from "@/lib/contracts";
 export const establishedQuestion: QueryRequest = { query: "What are the core components of India's digital approach?", language: "en" };
 export const demoResponse = queryResponseSchema.parse({
@@ -36,7 +37,7 @@ const localizedDemoResponses = {
 };
 
 export function demoResponseForQuery(input: QueryRequest) {
-  const language = input.language ?? (/[\u0980-\u09ff]/.test(input.query) ? "bn" : /[\u0900-\u097f]/.test(input.query) ? "hi" : "en");
+  const language = input.language ?? scriptLanguage(input.query);
   return localizedDemoResponses[language];
 }
 

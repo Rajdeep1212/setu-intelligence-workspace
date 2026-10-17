@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 9 Oct 2026 (security update merged as #13; e-Shram re-pin in review).
+Last updated: 17 Oct 2026 (frontend redesign step 1 in review).
 
 ## Work items
 
@@ -30,6 +30,7 @@ Design notes and results for each phase are in `docs/research/`.
 | I. Portfolio demo: hosting notes, README, screenshots | Done | [#14](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/14) | Demo mode checked: every answer is headed "Illustrative example", `/roadside` works offline, no request leaves the site (`HOSTING.md`); 5 screenshots in `docs/images/` |
 | J. e-Shram FAQ re-pin (owner decision, 9 Oct 2026) | In review | [#15](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/15) | Pin moved from the 13 Sep snapshot to the page fetched 9 Oct 2026; the pin ignores the footer "Last Update" date, which moves daily. Local watch: 25 unchanged, 1 changed (PFRDA APY page, see "Waiting for the owner"), 6 unreachable from the laptop (TLS) |
 | K. Freshness watch fix: fetch sources in parallel | In review | [#18](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/18) | The master runs since 8 Oct were cancelled, not failed: with 32 sources (6 before M2.1) fetched one at a time and many official hosts timing out from GitHub's runner after 60 s, the step overran the 15-minute job limit. Now 8 at a time; same sources, same pins; the local run takes 6 s instead of 24 s |
+| L. Frontend redesign, step 1: type foundation (owner approved 17 Oct 2026) | In review | | Inter and Noto Sans Bengali bundled with `next/font` (served from the site, no request to Google; Bengali loaded only on pages that show it). Before: Segoe UI and Nirmala UI, Windows-only fallbacks, so Bengali looked oversized beside English and other systems saw different fonts. Bengali text gets no letter spacing and taller lines; question, suggestions and composer carry `lang`. Held-out tests failed before the fix (unit: `lang`; browser: rendered font, letter spacing, line height). Hindi still uses the system font (owner to decide). Next: step 2, type scale (53-66% of text on 4 pages is under 12px) |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
