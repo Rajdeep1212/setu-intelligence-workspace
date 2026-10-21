@@ -13,7 +13,7 @@ actually names, the notified on-the-spot amount with a link to the government
 source, and where no amount has been verified. The tone stays calm: it never
 tells anyone to argue with an officer or refuse to pay.
 
-**Live demo:** _link to be added after the first deploy_
+**Live demo:** [setu-intelligence-workspace.vercel.app](https://setu-intelligence-workspace.vercel.app/)
 
 > The demo site runs in demo mode. Workspace answers there are one fixed,
 > illustrative example, each headed "Illustrative example: not a retrieved
@@ -38,8 +38,10 @@ checks. Details are in [Technology](#technology).
   accepted, 0 over-asks; 10 of 12 on held-out cases before the fix.
 - Scam Shield: 0 missed scams and 0 false alarms on 44 cases; 10 of 12 on
   held-out cases before the fix; it never says "safe".
-- Scheme corpus: 29 schemes and laws from 26 active official sources; a
-  weekly freshness watch covers 32 sources.
+- Scheme corpus: 25 schemes and laws from 26 active official sources (4 more
+  of the 29 reviewed are excluded, with reasons in
+  [corpus/README.md](corpus/README.md)); a weekly freshness watch covers 32
+  sources.
 
 ## Overview
 
@@ -168,14 +170,17 @@ and official-source provenance.
 
 ## Current local and historical evidence baseline
 
-The evidence frozen before publication records:
+Current figures come from the latest green CI run on `master`
+([run 39060867136](https://github.com/Rajdeep1212/setu-intelligence-workspace/actions/runs/39060867136),
+`a0ae274`, 17 Oct 2026). Baseline figures are the evidence frozen before
+publication.
 
 | Area | Verified result |
 |---|---|
-| Corpus | 8 documents / 239 chunks / 3 eligibility records |
-| Backend regression suite | 112 tests passed in a network-disabled container |
-| Frontend unit/integration suite | 25 default tests passed; 1 opt-in local integration test remains intentionally skipped by default |
-| Browser suite | 9 Playwright tests passed |
+| Corpus | Baseline: 8 documents / 239 chunks / 3 eligibility records (the PIB corpus behind the recorded cloud query). The reviewed scheme corpus is separate: 25 active items from 26 sources ([corpus/README.md](corpus/README.md)) |
+| Backend regression suite | Current: 291 tests in CI, 6 of them skipped (PostgreSQL migration tests that need a database). Baseline: 112 tests passed in a network-disabled container |
+| Frontend unit/integration suite | Current: 68 tests passed in CI; 1 opt-in local integration test is skipped by default. Baseline: 25 |
+| Browser suite | Current: 24 Playwright tests passed in CI. Baseline: 9 |
 | Offline evaluation | 60/60 deterministic fixture-replay cases passed; 20 each in English, Hindi, and Bengali |
 | GitHub Actions | Four read-only `ubuntu-latest` quality jobs; no secrets, cloud credentials, artifacts, or model downloads |
 | Frontend production build | Passed with Node.js 22 |
@@ -317,13 +322,6 @@ tests/                  Backend regression tests
   are quarantined and cannot produce a positive or negative determination.
 - Citation validation proves retrieved-ID membership and de-duplication, not
   semantic entailment; model-reported confidence is uncalibrated.
-
-## Screenshots
-
-No screenshots are published in this revision because the controlled in-app
-capture runtime was unavailable during the publication audit. The interface is
-fully reproducible in sanitized demo mode using the [local demo](docs/local-demo.md)
-instructions; no image or production result has been invented as a substitute.
 
 ## Further reading
 
