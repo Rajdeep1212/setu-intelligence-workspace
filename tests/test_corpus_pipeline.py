@@ -386,6 +386,19 @@ class TrackedManifestTests(unittest.TestCase):
         self.assertEqual(first, text_fingerprint(page.format("16-Oct-2026", 2), pin["ignore_lines"]))
         self.assertNotEqual(first, text_fingerprint(page.replace("What", "Why").format("09-Oct-2026", 1), pin["ignore_lines"]))
 
+    def test_apy_pin_is_the_october_review_and_ignores_nothing(self):
+        source = next(
+            source
+            for manifest in self.manifests
+            for _, source in cm.iter_active_sources(manifest)
+            if source["source_id"] == "apy.pfrda.scheme.current"
+        )
+        pin = source["pin"]
+        self.assertEqual(pin["retrieved_at"][:10], "2026-10-23")
+        self.assertEqual(source["updated_date"], "2026-10-23")
+        # The page showed "NPS Sanchay" text on 9 Oct and APY again on 14 Oct: every change must keep failing the watch.
+        self.assertFalse(pin.get("ignore_lines"))
+
     def test_west_bengal_pages_are_tagged_in_wb(self):
         for manifest in self.manifests:
             for item, source in cm.iter_active_sources(manifest):

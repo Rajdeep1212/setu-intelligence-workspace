@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 21 Oct 2026 (README: current CI counts beside the baseline, live demo link, 25 active schemes; in review as item M).
+Last updated: 23 Oct 2026 (APY re-pinned, item N; owner decisions of 14 Oct recorded).
 
 ## Work items
 
@@ -29,9 +29,10 @@ Design notes and results for each phase are in `docs/research/`.
 | H. Security: patched Next.js and dependencies | Done | [#13](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/13) | `next` and `eslint-config-next` 16.3.3 to 16.3.8, the lowest version outside the advisory range (16.4.0 not needed); `sharp` and `source-map-js` patched by `npm audit fix`. Production audit: 0 advisories. 5 dev-only `braces` advisories remain (lint tooling; the only offered fix downgrades `eslint-config-next` to 14) |
 | I. Portfolio demo: hosting notes, README, screenshots | Done | [#14](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/14) | Demo mode checked: every answer is headed "Illustrative example", `/roadside` works offline, no request leaves the site (`HOSTING.md`); 5 screenshots in `docs/images/` |
 | J. e-Shram FAQ re-pin (owner decision, 9 Oct 2026) | Done | [#15](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/15) | Pin moved from the 13 Sep snapshot to the page fetched 9 Oct 2026; the pin ignores the footer "Last Update" date, which moves daily. Local watch: 25 unchanged, 1 changed (PFRDA APY page, see "Waiting for the owner"), 6 unreachable from the laptop (TLS) |
-| K. Freshness watch fix: fetch sources in parallel | In review | [#18](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/18) | The master runs since 8 Oct were cancelled, not failed: with 32 sources (6 before M2.1) fetched one at a time and many official hosts timing out from GitHub's runner after 60 s, the step overran the 15-minute job limit. Now 8 at a time; same sources, same pins; the local run takes 6 s instead of 24 s |
-| L. Frontend redesign, step 1: type foundation (owner approved 17 Oct 2026) | In review | [#19](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/19) | Inter and Noto Sans Bengali bundled with `next/font` (served from the site, no request to Google; Bengali loaded only on pages that show it). Before: Segoe UI and Nirmala UI, Windows-only fallbacks, so Bengali looked oversized beside English and other systems saw different fonts. Bengali text gets no letter spacing and taller lines; question, suggestions and composer carry `lang`. Held-out tests failed before the fix (unit: `lang`; browser: rendered font, letter spacing, line height). Hindi still uses the system font (owner to decide). Next: step 2, type scale (53-66% of text on 4 pages is under 12px) |
-| M. README: current counts, demo link, corpus count | In review | this PR | Current CI figures (291 backend with 6 skipped, 68 frontend, 24 browser; run 39060867136) shown beside the 112 / 25 / 9 baseline; live demo linked; the stale "No screenshots" section removed; scheme corpus stated as 25 active of 29 reviewed |
+| K. Freshness watch fix: fetch sources in parallel | Done | [#18](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/18) | The master runs since 8 Oct were cancelled, not failed: with 32 sources (6 before M2.1) fetched one at a time and many official hosts timing out from GitHub's runner after 60 s, the step overran the 15-minute job limit. Now 8 at a time; same sources, same pins; the local run takes 6 s instead of 24 s |
+| L. Frontend redesign, step 1: type foundation (owner approved 17 Oct 2026) | Done | [#19](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/19) | Inter and Noto Sans Bengali bundled with `next/font` (served from the site, no request to Google; Bengali loaded only on pages that show it). Before: Segoe UI and Nirmala UI, Windows-only fallbacks, so Bengali looked oversized beside English and other systems saw different fonts. Bengali text gets no letter spacing and taller lines; question, suggestions and composer carry `lang`. Held-out tests failed before the fix (unit: `lang`; browser: rendered font, letter spacing, line height). Hindi still uses the system font (owner to decide). Next: step 2, type scale (53-66% of text on 4 pages is under 12px) |
+| M. README: current counts, demo link, corpus count | Done | [#20](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/20) | Current CI figures (291 backend with 6 skipped, 68 frontend, 24 browser; run 39060867136) shown beside the 112 / 25 / 9 baseline; live demo linked; the stale "No screenshots" section removed; scheme corpus stated as 25 active of 29 reviewed |
+| N. APY re-pin (owner decision, 14 Oct 2026) | In review | this PR | The 19 Oct watch flagged 1 source as changed (PFRDA APY page); 20 were unreachable from the GitHub runner and none other changed. Re-pinned to the page fetched 23 Oct 2026; layout only: no word added, every amount, age and date unchanged, two sections without rules dropped. The pin ignores no lines, so any later change is flagged |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -99,8 +100,22 @@ coding tool, referenced only by its `.gitignore` line) were deleted from the
 laptop; neither was in the repository.
 
 Handoff (14 Oct 2026, item K): no source was added or removed. Once merged, the
-push run will report the PFRDA APY page as changed (it is, see item 6 below),
+push run will report the PFRDA APY page as changed (it was; re-pinned in item N on 23 Oct 2026),
 so that first run fails until the owner decides on the APY source.
+
+## Owner decisions, 14 Oct 2026
+
+- **APY:** re-pin the PFRDA page (item N). It can flip between APY and
+  "NPS Sanchay" text, so the watch keeps flagging every change.
+- **M2.2 baseline:** at least 3.5 GB free RAM (the 6 GB limit is dropped),
+  models loaded one at a time; the owner runs the capture with other apps
+  closed; Docker only for the staging database, memory capped near 1.5 GB.
+
+Details are in [FINDINGS.md](FINDINGS.md).
+
+Handoff (23 Oct 2026, item N): rows K, L and M were marked Done (#18, #19
+and #20 are merged). Next: the M2.2 capture script (item O), then the owner
+runs the capture.
 
 ## Waiting for the owner
 
@@ -121,14 +136,7 @@ These need a person. Work continues on everything else.
    can leave UNVERIFIED.
 5. **Name:** "Nyaya Setu" is already used twice; choose a distinct public name
    before launch.
-6. **Re-read the PFRDA Atal Pension Yojana page**
-   (`https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy`). On
-   9 Oct 2026 the watch reported it as changed: the address now shows text
-   about "NPS Sanchay", not APY. `collect` holds it back. Choose a new
-   official APY source or exclude it with a reason
-   (`corpus/manifests/batch-001.json`). (The e-Shram re-read that was here
-   was decided on 9 Oct 2026: re-pinned.)
-7. **Workspace layout.** The recovered work has a conversation-style
+6. **Workspace layout.** The recovered work has a conversation-style
    redesign; `master` has added cards to the current layout since. Choose
    one before M2 extends the answer screen (see `recovery-review.md`).
 
