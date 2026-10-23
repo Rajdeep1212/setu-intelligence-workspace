@@ -181,7 +181,7 @@
       "jurisdiction": "IN",
       "publisher": "Pension Fund Regulatory and Development Authority",
       "current_status": "active official scheme page",
-      "status_as_of": "2026-09-09",
+      "status_as_of": "2026-10-23",
       "sources": [
         {
           "source_id": "apy.pfrda.scheme.current",
@@ -191,7 +191,7 @@
           "official_url": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
           "publisher": "Pension Fund Regulatory and Development Authority",
           "publication_date": null,
-          "updated_date": null,
+          "updated_date": "2026-10-23",
           "effective_from": "2015-06-01",
           "language": "en",
           "jurisdiction": "IN",
@@ -204,10 +204,10 @@
           ],
           "min_extracted_characters": 1000,
           "pin": {
-            "sha256": "37ea316b83073bc5c7be44d49dff14c1ab27431d51e2a12e6e3d0ac22556c86b",
-            "retrieved_at": "2026-09-09T06:57:24Z",
+            "sha256": "a8ff78f3cdd6eff1b3f1a08740f4103fcedcd3db59a07f88cda6b0ebda106394",
+            "retrieved_at": "2026-10-23T14:55:20Z",
             "watch": "text",
-            "text_sha256": "45e5f81807ed04eea37130aa3fee285310b09516fe82dd31cfad8deecb6cf751",
+            "text_sha256": "2d05208133a83c071812fb3f9ea733dec0f986b448ebdfc23457c38a400496ad",
             "text_version": "setu-structured-v2"
           }
         }

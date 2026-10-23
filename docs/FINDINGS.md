@@ -418,3 +418,21 @@ Details and the exact settings are in [HOSTING.md](HOSTING.md).
   paragraphs, so SETU does not store them and must not state them from this
   source yet. Fixing the extractor changes `EXTRACTION_VERSION`, so every
   HTML source must be re-pinned at the same time.
+
+## Owner decisions, 14 Oct 2026
+
+- **Atal Pension Yojana (PFRDA): re-pin to the current official page**
+  (`https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy`).
+  Re-pinned on 23 Oct 2026 in item N after a fresh review. The page showed
+  "NPS Sanchay" text on 9 Oct and APY text again on 14 Oct, so it can flip:
+  the pin ignores no lines and the weekly watch keeps flagging any change.
+  Compared with the 9 Sep snapshot, the 23 Oct text adds no words and keeps
+  every amount, age and date (Rs 1,000 to 5,000 a month, joining age 18 to
+  40, pension from 60, income-tax payers excluded from 1 Oct 2022). It is
+  reformatted into lists and drops two sections that state no rule (the
+  APY dashboard reports for service providers and the social-media links).
+- **M2.2 baseline capture: memory rule.** The 6 GB free-RAM limit is
+  dropped (the laptop has 7.75 GB). New rule: at least 3.5 GB free, models
+  loaded one at a time. The owner runs the capture with other apps closed.
+  Docker is allowed for the staging database container only (no models in
+  Docker), with Docker's memory capped near 1.5 GB.
