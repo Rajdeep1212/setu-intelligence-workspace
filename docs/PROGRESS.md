@@ -6,7 +6,7 @@ item that is not done. The plan and its reasoning are in
 [FINDINGS.md](FINDINGS.md); the full autonomous brief is kept in the owner's
 SETU project as `SETU_AUTOPILOT_PROMPT.md`.
 
-Last updated: 21 Oct 2026 (README: current CI counts beside the baseline, live demo link, 25 active schemes; in review as item M).
+Last updated: 23 Oct 2026 (M2.2 capture script in review, item O).
 
 ## Work items
 
@@ -32,6 +32,7 @@ Design notes and results for each phase are in `docs/research/`.
 | K. Freshness watch fix: fetch sources in parallel | In review | [#18](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/18) | The master runs since 8 Oct were cancelled, not failed: with 32 sources (6 before M2.1) fetched one at a time and many official hosts timing out from GitHub's runner after 60 s, the step overran the 15-minute job limit. Now 8 at a time; same sources, same pins; the local run takes 6 s instead of 24 s |
 | L. Frontend redesign, step 1: type foundation (owner approved 17 Oct 2026) | In review | [#19](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/19) | Inter and Noto Sans Bengali bundled with `next/font` (served from the site, no request to Google; Bengali loaded only on pages that show it). Before: Segoe UI and Nirmala UI, Windows-only fallbacks, so Bengali looked oversized beside English and other systems saw different fonts. Bengali text gets no letter spacing and taller lines; question, suggestions and composer carry `lang`. Held-out tests failed before the fix (unit: `lang`; browser: rendered font, letter spacing, line height). Hindi still uses the system font (owner to decide). Next: step 2, type scale (53-66% of text on 4 pages is under 12px) |
 | M. README: current counts, demo link, corpus count | In review | this PR | Current CI figures (291 backend with 6 skipped, 68 frontend, 24 browser; run 39060867136) shown beside the 112 / 25 / 9 baseline; live demo linked; the stale "No screenshots" section removed; scheme corpus stated as 25 active of 29 reviewed |
+| O. M2.2 baseline capture script (owner rule, 14 Oct 2026) | In review | [#22](https://github.com/Rajdeep1212/setu-intelligence-workspace/pull/22) | `scripts/capture_everyday_baseline.ps1`: refuses under 3.5 GB free, starts only the staging database container, runs the capture on the host through `scripts/capture_guard.py` (memory check before each model, one model at a time, abort under 1 GB free), stops the container. Tested without a model: RAM refusal, missing evaluator, Docker down, watchdog abort. Container start and stop not tested (0.6 to 0.9 GB free on the laptop). The owner runs the capture; the evaluator is in #16 |
 
 All of #4-#9 were merged on 29 Sep 2026 (master `3ee3d4d`). The first
 freshness run on GitHub (started by the #8 merge) passed: no pinned source
@@ -69,6 +70,10 @@ Handoff (8 Oct 2026, item H): merge the security PR before any public deploy;
 `roadside-bundle.json` is now pinned to LF in `.gitattributes`, which fixes the
 Windows-only bundle test. Next is M2.2 (everyday-use evaluation). Staging a batch is a local
 run (`corpus/README.md`); the e-Shram re-review below should come first.
+
+Handoff (23 Oct 2026, item O): the owner runs the M2.2 capture with the
+steps in the PR. It needs a checkout that has both this script and the
+evaluator from #16. The retrieval file it writes belongs to #16.
 
 ## Owner decisions, 8 Oct 2026
 
